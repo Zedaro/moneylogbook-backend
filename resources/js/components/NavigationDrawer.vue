@@ -24,30 +24,28 @@ export default {
   name: "NavigationDrawer",
   data() {
     return {
-      drawerListItems: [
-        {
-          pathName: 'overview',
-          title: 'Übersicht'
-        },
-        {
-          pathName: 'transactions',
-          title: 'Transaktionen'
-        },
-        {
-          pathName: 'repeatingTransactions',
-          title: 'Daueraufträge'
-        },
-        {
-          pathName: 'transfers',
-          title: 'Umbuchungen'
-        }
-          /*
-        {
-          pathName: 'moneyAccounts',
-          title: 'Konten'
-        },
-        */
-      ]
+      // drawerListItems: [
+      //   {
+      //     pathName: 'overview',
+      //     title: 'Übersicht'
+      //   },
+      //   {
+      //     pathName: 'transactions',
+      //     title: 'Transaktionen'
+      //   },
+      //   {
+      //     pathName: 'repeatingTransactions',
+      //     title: 'Daueraufträge'
+      //   },
+      //   {
+      //     pathName: 'transfers',
+      //     title: 'Umbuchungen'
+      //   },
+      //   {
+      //     pathName: 'backend-tests',
+      //     title: 'Backend-Tests'
+      //   }
+      // ]
     };
   },
   computed: {
@@ -56,6 +54,19 @@ export default {
     },
     height() {
       return 50;
+    },
+    drawerListItems() {
+        let pathNames = [ 'overview', 'transactions', 'repeatingTransactions', 'transfers', 'backend-tests' ];
+        let drawerListItems = [];
+
+        for (let i = 0; i < pathNames.length; i++) {
+            drawerListItems.push({
+                pathName: pathNames[i],
+                title: this.$t(`navigationTitles[${i}]`)
+            })
+        }
+
+        return drawerListItems;
     }
   },
   methods: {

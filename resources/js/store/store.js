@@ -210,7 +210,7 @@ export const store = new Vuex.Store({
                 const newBalance = parseFloat( ( balance + data.money ).toFixed(2) )
 
                 if(newBalance < 0) {
-                    return i18n.t('form.errorMessages.new.transaction', {account: ''});
+                    return i18n.t('form.errorMessages.new.transaction');
                 }
                 else {
                     data.newBalance = newBalance;

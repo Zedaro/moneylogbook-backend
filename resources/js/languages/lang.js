@@ -22,6 +22,7 @@ const messages = {
                 transfer: 'Umbuchung bearbeiten'
             }
         },
+        navigationTitles: [ 'Übersicht', 'Transaktionen', 'Daueraufträge', 'Umbuchungen', 'Backend-Tests' ],
         /*
         formType: {
             moneyAccount: 'Konto-Formular',
@@ -129,6 +130,7 @@ const messages = {
                 transfer: 'Edit Transfer'
             }
         },
+        navigationTitles: [ 'Overview', 'Transactions', 'Repeating Transactions', 'Transfers', 'Backend-Tests' ],
         formType: {
             moneyAccount: 'Konto-Formular',
             transaction: 'Transaktions-Formular',

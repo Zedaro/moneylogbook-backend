@@ -12,6 +12,7 @@ import RepeatingTransactionForm from "./components/repeatingTransactions/form/Re
 import TransfersPage from "./components/transfer/TransfersPage";
 import TransferForm from "./components/transfer/TransferForm";
 import TestCSS from "./components/TestCSS";
+import BackendTests from "./components/BackendTests";
 
 
 const routes = [
@@ -24,6 +25,12 @@ const routes = [
         name: 'testcss',
         component: TestCSS,
         meta: { title: 'testcss' }
+    },
+    {
+      path: 'backend-tests',
+      name: 'backend-tests',
+      component: BackendTests,
+      meta: { title: 'backend-tests' }
     },
     {
         path: '/overview',
