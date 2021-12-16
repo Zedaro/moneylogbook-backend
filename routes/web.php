@@ -1,0 +1,147 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostsController;
+use App\Models\Post;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('index');
+});
+
+Route::get('{path}', function () {
+    return view('index');
+});
+
+//Route::get('/overview', function() {
+//   return "Here's the overview. Welcome!";
+//});
+//
+//Route::get('/transactions/{id}', function($id) {
+//   return "This is transaction #".$id;
+//});
+//
+//Route::get('/admin/posts/example', array('as'=>'admin.home', function() {
+//    $url = route('admin.home');
+//
+//    return "This url is ".$url;
+//}));
+
+//Route::get('/post/{id}', [PostsController::class, 'index']);
+
+Route::resource('posts', PostsController::class);
+
+Route::get('/contact/{id}/{name}', [PostsController::class, 'contact']);
+
+Route::get('/contacts', [PostsController::class, 'contacts']);
+
+
+
+/*
+|--------------------------------------------------------------------------
+| DATABASE Raw SQL Queries
+|--------------------------------------------------------------------------
+*/
+
+//Route::get('/insert', function() {
+//
+//    DB::insert('insert into posts (title, content) values(?, ?)', ['Laravel Tutorial', 'Hi my little cuties! Buy my new shampoo~']);
+//
+//});
+//
+//Route::get('/read', function() {
+//
+//    $results = DB::select('SELECT * FROM posts WHERE id = ?', [1]);
+//
+//    foreach($results as $post) {
+//        return var_dump($post);
+//    }
+//
+//});
+//
+//Route::get('/update', function() {
+//
+//    $updated = DB::update('UPDATE posts SET title = ? WHERE id = ?', ['Laravel Shampoo', 1]);
+//    return $updated;
+//
+//});
+//
+//Route::get('delete', function() {
+//
+//    $deleted = DB::delete('DELETE FROM posts WHERE id = ?', [1]);
+//    return $deleted;
+//
+//});
+
+
+/*
+|--------------------------------------------------------------------------
+| ELOQUENT / ORM (= Object Relational Model)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/read/all', function() {
+
+    $posts = Post::all();
+
+    $postTitles = [];
+
+    foreach ($posts as $post) {
+        array_push($postTitles, $post->title);
+    }
+
+    return $postTitles;
+
+});
+
+Route::get('/find', function() {
+
+    $post = Post::find(1);
+
+    return $post->title;
+
+});
+
+Route::get('/findwhere', function() {
+
+    $post = Post::where('id', 1)->orderBy('id', 'desc')->take(1)->get();
+
+    return $post;
+
+});
+
+Route::get('/findmore', function() {
+
+//    $post = Post::findOrFail(5);
+//
+//    return $post->title;
+
+    $posts = Post::where('id', '<', 5)->get();
+
+    return $posts;
+
+});
+
+Route::get('/basicinsert', function() {
+
+    $post = new Post;
+
+    $post->title = 'new Eloquent title insert';
+    $post->content = 'Eloquent is so wow';
+
+    $post->save();
+
+});
+
+
+
