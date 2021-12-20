@@ -18,6 +18,7 @@ import {router} from "./router";
 import vuetify from './plugins/vuetify'
 //import i18n
 import { i18n } from './languages/lang';
+import axios from "axios";
 
 /**
  * The following block of code may be used to automatically register your
@@ -39,6 +40,7 @@ new Vue({
     router,
     vuetify,
     i18n,
+    axios,
     /*
   created: function() {
     this.$store.dispatch('setState')

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostsController;
 use App\Models\Post;
+use App\Models\Number;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,15 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('{path}', function () {
+Route::get('{path}', function ($path) {
+//    if ($path === 'backend-tests') {
+//        $number = Number::first();
+//        $number->number++;
+//
+//        $number->save();
+//
+//        return view('index', ['number' => $number->number]);
+//    }
     return view('index');
 });
 
@@ -143,5 +152,16 @@ Route::get('/basicinsert', function() {
 
 });
 
+
+Route::get('/incrementNumber', function() {
+
+    $number = Number::first();
+    $number->number++;
+
+    $number->save();
+
+    return $number->number;
+
+});
 
 

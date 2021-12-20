@@ -27,7 +27,7 @@ const routes = [
         meta: { title: 'testcss' }
     },
     {
-      path: 'backend-tests',
+      path: '/backend-tests',
       name: 'backend-tests',
       component: BackendTests,
       meta: { title: 'backend-tests' }
