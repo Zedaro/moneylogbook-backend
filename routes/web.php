@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostsController;
 use App\Models\Post;
 use App\Models\Number;
+use \App\Http\Controllers\MoneyAccountsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,21 +17,13 @@ use App\Models\Number;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/getMoneyAccounts', [MoneyAccountsController::class, 'show']);
 
-Route::get('{path}', function ($path) {
-//    if ($path === 'backend-tests') {
-//        $number = Number::first();
-//        $number->number++;
-//
-//        $number->save();
-//
-//        return view('index', ['number' => $number->number]);
-//    }
-    return view('index');
-});
+Route::post('/saveNewMoneyAccount', [MoneyAccountsController::class, 'store']);
+
+Route::post('/editMoneyAccount', [MoneyAccountsController::class, 'update']);
+
+Route::delete('/deleteMoneyAccount', [MoneyAccountsController::class, 'destroy']);
 
 //Route::get('/overview', function() {
 //   return "Here's the overview. Welcome!";
@@ -163,5 +156,32 @@ Route::get('/incrementNumber', function() {
     return $number->number;
 
 });
+
+
+
+
+
+
+
+Route::get('/', function () {
+    return view('index');
+});
+
+Route::get('{path}', function ($path) {
+//    if ($path === 'backend-tests') {
+//        $number = Number::first();
+//        $number->number++;
+//
+//        $number->save();
+//
+//        return view('index', ['number' => $number->number]);
+//    }
+    return view('index');
+});
+
+
+
+
+
 
 

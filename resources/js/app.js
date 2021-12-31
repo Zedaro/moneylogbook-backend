@@ -51,8 +51,11 @@ new Vue({
   },
   */
     created: function() {
+
         store.dispatch('setLocalStorage', false)
             .then( () => console.log(this.$store.getters.getState) );
+
+
     },
     render: h => h(App)
 })

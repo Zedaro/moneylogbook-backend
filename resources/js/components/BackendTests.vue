@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
     name: "BackendTests",
     data() {
@@ -25,6 +27,21 @@ export default {
         }
     },
     beforeMount() {
+        axios.get('/getMoneyAccounts')
+            .then(function(response) {
+                console.log(response.data);
+            });
+
+        // axios.post('/saveNewMoneyAccount', { name: "Edgar" })
+        //     .then(function(response) {
+        //         console.log(response);
+        //     });
+
+        // axios.post('/editMoneyAccount', { item: 3, name: "Edgar", money: 100, color: '0000FF' })
+        //     .then(function(response) {
+        //         console.log(response);
+        //     });
+
 
     }
 }

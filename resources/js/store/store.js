@@ -1,6 +1,7 @@
 import Vuex from "vuex"
 import Vue from "vue";
 import { i18n } from "../languages/lang";
+import axios from "axios";
 Vue.use(Vuex)
 
 
@@ -73,7 +74,106 @@ export const store = new Vuex.Store({
 
             return obj;
         }),
+        initialLocalStorageLaravel: ( (data) => {
+            let obj = {
+                languages: {
+                    de: 'Deutsch',
+                    "en-US": 'English (US)'
+                },
+                toolbarTitle: 'Übersicht',
+                moneyAccounts: [
+                    // {
+                    //     name: 'Sparkasse',
+                    //     money: 1010.0,
+                    //     color: "#EA0A8E"
+                    // },
+                    // {
+                    //     name: 'ING DiBa',
+                    //     money: 2000.0,
+                    //     color: "#FF6600"
+                    // },
+                    // {
+                    //     name: 'Bank 3000',
+                    //     money: 3000.0,
+                    //     color: "#00FFFB"
+                    // }
+                    // {
+                    //   name: data[0].name,
+                    //   money: data[0].money,
+                    //   color: data[0].color
+                    // },
+                    // {
+                    //     name: data[1].name,
+                    //     money: data[1].money,
+                    //     color: data[1].color
+                    // },
+                    // {
+                    //     name: data[2].name,
+                    //     money: data[2].money,
+                    //     color: data[2].color
+                    // },
+
+                ],
+                transactions: [
+                    {
+                        color: '#EA0A8E',
+                        name: 'Robux',
+                        description: 'Meine Nichte ist süchtig...',
+                        moneyAccount: 'Sparkasse',
+                        money: 10.0,
+                        date: '2021-11-05'
+                    }
+                ],
+                repeatingTransactions: [
+                    {
+                        color: '#EA0A8E',
+                        name: 'Schweigegeld',
+                        description: '...',
+                        moneyAccount: 'Sparkasse',
+                        money: 50.0,
+                        startingDate: '2021-11-20',
+                        endingDate: '2021-12-20',
+                        rhythmNumber: 1,
+                        rhythmType: 1,
+                        weekdays: null,
+                        rhythmText: 'Jeden Monat'
+                    }
+                ],
+                transfers: [
+                    {
+                        colorFrom: '#FF6600',
+                        colorTo: '#EA0A8E',
+                        name: 'Umbuchung 1',
+                        description: 'Test',
+                        from: 'ING DiBa',
+                        to: 'Sparkasse',
+                        money: 10.0,
+                        date: '2021-11-05'
+                    }
+                ]
+            };
+
+            data.forEach(moneyAccount => {
+               obj.moneyAccounts.push({
+                   name: moneyAccount.name,
+                   money: moneyAccount.money,
+                   color: moneyAccount.color
+               })
+            });
+
+            obj.totalMoney = obj.moneyAccounts[0].money + obj.moneyAccounts[1].money;
+
+            return obj;
+        } ),
         localStorage: null,
+
+        languages: null,
+        toolbarTitle: null,
+        moneyAccounts: null,
+        transactions: null,
+        repeatingTransactions: null,
+        transfers: null,
+        totalMoney: null
     },
 
     /*
@@ -127,7 +227,7 @@ export const store = new Vuex.Store({
             return state.localStorage.toolbarTitle;
         },
         getMoneyAccounts(state) {
-            return state.localStorage.moneyAccounts;
+            return state.localStorage.moneyAccounts; //state.moneyAccounts;
         },
         getMoney(state) {
             const unformattedMoney = state.localStorage.moneyAccounts[this.$route.params.item].money;
@@ -157,6 +257,8 @@ export const store = new Vuex.Store({
 
         updateLocalStorage(context) {
             localStorage.setItem('state', JSON.stringify(context.state.localStorage));
+
+
         },
 
 
@@ -165,8 +267,15 @@ export const store = new Vuex.Store({
             if(reset) {
                 localStorage.clear();
 
-                localStorage.setItem('state', JSON.stringify(context.state.initialLocalStorage()));
-                window.location.reload();
+                axios.get('/getMoneyAccounts')
+                    .then(function(response) {
+                        console.log(response);
+
+                        localStorage.setItem('state', JSON.stringify(context.state.initialLocalStorageLaravel(response.data)));
+                        window.location.reload();
+                    });
+
+
             }
             context.commit('setLocalStorage');
         },
@@ -436,6 +545,13 @@ export const store = new Vuex.Store({
         */
         setLocalStorage(state) {
             state.localStorage = localStorage.getItem('state') ? JSON.parse(localStorage.getItem('state')) : state.initialLocalStorage();
+
+            axios.get('/getMoneyAccounts')
+                .then( function(response) {
+                    state.moneyAccounts = response.data;
+                    console.log('Money Accounts from DB:');
+                    console.log(state.moneyAccounts);
+                } );
         },
         setDrawer(state) {
             state.drawer = !state.drawer;
@@ -455,6 +571,8 @@ export const store = new Vuex.Store({
             //save moneyAccount in state
             state.localStorage.moneyAccounts.push({ name: data.name, money: data.money, color: data.color });
 
+            axios.post('/saveNewMoneyAccount', data);
+
             //update localStorage
             //localStorage.setItem('state', JSON.stringify(state.localStorage));
         },
@@ -462,12 +580,19 @@ export const store = new Vuex.Store({
             //update moneyAccount entry in state
             state.localStorage.moneyAccounts[data.item] = { name: data.name, money: data.money, color: data.color };
 
+            axios.post('/editMoneyAccount', data)
+
             //update localStorage
             //localStorage.setItem('state', JSON.stringify(state.localStorage));
         },
         deleteMoneyAccount(state, data) {
             //delete moneyAccount in state
             state.localStorage.moneyAccounts.splice(data.item, 1);
+
+            axios.delete('/deleteMoneyAccount', { data: { item: data.item } })
+                .then(function(response) {
+                    console.log(response);
+                });
 
             //update localStorage
             //localStorage.setItem('state', JSON.stringify(state.localStorage));
