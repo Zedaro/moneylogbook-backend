@@ -36,7 +36,7 @@ export const store = new Vuex.Store({
                     {
                         color: '#EA0A8E',
                         name: 'Robux',
-                        description: 'Meine Nichte ist süchtig...',
+                        description: 'Sophia ist süchtig...',
                         moneyAccount: 'Sparkasse',
                         money: 10.0,
                         date: '2021-11-05'
@@ -115,14 +115,14 @@ export const store = new Vuex.Store({
 
                 ],
                 transactions: [
-                    {
-                        color: '#EA0A8E',
-                        name: 'Robux',
-                        description: 'Meine Nichte ist süchtig...',
-                        moneyAccount: 'Sparkasse',
-                        money: 10.0,
-                        date: '2021-11-05'
-                    }
+                    // {
+                    //     color: '#EA0A8E',
+                    //     name: 'Robux',
+                    //     description: 'Sophia ist süchtig...',
+                    //     moneyAccount: 'Sparkasse',
+                    //     money: 10.0,
+                    //     date: '2021-11-05'
+                    // }
                 ],
                 repeatingTransactions: [
                     {
@@ -153,13 +153,13 @@ export const store = new Vuex.Store({
                 ]
             };
 
-            data.forEach(moneyAccount => {
-               obj.moneyAccounts.push({
-                   name: moneyAccount.name,
-                   money: moneyAccount.money,
-                   color: moneyAccount.color
-               })
+            data.moneyAccounts.forEach(moneyAccount => {
+                obj.moneyAccounts.push(moneyAccount);
             });
+            data.transactions.forEach(transaction => {
+                obj.transactions.push(transaction);
+            });
+
 
             obj.totalMoney = obj.moneyAccounts[0].money + obj.moneyAccounts[1].money;
 
@@ -267,11 +267,13 @@ export const store = new Vuex.Store({
             if(reset) {
                 localStorage.clear();
 
-                axios.get('/getMoneyAccounts')
+                axios.get('/getData')
                     .then(function(response) {
+                        console.log('response:');
                         console.log(response);
 
                         localStorage.setItem('state', JSON.stringify(context.state.initialLocalStorageLaravel(response.data)));
+                        console.log(context.state.localStorage);
                         window.location.reload();
                     });
 
@@ -546,9 +548,10 @@ export const store = new Vuex.Store({
         setLocalStorage(state) {
             state.localStorage = localStorage.getItem('state') ? JSON.parse(localStorage.getItem('state')) : state.initialLocalStorage();
 
-            axios.get('/getMoneyAccounts')
+            axios.get('/getData')
                 .then( function(response) {
-                    state.moneyAccounts = response.data;
+                    state.moneyAccounts = response.data.moneyAccounts;
+                    state.transactions = response.data.transactions;
                     console.log('Money Accounts from DB:');
                     console.log(state.moneyAccounts);
                 } );

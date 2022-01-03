@@ -16,9 +16,9 @@ class CreateMoneyAccounts extends Migration
     {
         Schema::create('money_accounts', function (Blueprint $table) {
             $table->id();
-            $table->tinyText('name');
+            $table->string('name');
             $table->float('money');
-            $table->tinyText('color');
+            $table->string('color');
             $table->timestamps();
         });
 

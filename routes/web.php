@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostsController;
 use App\Models\Post;
 use App\Models\Number;
-use \App\Http\Controllers\MoneyAccountsController;
+use App\Http\Controllers\MoneyAccountsController;
+use App\Http\Controllers\TransactionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,13 +18,24 @@ use \App\Http\Controllers\MoneyAccountsController;
 |
 */
 
-Route::get('/getMoneyAccounts', [MoneyAccountsController::class, 'show']);
+Route::get('/getData', function() {
+
+    $data = [
+        'moneyAccounts' => ( new MoneyAccountsController() ) -> show(),
+        'transactions' => ( new TransactionsController() ) -> show()
+    ];
+
+    return $data;
+
+});
 
 Route::post('/saveNewMoneyAccount', [MoneyAccountsController::class, 'store']);
 
 Route::post('/editMoneyAccount', [MoneyAccountsController::class, 'update']);
 
 Route::delete('/deleteMoneyAccount', [MoneyAccountsController::class, 'destroy']);
+
+
 
 //Route::get('/overview', function() {
 //   return "Here's the overview. Welcome!";
