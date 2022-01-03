@@ -134,7 +134,7 @@ export default {
         new: true,
         name: '',
         description: '',
-        items: (this.$store.getters.getMoneyAccountNames),
+        items: (this.$store.getters.getMoneyAccountSelectionItems),
         moneyAccount: '',
         money: null,
         //color: '#000000',
@@ -154,7 +154,7 @@ export default {
         new: false,
         name: (this.$store.getters.getTransactions[this.$route.params.item].name),
         description: (this.$store.getters.getTransactions[this.$route.params.item].description),
-        items: (this.$store.getters.getMoneyAccountNames),
+        items: (this.$store.getters.getMoneyAccountSelectionItems),
         moneyAccount: (this.$store.getters.getTransactions[this.$route.params.item].moneyAccount),
         money: (this.$store.getters.getTransactions[this.$route.params.item].money),
         date: (this.$store.getters.getTransactions[this.$route.params.item].date),
@@ -212,7 +212,8 @@ export default {
         color: this.$store.getters.getMoneyAccounts.find(account => account.name === this.moneyAccount).color,
         name: this.name,
         description: this.description,
-        moneyAccount: this.$store.getters.getMoneyAccount(this.moneyAccount),
+        moneyAccount: this.$store.getters.getMoneyAccountByIndex(this.moneyAccount),
+        moneyAccountIndex: this.moneyAccount,
         money: parseFloat(this.money.toFixed(2)),   //.replace(/\./g, ','),
         date: this.date
       };

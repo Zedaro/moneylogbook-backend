@@ -52,7 +52,7 @@ class TransactionsController extends Controller
             $obj[] = [
                 'name' => $transaction->name,
                 'description' => $transaction->description,
-                'moneyAccount' => $transaction->moneyAccount->name,
+                'moneyAccount' => $transaction->money_account_id - 1,
                 'money' => $transaction->money,
                 'date' => $transaction->date
             ];
