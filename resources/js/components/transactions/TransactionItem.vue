@@ -12,7 +12,9 @@
     </div>
 
     <div class="money-account-div">
-      <v-card-text class="text-center money-account">{{ this.$store.getters.getMoneyAccountByIndex(this.moneyAccount).name }}</v-card-text>
+      <v-card-text class="text-center money-account">{{
+              this.$store.getters.getMoneyAccountById(this.moneyAccount).name
+          }}</v-card-text>
     </div>
 
     <div class="name-div">
@@ -28,10 +30,10 @@
 <script>
 export default {
   name: "TransactionItem",
-  props: ['name', 'description', 'money', 'moneyAccount', 'date', 'index'],
+  props: ['name', 'description', 'money', 'money_account_id', 'date', 'index'],
   computed: {
     moneyAccountsExist() {
-      const account = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountByIndex(this.moneyAccount).name);//this.moneyAccount);
+      const account = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.money_account_id).name);//this.moneyAccount);
 
       return (typeof account != 'undefined');
     },

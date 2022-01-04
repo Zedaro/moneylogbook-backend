@@ -36,6 +36,9 @@ Route::post('/editMoneyAccount', [MoneyAccountsController::class, 'update']);
 Route::delete('/deleteMoneyAccount', [MoneyAccountsController::class, 'destroy']);
 
 
+Route::post('/saveNewTransaction', [TransactionsController::class, 'store']);
+
+
 
 //Route::get('/overview', function() {
 //   return "Here's the overview. Welcome!";

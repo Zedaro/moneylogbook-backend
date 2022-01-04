@@ -1,7 +1,7 @@
 <template>
   <div class="list-div">
     <transaction-item v-for="(transaction, index) in this.$store.getters.getTransactions" :key="index"
-                         :name="transaction.name" :description="transaction.description" :money="transaction.money" :moneyAccount="transaction.moneyAccount" :date="transaction.date" :index="index">
+                         :name="transaction.name" :description="transaction.description" :money="transaction.money" :money_account_id="transaction.money_account_id" :date="transaction.date" :index="index">
     </transaction-item>
   </div>
 </template>

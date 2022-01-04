@@ -35,7 +35,17 @@ class TransactionsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $transaction = new Transaction;
+
+        $transaction->name = $request->name;
+        $transaction->description = $request->description;
+        $transaction->money_account_id = $request->money_account_id;
+        $transaction->money = $request->money;
+        $transaction->date = $request->date;
+
+        $transaction->save();
+
+        return $transaction;
     }
 
     /**
@@ -49,13 +59,14 @@ class TransactionsController extends Controller
         $obj = [];
 
         foreach(Transaction::all() as $transaction) {
-            $obj[] = [
-                'name' => $transaction->name,
-                'description' => $transaction->description,
-                'moneyAccount' => $transaction->money_account_id - 1,
-                'money' => $transaction->money,
-                'date' => $transaction->date
-            ];
+            $obj[] = $transaction;
+//            [
+//                'name' => $transaction->name,
+//                'description' => $transaction->description,
+//                'moneyAccount' => $transaction->money_account_id,
+//                'money' => $transaction->money,
+//                'date' => $transaction->date
+//            ];
         }
 
         return $obj;

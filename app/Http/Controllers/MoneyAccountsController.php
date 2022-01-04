@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MoneyAccount;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class MoneyAccountsController extends Controller
 {
@@ -36,14 +37,25 @@ class MoneyAccountsController extends Controller
     public function store(Request $request)
     {
 
-        //return $request;
-
         $moneyAccount = new MoneyAccount;
+
+        //How to create an entry without writing every attribute
+//        foreach(Schema::getColumnListing('money_accounts') as $key) {
+//            /*Ausnahmen hinzufügen:
+//              if ($key == 'derWertSollÜbersprungenWerden') continue;   ->   Wenn $key dieser Wert ist, mach weiter mit dem nächsten Durchlauf des loops
+//            */
+//
+//            if($key == "created_at" || $key == "updated_at") continue;
+//
+//            $moneyAccount->$key = $request->$key;
+//        }
 
         $moneyAccount->name = $request->name;
         $moneyAccount->money = $request->money;
         $moneyAccount->color = $request->color;
         $moneyAccount->save();
+
+        return $moneyAccount;
     }
 
     /**
@@ -57,11 +69,12 @@ class MoneyAccountsController extends Controller
         $obj = [];
 
         foreach(MoneyAccount::all() as $moneyAccount) {
-             $obj[] = [
-               'name' => $moneyAccount->name,
-                'money' => $moneyAccount->money,
-                'color' => $moneyAccount->color
-            ];
+
+            $obj[] = $moneyAccount;
+//                 'name' => $moneyAccount->name,
+//                 'money' => $moneyAccount->money,
+//                 'color' => $moneyAccount->color
+
         }
 
         return $obj;
