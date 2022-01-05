@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
+use App\Http\Controllers\MoneyAccountsController;
 
 class TransactionsController extends Controller
 {
@@ -37,15 +39,19 @@ class TransactionsController extends Controller
     {
         $transaction = new Transaction;
 
+        //make new transaction entry in DB
         $transaction->name = $request->name;
         $transaction->description = $request->description;
-        $transaction->money_account_id = $request->money_account_id;
+        $transaction->money_account_id = $request->moneyAccountId;
         $transaction->money = $request->money;
         $transaction->date = $request->date;
-
         $transaction->save();
 
-        return $transaction;
+        //edit balance of affected account
+        ( new MoneyAccountsController ) -> editBalance($request->moneyAccountId, $request->newBalance);
+
+        //return created transaction
+        return $this->showOne($transaction->id);
     }
 
     /**
@@ -59,17 +65,38 @@ class TransactionsController extends Controller
         $obj = [];
 
         foreach(Transaction::all() as $transaction) {
-            $obj[] = $transaction;
+            $obj[] = $this->showOne($transaction->id);
 //            [
 //                'name' => $transaction->name,
 //                'description' => $transaction->description,
-//                'moneyAccount' => $transaction->money_account_id,
+//                'moneyAccountId' => $transaction->money_account_id,
 //                'money' => $transaction->money,
 //                'date' => $transaction->date
 //            ];
         }
 
         return $obj;
+    }
+
+    public function showOne($id) {
+
+        $obj = [];
+
+        $transaction = Transaction::find($id);
+
+        foreach(Schema::getColumnListing('transactions') as $key) {
+
+            if($key == 'money_account_id') {
+                $obj['moneyAccountId'] = $transaction->$key;
+                continue;
+            }
+
+            $obj[$key] = $transaction->$key;
+
+        }
+
+        return $obj;
+
     }
 
     /**

@@ -47,7 +47,7 @@
             <v-select
               :items="items"
               :label="$t('form.moneyAccount')"
-              v-model="money_account_id"
+              v-model="moneyAccountId"
               :error-messages="errors"
           ></v-select>
           </validation-provider>
@@ -135,7 +135,7 @@ export default {
         name: '',
         description: '',
         items: (this.$store.getters.getMoneyAccountSelectionItems),
-        money_account_id: '',
+        moneyAccountId: '',
         money: null,
         //color: '#000000',
 
@@ -155,7 +155,7 @@ export default {
         name: (this.$store.getters.getTransactions[this.$route.params.item].name),
         description: (this.$store.getters.getTransactions[this.$route.params.item].description),
         items: (this.$store.getters.getMoneyAccountSelectionItems),
-        moneyAccount: (this.$store.getters.getTransactions[this.$route.params.item].money_account_id),
+        moneyAccountId: (this.$store.getters.getTransactions[this.$route.params.item].moneyAccountId),
         money: (this.$store.getters.getTransactions[this.$route.params.item].money),
         date: (this.$store.getters.getTransactions[this.$route.params.item].date),
         //color: (this.$store.getters.getMoneyAccounts[this.$route.params.item].color),
@@ -209,11 +209,11 @@ export default {
 
       const data = {
         item: this.$route.params.item,
-        color: this.$store.getters.getMoneyAccounts.find(account => account.name === this.money_account_id).color,
+        //color: this.$store.getters.getMoneyAccounts.find(account => account.name === this.moneyAccountId).color,
         name: this.name,
         description: this.description,
-        moneyAccount: this.$store.getters.getMoneyAccountById(this.moneyAccount),
-        moneyAccountId: this.moneyAccount,
+        moneyAccount: this.$store.getters.getMoneyAccountById(this.moneyAccountId),
+        moneyAccountId: this.moneyAccountId,
         money: parseFloat(this.money.toFixed(2)),   //.replace(/\./g, ','),
         date: this.date
       };

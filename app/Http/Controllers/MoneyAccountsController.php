@@ -80,6 +80,12 @@ class MoneyAccountsController extends Controller
         return $obj;
     }
 
+    public function showOne($id) {
+
+        return MoneyAccount::find($id);
+
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -100,15 +106,19 @@ class MoneyAccountsController extends Controller
      */
     public function update(Request $request)
     {
-        $moneyAccount = MoneyAccount::all()->get($request->item);
+        $moneyAccount = MoneyAccount::find($request->id);
 
         $moneyAccount->name = $request->name;
         $moneyAccount->money = $request->money;
         $moneyAccount->color = $request->color;
         $moneyAccount->save();
 
-        //return $moneyAccount;
+        return $moneyAccount;
 
+    }
+
+    public function editBalance($moneyAccountId, $newBalance) {
+        MoneyAccount::find($moneyAccountId)->money = $newBalance;
     }
 
     /**
@@ -119,6 +129,6 @@ class MoneyAccountsController extends Controller
      */
     public function destroy(Request $request)
     {
-        MoneyAccount::all()->get($request->item)->delete();
+        MoneyAccount::find($request->id)->delete();
     }
 }

@@ -2,7 +2,7 @@
 
   <v-card class="list-item" :to="moneyAccountsExist ? item : ''">
 
-    <div class="color" :style="{ backgroundColor: this.$store.getters.getColor(this.moneyAccount) }"></div>
+    <div class="color" :style="{ backgroundColor: this.$store.getters.getColor(this.moneyAccountId) }"></div>
 
     <v-card-text class="text-center grey--text date">{{ formattedDate }}</v-card-text>
     <!-- <v-card-text class="text-center grey--text description">{{ this.description }}</v-card-text> -->
@@ -13,7 +13,7 @@
 
     <div class="money-account-div">
       <v-card-text class="text-center money-account">{{
-              this.$store.getters.getMoneyAccountById(this.moneyAccount).name
+              this.$store.getters.getMoneyAccountById(this.moneyAccountId).name
           }}</v-card-text>
     </div>
 
@@ -30,10 +30,10 @@
 <script>
 export default {
   name: "TransactionItem",
-  props: ['name', 'description', 'money', 'money_account_id', 'date', 'index'],
+  props: ['name', 'description', 'money', 'moneyAccountId', 'date', 'index'],
   computed: {
     moneyAccountsExist() {
-      const account = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.money_account_id).name);//this.moneyAccount);
+      const account = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.moneyAccountId).name);//this.moneyAccount);
 
       return (typeof account != 'undefined');
     },

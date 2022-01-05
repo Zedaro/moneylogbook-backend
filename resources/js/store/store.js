@@ -7,7 +7,9 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
     state: {
+        loading: true,
         drawer: false,
+
         initialLocalStorage: ( () => {
             let obj = {
                 languages: {
@@ -153,19 +155,26 @@ export const store = new Vuex.Store({
                 ]
             };
 
+            obj.totalMoney = null;
             data.moneyAccounts.forEach(moneyAccount => {
                 obj.moneyAccounts.push(moneyAccount);
+                obj.totalMoney += moneyAccount.money;
             });
             data.transactions.forEach(transaction => {
                 obj.transactions.push(transaction);
             });
 
-
-            obj.totalMoney = obj.moneyAccounts[0].money + obj.moneyAccounts[1].money;
-
             return obj;
         } ),
         localStorage: null,
+        // {
+        //     languages: {},
+        //     toolbarTitle: '',
+        //     moneyAccounts: [],
+        //     transactions: [],
+        //     repeatingTransactions: [],
+        //     transfers: []
+        // },
 
         languages: null,
         toolbarTitle: null,
@@ -203,6 +212,9 @@ export const store = new Vuex.Store({
         getMoneyAccountById(state) {
             return (id) => state.localStorage.moneyAccounts.find(account => account.id === id);
         },
+        getMoneyAccountByIndex(state) {
+            return (index) => state.localStorage.moneyAccounts[index];
+        },
         getTransaction(state) {
             return (index) => state.localStorage.transactions[index];
         },
@@ -212,8 +224,8 @@ export const store = new Vuex.Store({
         getTransfer(state) {
             return (index) => state.localStorage.transfers[index];
         },
-        getColor(state) {
-            return (index) => state.localStorage.moneyAccounts[index].color;
+        getColor(state, getters) {
+            return (id) => getters.getMoneyAccountById(id).color;
         },
 
 
@@ -253,10 +265,10 @@ export const store = new Vuex.Store({
         getMoneyAccountSelectionItems(state) {
             let selectionItems = [];
 
-            state.localStorage.moneyAccounts.forEach( (moneyAccount, index) => {
+            state.localStorage.moneyAccounts.forEach( moneyAccount => {
                 selectionItems.push({
                     text: moneyAccount.name,
-                    value: index,
+                    value: moneyAccount.id,
                     disabled: false
                 })
             })
@@ -280,25 +292,28 @@ export const store = new Vuex.Store({
             localStorage.setItem('state', JSON.stringify(context.state.localStorage));
 
         },
-        setLocalStorage(context, reset) {
+        async setLocalStorage(context, reset) {
+
+            let data = null;
+
+            await axios.get('/getData')
+                .then(function(response) {
+                    console.log('response:');
+                    console.log(response);
+
+                    data = response.data
+                });
+
             if(reset) {
                 localStorage.clear();
 
-                axios.get('/getData')
-                    .then(function(response) {
-                        console.log('response:');
-                        console.log(response);
-
-                        localStorage.setItem('state', JSON.stringify(context.state.initialLocalStorageLaravel(response.data)));
-                        console.log(context.state.localStorage);
-                        window.location.reload();
-                    });
-
-
+                localStorage.setItem('state', JSON.stringify(context.state.initialLocalStorageLaravel(data)));
+                console.log(context.state.localStorage);
+                window.location.reload();
             }
-            context.commit('setLocalStorage');
-        },
 
+            context.commit('setLocalStorage', data);
+        },
 
         getAllData(context) {
             axios.get('/getData')
@@ -323,6 +338,7 @@ export const store = new Vuex.Store({
         },
 
         async saveMoneyAccount(context, data) {
+            //New MoneyAccount
             if(data.item === 'new') {
 
                 await axios.post('/saveNewMoneyAccount', data)
@@ -333,13 +349,26 @@ export const store = new Vuex.Store({
                     } )
                     .then( function(response) {
                         context.commit('saveNewMoneyAccount', response);
-
                     } );
 
                 //context.commit('saveNewMoneyAccount', data);
 
-            } else {
-                context.commit('saveEditedMoneyAccount', data);
+            }
+            //Edit MoneyAccount
+            else {
+
+                data.id = context.getters.getMoneyAccountByIndex(data.item).id;
+
+                console.log('updateMoneyAccount: posted data:');
+                console.log(data);
+
+                await axios.post('/updateMoneyAccount', data)
+                    .then((response) => {
+                        console.log('updateMoneyAccount response:');
+                        console.log(response);
+                        context.commit('saveEditedMoneyAccount', { moneyAccountIndex: data.item , updatedData: response.data } );
+                    });
+
             }
 
 
@@ -348,11 +377,17 @@ export const store = new Vuex.Store({
             context.dispatch('updateLocalStorage');
             console.log('localStorage updated');
         },
-        deleteMoneyAccount(context, data) {
-            context.commit('deleteMoneyAccount', data);
+        async deleteMoneyAccount(context, data) {
 
-            //update localStorage
-            context.dispatch('updateLocalStorage');
+            await axios.delete('/deleteMoneyAccount', { data: { id: data.id } })
+                .then(() => {
+
+                    context.commit('deleteMoneyAccount', { index: data.index });
+
+                    //update localStorage
+                    context.dispatch('updateLocalStorage');
+                });
+
         },
 
         async saveTransaction(context, data) {
@@ -367,7 +402,7 @@ export const store = new Vuex.Store({
                 else {
                     data.newBalance = newBalance;
 
-                    await axios.post('saveNewTransaction', data)
+                    await axios.post('/saveNewTransaction', data)
                         .then((response) => context.commit('saveNewTransaction', { transaction: response.data, moneyAccount: data.moneyAccount, newBalance: data.newBalance }));
 
                 }
@@ -378,7 +413,7 @@ export const store = new Vuex.Store({
                 data.oldTransaction = context.getters.getTransaction(data.item);
 
                 //Edit Transaction without new moneyAccount
-                if(data.oldTransaction.moneyAccount === data.moneyAccountId) {
+                if(data.oldTransaction.moneyAccountId === data.moneyAccountId) {
 
                     const balance = data.moneyAccount.money;
                     const newBalance = parseFloat( ( balance + (data.money - data.oldTransaction.money) ).toFixed(2) )
@@ -589,16 +624,23 @@ export const store = new Vuex.Store({
             state.moneyAccounts = JSON.parse(localStorage.getItem('state')).moneyAccounts;
         },
         */
-        setLocalStorage(state) {
-            state.localStorage = localStorage.getItem('state') ? JSON.parse(localStorage.getItem('state')) : state.initialLocalStorage();
+        setLocalStorage(state, data) {
+            state.localStorage = localStorage.getItem('state') ? JSON.parse(localStorage.getItem('state')) : state.initialLocalStorageLaravel(data);
 
-            axios.get('/getData')
-                .then( function(response) {
-                    state.moneyAccounts = response.data.moneyAccounts;
-                    state.transactions = response.data.transactions;
-                    console.log('Money Accounts from DB:');
-                    console.log(state.moneyAccounts);
-                } );
+            state.moneyAccounts = data.moneyAccounts;
+            state.transactions = data.transactions;
+            console.log('Money Accounts from DB:');
+            console.log(state.moneyAccounts);
+
+            state.loading = false;
+
+            // axios.get('/getData')
+            //     .then( function(response) {
+            //         state.moneyAccounts = response.data.moneyAccounts;
+            //         state.transactions = response.data.transactions;
+            //         console.log('Money Accounts from DB:');
+            //         console.log(state.moneyAccounts);
+            //     } );
         },
         setDrawer(state) {
             state.drawer = !state.drawer;
@@ -623,23 +665,18 @@ export const store = new Vuex.Store({
             //update localStorage
             //localStorage.setItem('state', JSON.stringify(state.localStorage));
         },
-        saveEditedMoneyAccount(state, data) {
+        saveEditedMoneyAccount(state, { moneyAccountIndex, updatedData }) {
             //update moneyAccount entry in state
-            state.localStorage.moneyAccounts[data.item] = { name: data.name, money: data.money, color: data.color };
+            //state.localStorage.moneyAccounts[data.item] = { name: data.name, money: data.money, color: data.color };
+            state.localStorage.moneyAccounts[moneyAccountIndex] = updatedData;
 
-            axios.post('/editMoneyAccount', data)
 
             //update localStorage
             //localStorage.setItem('state', JSON.stringify(state.localStorage));
         },
-        deleteMoneyAccount(state, data) {
+        deleteMoneyAccount(state, { index }) {
             //delete moneyAccount in state
-            state.localStorage.moneyAccounts.splice(data.item, 1);
-
-            axios.delete('/deleteMoneyAccount', { data: { item: data.item } })
-                .then(function(response) {
-                    console.log(response);
-                });
+            state.localStorage.moneyAccounts.splice(index, 1);
 
             //update localStorage
             //localStorage.setItem('state', JSON.stringify(state.localStorage));
@@ -653,15 +690,8 @@ export const store = new Vuex.Store({
             //state.localStorage.moneyAccounts[data.accountIndex].money = newBalance;
 
             //save transaction entry in state
-
-            console.log('transaction:');
-            console.log(transaction);
-            console.log('moneyAccount:');
-            console.log(moneyAccount);
-            console.log('newBalance:');
-            console.log(newBalance);
-
             state.localStorage.transactions.push( transaction /*{ name: data.name, description: data.description, money: data.money, moneyAccount: data.moneyAccountId, date: data.date }*/);
+
             //update account balance
             moneyAccount.money = newBalance;
 

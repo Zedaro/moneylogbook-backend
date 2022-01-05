@@ -50,7 +50,7 @@ new Vue({
         }) ;
   },
   */
-    created: function() {
+    created () {
 
         //store.dispatch('getAllData');
 

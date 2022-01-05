@@ -31,7 +31,7 @@ Route::get('/getData', function() {
 
 Route::post('/saveNewMoneyAccount', [MoneyAccountsController::class, 'store']);
 
-Route::post('/editMoneyAccount', [MoneyAccountsController::class, 'update']);
+Route::post('/updateMoneyAccount', [MoneyAccountsController::class, 'update']);
 
 Route::delete('/deleteMoneyAccount', [MoneyAccountsController::class, 'destroy']);
 

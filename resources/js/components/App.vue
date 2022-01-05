@@ -1,5 +1,5 @@
 <template>
-    <v-app id="inspire">
+    <v-app id="inspire" v-if="!this.$store.state.loading">
         <navigation-drawer></navigation-drawer>
         <the-header></the-header>
         <v-main>

@@ -114,6 +114,7 @@ export default {
           this.money = parseFloat(this.money);
         }
         */
+
       const data = {
         item: this.$route.params.item,
         name: this.name,
@@ -129,7 +130,7 @@ export default {
           });
     },
     deleteData() {
-      this.$store.dispatch('deleteMoneyAccount', { item: this.$route.params.item })
+      this.$store.dispatch('deleteMoneyAccount', { index: this.$route.params.item, id: this.$store.getters.getMoneyAccountByIndex(this.$route.params.item).id })
           .then( () => {
             this.$store.dispatch('updateTotalMoney');
           })
