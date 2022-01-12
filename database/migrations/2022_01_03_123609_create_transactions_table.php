@@ -17,7 +17,7 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
+            $table->text('description') -> nullable();
             $table->integer('money_account_id');
             $table->float('money');
             $table->date('date');

@@ -123,8 +123,7 @@ class MoneyAccountsController extends Controller
         $moneyAccount->money = $newBalance;
         $moneyAccount->save();
 
-        error_log($moneyAccount->money);
-
+        //error_log($moneyAccount->money);
         //error_log('works here');
 
         return [

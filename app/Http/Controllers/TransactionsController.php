@@ -121,9 +121,6 @@ class TransactionsController extends Controller
      */
     public function update(Request $request)
     {
-        error_log($request->newBalance);
-        error_log($request);
-
 
         if(isset($request->newBalance)) {
 
@@ -133,8 +130,6 @@ class TransactionsController extends Controller
 //            $transaction->money = $request->transaction['money'];
 //            $transaction->date = $request->transaction['date'];
 //            $transaction->save();
-
-            error_log('true');
 
             $transaction = Transaction::find($request->id);
             $transaction->name = $request->name;
@@ -151,8 +146,6 @@ class TransactionsController extends Controller
 
         }
         else {
-
-            error_log('false');
 
             $transaction = Transaction::find($request->id);
             $transaction->name = $request->name;

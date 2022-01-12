@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TransferController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostsController;
@@ -23,7 +24,8 @@ Route::get('/getData', function() {
 
     $data = [
         'moneyAccounts' => ( new MoneyAccountsController() ) -> show(),
-        'transactions' => ( new TransactionsController() ) -> show()
+        'transactions' => ( new TransactionsController() ) -> show(),
+        'transfers' => ( new TransferController() ) -> show()
     ];
 
     return $data;
@@ -36,6 +38,8 @@ Route::post('/updateMoneyAccount', [MoneyAccountsController::class, 'update']);
 
 Route::delete('/deleteMoneyAccount', [MoneyAccountsController::class, 'destroy']);
 
+Route::post('/testMoneyAccountsController', [MoneyAccountsController::class, 'test']);
+
 
 Route::post('/saveNewTransaction', [TransactionsController::class, 'store']);
 
@@ -43,7 +47,14 @@ Route::post('/updateTransaction', [TransactionsController::class, 'update']);
 
 Route::delete("/deleteTransaction", [TransactionsController::class, 'destroy']);
 
-Route::post('/testMoneyAccountsController', [MoneyAccountsController::class, 'test']);
+
+Route::post('/saveNewTransfer', [TransferController::class, 'store']);
+
+Route::post('/updateTransfer', [TransferController::class, 'update']);
+
+Route::delete("/deleteTransfer", [TransferController::class, 'destroy']);
+
+
 
 //Route::get('/overview', function() {
 //   return "Here's the overview. Welcome!";

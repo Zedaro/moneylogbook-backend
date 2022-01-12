@@ -50,7 +50,7 @@
                 ref="from"
                 :items="selectItems"
                 :label="$t('form.from')"
-                v-model="from"
+                v-model="fromId"
                 :error-messages="errors"
             ></v-select>
           </validation-provider>
@@ -61,7 +61,7 @@
                 ref="to"
                 :items="selectItems"
                 :label="$t('form.to')"
-                v-model="to"
+                v-model="toId"
                 :error-messages="errors"
             ></v-select>
           </validation-provider>
@@ -184,16 +184,19 @@ export default {
     */
 
     const newForm = this.$route.params.item === 'new';
-    const transfers = this.$store.getters.getTransfers[this.$route.params.item];
+    const transfer = this.$store.getters.getTransfers[this.$route.params.item];
+
+    console.log("transfer:", transfer);
 
     return {
-      name: (newForm) ? ('') : (transfers.name),
-      description: (newForm) ? ('') : (transfers.description),
-      from: (newForm) ? ('') : (transfers.from),
-      to: (newForm) ? ('') : (transfers.to),
-      money: (newForm) ? (null) : (transfers.money),
-      date: (newForm) ? (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10) : (transfers.date),
-      selectItems: (this.$store.getters.getMoneyAccountNames),
+      id: (newForm) ? ('') : (transfer.id),
+      name: (newForm) ? ('') : (transfer.name),
+      description: (newForm) ? ('') : (transfer.description),
+      fromId: (newForm) ? ('') : (transfer.fromId),
+      toId: (newForm) ? ('') : (transfer.toId),
+      money: (newForm) ? (null) : (transfer.money),
+      date: (newForm) ? (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10) : (transfer.date),
+      selectItems: (this.$store.getters.getMoneyAccountSelectionItems),
 
       menu: false,
       dialog: false,
@@ -327,18 +330,20 @@ export default {
       }
       */
 
-      const data = {
+      const transactionData = {
         item: this.$route.params.item,
-        colorFrom: this.$store.getters.getMoneyAccounts.find(account => account.name === this.from).color,
-        colorTo: this.$store.getters.getMoneyAccounts.find(account => account.name === this.to).color,
+        id: this.id,
         name: this.name,
         description: this.description,
-        from: this.from,
-        to: this.to,
+        fromId: this.fromId,
+        toId: this.toId,
         money: parseFloat(this.money.toFixed(2)),   //.replace(/\./g, ','),
         date: this.date
       };
-      this.$store.dispatch('saveTransfer', data)
+
+      console.log("id:", transactionData.id);
+
+      this.$store.dispatch('saveTransfer', transactionData)
           .then((dialogText) => {
             if(dialogText !== undefined) {
               this.dialogText = dialogText;
