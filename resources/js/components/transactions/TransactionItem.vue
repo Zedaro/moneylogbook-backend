@@ -33,6 +33,10 @@ export default {
   props: ['name', 'description', 'money', 'moneyAccountId', 'date', 'index'],
   computed: {
     moneyAccountsExist() {
+      console.log("test");
+      console.log("this.moneyAccountId:", this.moneyAccountId);
+      console.log("HIER LIEGT DER FEHLER: ", this.$store.getters.getMoneyAccountById(this.moneyAccountId));
+
       const account = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.moneyAccountId).name);//this.moneyAccount);
 
       return (typeof account != 'undefined');
@@ -50,6 +54,10 @@ export default {
       const [year, month, day] = this.date.split('-');
       return `${day}.${month}.${year}`;
     }
+  },
+  mounted() {
+      console.log("TransactionItem mounted this.name:", this.name);
+      console.log("TransactionItem mounted this.$store.getters.getMoneyAccountById(this.moneyAccountId).name:", this.$store.getters.getMoneyAccountById(this.moneyAccountId).name);
   }
 }
 </script>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MoneyAccount;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class MoneyAccountsController extends Controller
@@ -118,8 +119,21 @@ class MoneyAccountsController extends Controller
     }
 
     public function editBalance($moneyAccountId, $newBalance) {
-        MoneyAccount::find($moneyAccountId)->money = $newBalance;
+        $moneyAccount = MoneyAccount::find($moneyAccountId);
+        $moneyAccount->money = $newBalance;
+        $moneyAccount->save();
+
+        error_log($moneyAccount->money);
+
+        //error_log('works here');
+
+        return [
+            'changedMoneyAccount' => $moneyAccount,
+            'moneyAccountId' => $moneyAccountId,
+            'newBalance' => $newBalance
+        ];
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -131,4 +145,12 @@ class MoneyAccountsController extends Controller
     {
         MoneyAccount::find($request->id)->delete();
     }
+
+
+    public function test(Request $request) {
+        //$this->editBalance($request->moneyAccountId, $request->newBalance);
+        //return $this->editBalance(5);
+    }
+
+
 }

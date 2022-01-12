@@ -55,7 +55,7 @@ new Vue({
         //store.dispatch('getAllData');
 
         store.dispatch('setLocalStorage', false)
-            .then( () => console.log(this.$store.getters.getState) );
+            .then( () => console.log("store state:", this.$store.getters.getState));
 
 
     },

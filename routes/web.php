@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostsController;
 use App\Models\Post;
@@ -38,7 +39,11 @@ Route::delete('/deleteMoneyAccount', [MoneyAccountsController::class, 'destroy']
 
 Route::post('/saveNewTransaction', [TransactionsController::class, 'store']);
 
+Route::post('/updateTransaction', [TransactionsController::class, 'update']);
 
+Route::delete("/deleteTransaction", [TransactionsController::class, 'destroy']);
+
+Route::post('/testMoneyAccountsController', [MoneyAccountsController::class, 'test']);
 
 //Route::get('/overview', function() {
 //   return "Here's the overview. Welcome!";
