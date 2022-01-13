@@ -125,9 +125,22 @@ export default {
     clickDrawer() {
       this.$store.dispatch("setDrawer");
     },
+    testFunc(property) {
+
+        const obj = {
+            prop1: 'value1',
+            prop2: 'value2'
+        };
+
+        return obj[property];
+
+    },
     test() {
-      //console.log( parseFloat((10.05 + 10.05).toFixed(2)) );
-      console.log(10.1 > 0);
+        //console.log( parseFloat((10.05 + 10.05).toFixed(2)) );
+        //console.log(10.1 > 0);
+
+        console.log('Test result:', this.testFunc('prop1'));
+
     },
     newLocalStorage() {
       this.$store.dispatch('setLocalStorage', true);

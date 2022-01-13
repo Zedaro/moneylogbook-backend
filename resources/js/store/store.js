@@ -4,6 +4,11 @@ import { i18n } from "../languages/lang";
 import axios from "axios";
 Vue.use(Vuex)
 
+// function editTransferBalance(moneyAccount, balance) {
+//
+//     console.log('function call works! moneyAccount:', moneyAccount, "balance:", balance);
+//
+// }
 
 export const store = new Vuex.Store({
     state: {
@@ -550,107 +555,152 @@ export const store = new Vuex.Store({
             context.dispatch('updateLocalStorage');
         },
 
-        async saveTransfer(context, data) {
+        /**
+         * Get necessary data, calculate new balances for from and to, check if from would become negative. If everything is alright, send post request and commit.
+         * @param context
+         * @param {Object} transfer What the user has written in the transfer form
+         * @returns {Promise<*>}
+         */
+        async createTransfer(context, transfer) {
 
-            data.fromName = context.getters.getMoneyAccountById(data.fromId).name;
-            data.toName = context.getters.getMoneyAccountById(data.toId).name;
+            //Get from and to
+            let from = context.getters.getMoneyAccountById(transfer.fromId);
+            let to = context.getters.getMoneyAccountById(transfer.toId);
 
-            data.fromAccount = context.state.localStorage.moneyAccounts.find(account => account.name === data.fromName);
-            data.toAccount = context.state.localStorage.moneyAccounts.find(account => account.name === data.toName);
+            //Calculate new balances
+            let fromAccountNewBalance = parseFloat( (from.money - transfer.money).toFixed(2) );
+            let toAccountNewBalance = parseFloat( ( to.money + transfer.money ).toFixed(2) );
 
-            //Neue Umbuchung
-            if(data.item === 'new') {
-                data.fromAccountNewBalance = parseFloat( (data.fromAccount.money - data.money).toFixed(2) );
-                data.toAccountNewBalance = parseFloat( ( data.toAccount.money + data.money ).toFixed(2) );
+            //Check if from would get negative; Return error string if true
+            if(fromAccountNewBalance < 0) {
+                return i18n.t('form.errorMessages.new.transfer');
+            }
 
-                if(data.fromAccountNewBalance < 0) {
-                    return i18n.t('form.errorMessages.new.transfer');
+            //Send Post Request to create a new transfer entry in the DB with the provided transfer data
+            await axios.post("/saveNewTransfer", { transfer: transfer, newBalance: { from: fromAccountNewBalance, to: toAccountNewBalance } })
+
+                .then((response) => {
+
+                    //Id is null. Attach the ID to the transfer object. Needed for saving it in state.localStorage when calling the mutation
+                    transfer.id = response.data.id;
+                    //Calling the mutation for saving the transfer and its effects on the from and to money accounts
+                    context.commit('saveNewTransfer', { transfer: transfer, from: { moneyAccount: from, newBalance: fromAccountNewBalance }, to: { moneyAccount: to, newBalance: toAccountNewBalance } });
+
+                });
+
+
+            //update localStorage
+            context.dispatch('updateLocalStorage');
+        },
+        async editTransfer(context, { transfer, transferIndex }) {
+
+            //get from and to
+            let fromAccount = context.state.localStorage.moneyAccounts.find(account => account.id === transfer.fromId);
+            let toAccount = context.state.localStorage.moneyAccounts.find(account => account.id === transfer.toId);
+
+            //Get old transfer (for checking if from or to changed; for calculating new balances)
+            let oldTransfer = context.state.localStorage.transfers[transferIndex];
+
+
+
+            //Edit transfer - same moneyAccounts
+            if (oldTransfer.fromId === transfer.fromId && oldTransfer.toId === transfer.toId) {
+
+                //Calculate from and to balances
+                let newFromBalance = parseFloat( (fromAccount.money - (transfer.money - oldTransfer.money) ).toFixed(2));
+                let newToBalance = parseFloat((toAccount.money + (transfer.money - oldTransfer.money)).toFixed(2));
+
+                //If newBalance would be negative, return error text
+                if (newFromBalance < 0) {
+                    return i18n.t('form.errorMessages.edit.transfer.sameMoneyAccounts');
                 }
 
-                await axios.post("/saveNewTransfer", data)
+                //Post request to update transfer entry in DB, then commit
+                await axios.post("/updateTransfer", { transfer: transfer, newBalance: { from: newFromBalance, to: newToBalance } })
                     .then((response) => {
-                        data.id = response.data.id;
-                        context.commit('saveNewTransfer', data);
+                        context.commit('saveEditedTransferTest', { editedMoneyAccounts: 'none', transfer: transfer, transferIndex: transferIndex, from: { moneyAccount: fromAccount, newBalance: newFromBalance }, to: { moneyAccount: toAccount, newBalance: newToBalance } });
                     });
 
             }
-            //Umbuchung bearbeiten
+
+
+
+
+
+            //Edit transfer - different moneyAccount(s)
             else {
-                //Save old transfer in data
-                data.oldTransfer = context.state.localStorage.transfers[data.item];
 
-                const oldTransfer = data.oldTransfer.money;
-                const newTransfer = data.money;
+                //save indexes of the from and to accounts of the oldTransfer
+                data.oldTransfer.fromIndex = context.state.localStorage.moneyAccounts.findIndex(account => account.id === data.oldTransfer.fromId);
+                data.oldTransfer.toIndex = context.state.localStorage.moneyAccounts.findIndex(account => account.id === data.oldTransfer.toId);
 
-                //Umbuchung bearbeiten - ohne Kontoänderung
-                if(data.oldTransfer.fromId === data.fromId  &&  data.oldTransfer.toId === data.toId) {
+                //save the from and to account of the oldTransaction
+                data.oldFromAccount = context.state.localStorage.moneyAccounts[data.oldTransfer.fromIndex];
+                data.oldToAccount = context.state.localStorage.moneyAccounts[data.oldTransfer.toIndex];
 
-                    data.newFromBalance = parseFloat( ( data.fromAccount.money - (newTransfer - oldTransfer) ).toFixed(2) );
-                    data.newToBalance = parseFloat( ( data.toAccount.money + (newTransfer - oldTransfer) ).toFixed(2) ) ;
+                //from und to haben sich geändert
+                if (data.oldTransfer.fromId !== data.fromId && data.oldTransfer.toId !== data.toId) {
 
-                    //if newBalance would be negative, return dialog text
-                    if(data.newFromBalance < 0) {
-                        return i18n.t('form.errorMessages.edit.transfer.sameMoneyAccounts');
+                    //if newFromBalance negative, return dialog text
+                    const newFromBalance = parseFloat((data.fromAccount.money - data.money).toFixed(2));
+                    if (newFromBalance < 0) {
+                        return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.newFromNegative');
                     }
-                    //else saveEditedTransfer
 
-                    await axios.post("/updateTransfer", data)
-                        .then((response) => {
-                            context.commit('saveEditedTransfer', data);
-                        });
+                    //if balance of the old to account would be negative, return dialog text
+                    const toBalance = parseFloat((data.oldToAccount.money - oldTransfer).toFixed(2));
+                    if (toBalance < 0) {
+                        return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.oldToNegative');
+                    }
 
+                    //if both isn't the case, saveEditedTransferWithNewFromTo
+                    //context.commit('saveEditedTransferWithNewFromTo', data);
+                    data.editedMoneyAccounts = 'both';
+                    context.commit('saveEditedTransferTest', data);
                 }
-                //Umbuchung bearbeiten - mit Kontoänderung
+
+
+
+                //from hat sich geändert
+                else if (data.oldTransfer.fromId !== data.fromId) {
+                    //if newFromBalance negative, return dialog text
+                    const newFromBalance = parseFloat((data.fromAccount.money - data.money).toFixed(2));
+                    if (newFromBalance < 0) {
+                        return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.newFromNegative');
+                    }
+
+                    //else saveEditedTransferWithNewFrom
+                    //context.commit('saveEditedTransferWithNewFrom', data);
+                    data.editedMoneyAccounts = 'from';
+                    context.commit('saveEditedTransferTest', data);
+                }
+
+
+
+                //to hat sich geändert
                 else {
-                    //save indexes of the from and to accounts of the oldTransfer
-                    data.oldTransfer.fromIndex = context.state.localStorage.moneyAccounts.findIndex(account => account.name === data.oldTransfer.from);
-                    data.oldTransfer.toIndex = context.state.localStorage.moneyAccounts.findIndex(account => account.name === data.oldTransfer.to);
 
-                    //save the from and to account of the oldTransaction
-                    data.oldFromAccount = context.state.localStorage.moneyAccounts[data.oldTransfer.fromIndex];
-                    data.oldToAccount = context.state.localStorage.moneyAccounts[data.oldTransfer.toIndex];
-
-                    //from und to haben sich geändert
-                    if(data.oldTransfer.from !== data.from  &&  data.oldTransfer.to !== data.to) {
-
-                        //if newFromBalance negative, return dialog text
-                        const newFromBalance = parseFloat( (data.fromAccount.money - data.money).toFixed(2) );
-                        if(newFromBalance < 0) {
-                            return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.newFromNegative');
-                        }
-
-                        //if balance of the old to account would be negative, return dialog text
-                        const toBalance = parseFloat( ( data.oldToAccount.money - oldTransfer ).toFixed(2) );
-                        if(toBalance < 0) {
-                            return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.oldToNegative');
-                        }
-
-                        //if both isn't the case, saveEditedTransferWithNewFromTo
-                        context.commit('saveEditedTransferWithNewFromTo', data);
+                    //if balance of the old to account would be negative, return dialog text
+                    const toBalance = parseFloat((data.oldToAccount.money - oldTransfer).toFixed(2));
+                    if (toBalance < 0) {
+                        return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.oldToNegative');
                     }
-                    //from hat sich geändert
-                    else if(data.oldTransfer.from !== data.from) {
-                        //if newFromBalance negative, return dialog text
-                        const newFromBalance = parseFloat( (data.fromAccount.money - data.money).toFixed(2) );
-                        if(newFromBalance < 0) {
-                            return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.newFromNegative');
-                        }
-                        //else saveEditedTransferWithNewFrom
-                        context.commit('saveEditedTransferWithNewFrom', data);
-                    }
-                    //to hat sich geändert
-                    else {
 
-                        //if balance of the old to account would be negative, return dialog text
-                        const toBalance = parseFloat( ( data.oldToAccount.money - oldTransfer ).toFixed(2) );
-                        if(toBalance < 0) {
-                            return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.oldToNegative');
-                        }
-                        //else saveEditedTransferWithNewTo
-                        context.commit('saveEditedTransferWithNewTo', data);
-                    }
+                    //else saveEditedTransferWithNewTo
+                    //context.commit('saveEditedTransferWithNewTo', data);
+                    data.editedMoneyAccounts = 'to';
+                    context.commit('saveEditedTransferTest', data);
                 }
+
             }
+
+
+
+
+
+
+
+
 
             //update localStorage
             context.dispatch('updateLocalStorage');
@@ -841,16 +891,15 @@ export const store = new Vuex.Store({
             //localStorage.setItem('state', JSON.stringify(state.localStorage));
         },
 
-        saveNewTransfer(state, data) {
-            //save transfer entry
-            state.localStorage.transfers.push( { id: data.id, name: data.name, description: data.description, money: data.money, fromId: data.fromId, toId: data.toId, date: data.date } );
+        saveNewTransfer(state, { transfer, from, to }) {
 
-            //update balances of from and to
-            data.fromAccount.money = data.fromAccountNewBalance; //parseFloat( ( data.fromAccount.money - data.money ).toFixed(2) );
-            data.toAccount.money = data.toAccountNewBalance; //parseFloat( ( data.toAccount.money + data.money ).toFixed(2) );
+            //save transfer in state.localStorage
+            state.localStorage.transfers.push(transfer);
 
-            //update localStorage
-            //localStorage.setItem('state', JSON.stringify(state.localStorage));
+            //update balances of from and to in state.localStorage
+            from.moneyAccount.money = from.newBalance;  //parseFloat( ( data.fromAccount.money - data.money ).toFixed(2) );
+            to.moneyAccount.money = to.newBalance;      //parseFloat( ( data.toAccount.money + data.money ).toFixed(2) );
+
         },
         saveEditedTransfer(state, data) {
             const oldTransfer = data.oldTransfer.money;
@@ -867,17 +916,22 @@ export const store = new Vuex.Store({
         saveEditedTransferWithNewFromTo(state, data) {
             const oldTransfer = data.oldTransfer.money;
             const newTransfer = data.money;
+
             //Geld beim alten from wiederherstellen
             data.oldFromAccount.money = parseFloat( ( data.oldFromAccount.money + oldTransfer ).toFixed(2) );
+
             //Umbuchung vom neuen from abrechnen
             data.fromAccount.money = parseFloat( ( data.fromAccount.money - newTransfer ).toFixed(2) );
+
             //Geld vom alten to wieder abziehen
             data.oldToAccount.money = parseFloat( ( data.oldToAccount.money - oldTransfer ).toFixed(2) );
+
             //Umbuchung auf das neue to rechnen
             data.toAccount.money = parseFloat( ( data.toAccount.money + newTransfer ).toFixed(2) );
 
             //update transfer entry and localStorage
             state.localStorage.transfers[data.item] = { colorFrom: data.colorFrom, colorTo: data.colorTo, name: data.name, description: data.description, money: data.money, from: data.from, to: data.to, date: data.date };
+
             //localStorage.setItem('state', JSON.stringify(state.localStorage));
         },
         saveEditedTransferWithNewFrom(state, data) {
@@ -923,6 +977,88 @@ export const store = new Vuex.Store({
 
             //update localStorage
             //localStorage.setItem('state', JSON.stringify(state.localStorage));
+        },
+
+        saveEditedTransferTest(state, { editedMoneyAccounts, transfer, transferIndex, from, to }) {
+
+            /*data:
+                date: "2022-01-12"
+                description: "rsjkbbkrg"
+                editedMoneyAccounts: "to"
+                fromAccount: {…}
+                fromId: 3
+                fromName: "Bank 3000"
+                id: 2  ->  transfer id
+                item: 1  ->  transfer index in state.localStorage
+                money: 100
+                name: "Test1"
+                oldFromAccount: {…}
+                oldToAccount: {…}
+                oldTransfer: {…}
+                toAccount: {…}
+                toId: 2
+                toName: "ING DiBa"
+                [[Prototype]]: Object
+             */
+
+            const newTransfer = transfer.money;
+
+            debugger;
+
+            //Which moneyAccounts changed? Options: none, from&to, only from, only to
+            switch(editedMoneyAccounts) {
+
+                case 'none':
+                    //update balances of from and to
+                    from.moneyAccount.money = from.newBalance;
+                    to.moneyAccount.money = to.newBalance;
+
+                    break;
+
+                case 'both':
+                    //Geld beim alten from wiederherstellen
+                    data.oldFromAccount.money = parseFloat( ( data.oldFromAccount.money + oldTransfer ).toFixed(2) );
+
+                    //Umbuchung vom neuen from abrechnen
+                    data.fromAccount.money = parseFloat( ( data.fromAccount.money - newTransfer ).toFixed(2) );
+
+                    //Geld vom alten to wieder abziehen
+                    data.oldToAccount.money = parseFloat( ( data.oldToAccount.money - oldTransfer ).toFixed(2) );
+
+                    //Umbuchung auf das neue to rechnen
+                    data.toAccount.money = parseFloat( ( data.toAccount.money + newTransfer ).toFixed(2) );
+
+                    break;
+
+                case 'from':
+                    //Geld beim alten from wiederherstellen
+                    data.oldFromAccount.money = parseFloat( ( data.oldFromAccount.money + oldTransfer ).toFixed(2) );
+                    //Umbuchung vom neuen from abrechnen
+                    data.fromAccount.money = parseFloat( ( data.fromAccount.money - newTransfer ).toFixed(2) );
+                    //to updaten
+                    data.toAccount.money = parseFloat( ( data.toAccount.money + (newTransfer - oldTransfer) ).toFixed(2) );
+
+                    break;
+
+                case 'to':
+                    //Geld vom alten to wieder abziehen
+                    data.oldToAccount.money = parseFloat( ( data.oldToAccount.money - oldTransfer ).toFixed(2) );
+                    //Umbuchung auf das neue to rechnen
+                    data.toAccount.money = parseFloat( ( data.toAccount.money + newTransfer ).toFixed(2) );
+                    //from updaten
+                    data.fromAccount.money = parseFloat( ( data.fromAccount.money - (newTransfer - oldTransfer) ).toFixed(2) );
+
+                    break;
+
+            }
+
+            //Update transfer object in state.localStorage
+            state.localStorage.transfers[transferIndex] = transfer;
+
+            debugger;
+
+            //state.localStorage.transfers[data.item] = transfer;
+
         }
     }
 });

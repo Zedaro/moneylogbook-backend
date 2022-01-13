@@ -37,21 +37,25 @@ class TransferController extends Controller
     {
         $transfer = new Transfer();
 
-        $transfer->name = $request->name;
-        $transfer->description = $request->description;
-        $transfer->from_id = $request->fromId;
-        $transfer->to_id = $request->toId;
-        $transfer->money = $request->money;
-        $transfer->date = $request->date;
+        $transferData = $request->transfer;
+
+        $transfer->name = $transferData['name'];
+        $transfer->description = $request->transfer['description'];
+        $transfer->from_id = $request->transfer['fromId'];
+        $transfer->to_id = $request->transfer['toId'];
+        $transfer->money = $request->transfer['money'];
+        $transfer->date = $request->transfer['date'];
         $transfer->save();
 
         //edit balance of affected account
         $moneyAccountsController = new MoneyAccountsController;
-        $moneyAccountsController -> editBalance($request->fromId, $request->fromAccountNewBalance);
-        $moneyAccountsController -> editBalance($request->toId, $request->toAccountNewBalance);
+        $moneyAccountsController -> editBalance($request->transfer['fromId'], $request->newBalance['from']);
+        $moneyAccountsController -> editBalance($request->transfer['toId'], $request->newBalance['to']);
 
         //return created transfer
-        return $this->showOne($transfer->id);
+        //return $this->showOne($transfer->id);
+
+        return $transfer->id;
     }
 
     /**
@@ -124,21 +128,24 @@ class TransferController extends Controller
      */
     public function update(Request $request)
     {
-        $transfer = Transfer::find($request->id);
+
+        $transferData = $request->transfer;
+
+        $transfer = Transfer::find($transferData['id']);
 
         error_log($request->id);
 
-        $transfer->name = $request->name;
-        $transfer->description = $request->description;
-        $transfer->money = $request->money;
-        $transfer->date = $request->date;
+        $transfer->name = $transferData['name'];
+        $transfer->description = $transferData['description'];
+        $transfer->money = $transferData['money'];
+        $transfer->date = $transferData['date'];
         $transfer->save();
 
         $moneyAccountsController = new MoneyAccountsController();
-        $moneyAccountsController->editBalance($request->fromId, $request->newFromBalance);
-        $moneyAccountsController->editBalance($request->toId, $request->newToBalance);
+        $moneyAccountsController->editBalance($transferData['fromId'], $request->newBalance['from']);
+        $moneyAccountsController->editBalance($transferData['toId'], $request->newBalance['to']);
 
-        return $this->showOne($transfer->id);
+        //return $this->showOne($transfer->id);
     }
 
     /**
