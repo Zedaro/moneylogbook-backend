@@ -645,14 +645,28 @@ export const store = new Vuex.Store({
                 let oldToAccount = context.getters.getMoneyAccountById(oldTransfer.toId);  //context.state.localStorage.moneyAccounts.find(account => account.id === oldTransfer.toId);  //context.state.localStorage.moneyAccounts[oldTransferToIndex];
 
 
-                //if BOTH (from & to) changed
-                if (oldTransfer.fromId !== transfer.fromId && oldTransfer.toId !== transfer.toId) {
+                //--------------------------------------------------------------------
+
+                //Which moneyAccounts were changed? From, to, or both? -> Needed for error checking
+                let changedMoneyAccounts = null;
+                if (oldTransfer.fromId !== transfer.fromId && oldTransfer.toId !== transfer.toId)
+                    changedMoneyAccounts = 'both';
+                else if (oldTransfer.fromId !== transfer.fromId)
+                    changedMoneyAccounts = 'from';
+                else
+                    changedMoneyAccounts = 'to';
+
+                //Error checking for changed from or to accounts or both (-> would the moneyAccount(s) become negative?)
+                if (changedMoneyAccounts === 'from') {
 
                     //if newFromBalance negative, return dialog text
                     const newFromBalance = parseFloat((fromAccount.money - transfer.money).toFixed(2));
                     if (newFromBalance < 0) {
                         return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.newFromNegative');
                     }
+
+                }
+                if (changedMoneyAccounts === 'to') {
 
                     //if balance of the old to account would be negative, return dialog text
                     const oldToNewBalance = parseFloat((oldToAccount.money - oldTransfer.money).toFixed(2));
@@ -660,81 +674,187 @@ export const store = new Vuex.Store({
                         return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.oldToNegative');
                     }
 
-
-                    axios.post()
-
-                    context.commit('saveEditedTransfer', {
-                        changedMoneyAccounts: 'both',
-                        transfer: transfer,
-                        transferIndex: transferIndex,
-                        current: {
-                            fromAccount: fromAccount,
-                            toAccount: toAccount,
-                        },
-                        old: {
-                            fromAccount: oldFromAccount,
-                            toAccount: oldToAccount,
-                            transfer: {
-                                money: oldTransfer.money
-                            }
-                        },
-                    });
                 }
 
-                //Only FROM changed
-                else if (oldTransfer.fromId !== transfer.fromId) {
 
-                    //if newFromBalance negative, return dialog text
-                    const newFromBalance = parseFloat((fromAccount.money - transfer.money).toFixed(2));
-                    if (newFromBalance < 0) {
-                        return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.newFromNegative');
+                //Commit: calculate balances of the accounts (old from & to, current from & to) + save transfer in state
+                context.commit('saveEditedTransfer', {
+                    changedMoneyAccounts: changedMoneyAccounts,
+                    transfer: transfer,
+                    transferIndex: transferIndex,
+                    current: {
+                        fromAccount: fromAccount,
+                        toAccount: toAccount,
+                    },
+                    old: {
+                        fromAccount: oldFromAccount,
+                        toAccount: oldToAccount,
+                        transfer: {
+                            money: oldTransfer.money
+                        }
                     }
+                });
 
-
-                    context.commit('saveEditedTransfer', {
-                        changedMoneyAccounts: 'from',
-                        transfer: transfer,
-                        transferIndex: transferIndex,
-                        current: {
-                            fromAccount: fromAccount,
-                            toAccount: toAccount,
+                //Send post request to server -> update transfer + affected moneyAccounts
+                axios.post('/updateTransfer', {
+                    changedMoneyAccounts: changedMoneyAccounts,
+                    transfer: transfer,
+                    // current: {
+                    //     fromAccount: fromAccount,
+                    //     toAccount: toAccount
+                    // },
+                    // old: {
+                    //     fromAccount: oldFromAccount,
+                    //     toAccount: oldToAccount
+                    // }
+                    current: {
+                        fromAccount: {
+                            id: fromAccount.id,
+                            balance: fromAccount.money
                         },
-                        old: {
-                            fromAccount: oldFromAccount,
-                            transfer: {
-                                money: oldTransfer.money
-                            }
+                        toAccount: {
+                            id: toAccount.id,
+                            balance: toAccount.money
+                        }
+                    },
+                    old: {
+                        fromAccount: {
+                            id: oldFromAccount.id,
+                            balance: oldFromAccount.money
                         },
-                    });
-                }
-
-                //Only TO changed
-                else {
-
-                    //if balance of the old to account would get negative, return dialog text
-                    const toBalance = parseFloat((oldToAccount.money - oldTransfer.money).toFixed(2));
-                    if (toBalance < 0) {
-                        return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.oldToNegative');
+                        toAccount: {
+                            id: oldToAccount.id,
+                            balance: oldToAccount.money
+                        }
                     }
+                });
 
-                    //else saveEditedTransferWithNewTo
-                    //context.commit('saveEditedTransferWithNewTo', data);
-                    context.commit('saveEditedTransfer', {
-                        changedMoneyAccounts: 'to',
-                        transfer: transfer,
-                        transferIndex: transferIndex,
-                        current: {
-                            fromAccount: fromAccount,
-                            toAccount: toAccount,
-                        },
-                        old: {
-                            toAccount: oldToAccount,
-                            transfer: {
-                                money: oldTransfer.money
-                            }
-                        },
-                    });
-                }
+
+                //--------------------------------------------------------------------
+
+
+                // //if BOTH (from & to) changed
+                // if (oldTransfer.fromId !== transfer.fromId && oldTransfer.toId !== transfer.toId) {
+                //
+                //     //if newFromBalance negative, return dialog text
+                //     const newFromBalance = parseFloat((fromAccount.money - transfer.money).toFixed(2));
+                //     if (newFromBalance < 0) {
+                //         return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.newFromNegative');
+                //     }
+                //
+                //     //if balance of the old to account would be negative, return dialog text
+                //     const oldToNewBalance = parseFloat((oldToAccount.money - oldTransfer.money).toFixed(2));
+                //     if (oldToNewBalance < 0) {
+                //         return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.oldToNegative');
+                //     }
+                //
+                //     //Commit: calculate balances of the accounts (old from & to, current from & to) + save transfer in state
+                //     context.commit('saveEditedTransfer', {
+                //         changedMoneyAccounts: 'both',
+                //         transfer: transfer,
+                //         transferIndex: transferIndex,
+                //         current: {
+                //             fromAccount: fromAccount,
+                //             toAccount: toAccount,
+                //         },
+                //         old: {
+                //             fromAccount: oldFromAccount,
+                //             toAccount: oldToAccount,
+                //             transfer: {
+                //                 money: oldTransfer.money
+                //             }
+                //         }
+                //     });
+                //
+                //     axios.post('/updateTransfer', {
+                //         changedMoneyAccounts: 'both',
+                //         transfer: transfer,
+                //         // current: {
+                //         //     fromAccount: fromAccount,
+                //         //     toAccount: toAccount
+                //         // },
+                //         // old: {
+                //         //     fromAccount: oldFromAccount,
+                //         //     toAccount: oldToAccount
+                //         // }
+                //         current: {
+                //             fromAccount: {
+                //                 id: fromAccount.id,
+                //                 balance: fromAccount.money
+                //             },
+                //             toAccount: {
+                //                 id: toAccount.id,
+                //                 balance: toAccount.money
+                //             }
+                //         },
+                //         old: {
+                //             fromAccount: {
+                //                 id: oldFromAccount.id,
+                //                 balance: oldFromAccount.money
+                //             },
+                //             toAccount: {
+                //                 id: oldToAccount.id,
+                //                 balance: oldToAccount.money
+                //             }
+                //         }
+                //     });
+                //
+                // }
+                //
+                // //Only FROM changed
+                // else if (oldTransfer.fromId !== transfer.fromId) {
+                //
+                //     //if newFromBalance negative, return dialog text
+                //     const newFromBalance = parseFloat((fromAccount.money - transfer.money).toFixed(2));
+                //     if (newFromBalance < 0) {
+                //         return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.newFromNegative');
+                //     }
+                //
+                //
+                //     context.commit('saveEditedTransfer', {
+                //         changedMoneyAccounts: 'from',
+                //         transfer: transfer,
+                //         transferIndex: transferIndex,
+                //         current: {
+                //             fromAccount: fromAccount,
+                //             toAccount: toAccount,
+                //         },
+                //         old: {
+                //             fromAccount: oldFromAccount,
+                //             transfer: {
+                //                 money: oldTransfer.money
+                //             }
+                //         },
+                //     });
+                // }
+                //
+                // //Only TO changed
+                // else {
+                //
+                //     //if balance of the old to account would get negative, return dialog text
+                //     const toBalance = parseFloat((oldToAccount.money - oldTransfer.money).toFixed(2));
+                //     if (toBalance < 0) {
+                //         return i18n.t('form.errorMessages.edit.transfer.differentMoneyAccounts.oldToNegative');
+                //     }
+                //
+                //     //else saveEditedTransferWithNewTo
+                //     //context.commit('saveEditedTransferWithNewTo', data);
+                //     context.commit('saveEditedTransfer', {
+                //         changedMoneyAccounts: 'to',
+                //         transfer: transfer,
+                //         transferIndex: transferIndex,
+                //         current: {
+                //             fromAccount: fromAccount,
+                //             toAccount: toAccount,
+                //         },
+                //         old: {
+                //             toAccount: oldToAccount,
+                //             transfer: {
+                //                 money: oldTransfer.money
+                //             }
+                //         },
+                //     });
+                // }
 
             }
 
@@ -837,11 +957,6 @@ export const store = new Vuex.Store({
         },
 
         saveNewTransaction(state, {transaction, moneyAccount, newBalance}) {
-            //state.localStorage.moneyAccounts[data.accountIndex].money += data.money;
-            //const floatFormat = new Intl.NumberFormat('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2,});
-            //const oldBalance = state.localStorage.moneyAccounts[data.accountIndex].money;
-            //const newBalance = parseFloat(floatFormat.format(oldBalance + data.money));
-            //state.localStorage.moneyAccounts[data.accountIndex].money = newBalance;
 
             //save transaction entry in state
             state.localStorage.transactions.push( transaction /*{ name: data.name, description: data.description, money: data.money, moneyAccount: data.moneyAccountId, date: data.date }*/);
@@ -849,11 +964,6 @@ export const store = new Vuex.Store({
             //update account balance
             moneyAccount.money = newBalance;
 
-            //save moneyAccount as variable
-            //const account = state.localStorage.moneyAccounts[data.accountIndex];
-
-
-            //localStorage.setItem('state', JSON.stringify(state.localStorage));
         },
         saveEditedTransaction(state, { transaction, transactionIndex, moneyAccountIndex, newBalance }) {
             //const newTransaction = data.money;

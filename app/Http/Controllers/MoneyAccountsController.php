@@ -118,6 +118,19 @@ class MoneyAccountsController extends Controller
 
     }
 
+    public function updateWithObject($obj) {
+
+        $moneyAccount = MoneyAccount::find($obj['id']);
+
+        $moneyAccount->name = $obj['name'];
+        $moneyAccount->money = $obj['money'];
+        $moneyAccount->color = $obj['color'];
+        $moneyAccount->save();
+
+        return $moneyAccount;
+
+    }
+
     public function editBalance($moneyAccountId, $newBalance) {
         $moneyAccount = MoneyAccount::find($moneyAccountId);
         $moneyAccount->money = $newBalance;

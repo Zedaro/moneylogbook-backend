@@ -128,22 +128,51 @@ class TransferController extends Controller
      */
     public function update(Request $request)
     {
-
+        //Save transfer data, current from&to accounts, old from&to accounts in a variable each -> for easier access
         $transferData = $request->transfer;
+        $current = $request->current;
+        $old = $request->old;
 
+        //Find the transfer in the DB
         $transfer = Transfer::find($transferData['id']);
 
-        error_log($request->id);
-
+        //Update the transfer in the DB
         $transfer->name = $transferData['name'];
         $transfer->description = $transferData['description'];
+        $transfer->from_id = $transferData['fromId'];
+        $transfer->to_id = $transferData['toId'];
         $transfer->money = $transferData['money'];
         $transfer->date = $transferData['date'];
         $transfer->save();
 
+
+
+//        switch($transferData['changedMoneyAccounts']) {
+//
+//            case 'none':
+//
+//            case 'both':
+//
+//            case 'from':
+//
+//            case 'to':
+//
+//
+//        }
+
+
+        //Create MoneyAccountsController, then update balances of the from and to accounts (current and old)
         $moneyAccountsController = new MoneyAccountsController();
-        $moneyAccountsController->editBalance($transferData['fromId'], $request->newBalance['from']);
-        $moneyAccountsController->editBalance($transferData['toId'], $request->newBalance['to']);
+        $moneyAccountsController->editBalance($current['fromAccount']['id'], $current['fromAccount']['balance']);
+        $moneyAccountsController->editBalance($old['fromAccount']['id'], $old['fromAccount']['balance']);
+        $moneyAccountsController->editBalance($current['toAccount']['id'], $current['toAccount']['balance']);
+        $moneyAccountsController->editBalance($old['toAccount']['id'], $old['toAccount']['balance']);
+
+
+//        $moneyAccountsController->updateWithObject($current['fromAccount']);
+//        $moneyAccountsController->updateWithObject($current['toAccount']);
+//        $moneyAccountsController->updateWithObject($old['fromAccount']);
+//        $moneyAccountsController->updateWithObject($old['toAccount']);
 
         //return $this->showOne($transfer->id);
     }
