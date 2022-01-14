@@ -139,7 +139,10 @@ export default {
         //console.log( parseFloat((10.05 + 10.05).toFixed(2)) );
         //console.log(10.1 > 0);
 
-        console.log('Test result:', this.testFunc('prop1'));
+        //console.log('Test result:', this.testFunc('prop1'));
+
+        // let fruits = ['apple', 'banana', 'mango'];
+        // console.table(fruits);
 
     },
     newLocalStorage() {

@@ -50,5 +50,17 @@ class CreateTransfersTable extends Migration
         $transfer->date = '2021-11-05';
         $transfer->save();
 
+
+
+        $transfer = new Transfer();
+
+        $transfer->name = 'Test1';
+        $transfer->description = '';
+        $transfer->from_id = 3;
+        $transfer->to_id = 2;
+        $transfer->money = 100.0;
+        $transfer->date = '2021-11-05';
+        $transfer->save();
+
     }
 }
