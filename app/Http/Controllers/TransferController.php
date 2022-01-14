@@ -183,8 +183,16 @@ class TransferController extends Controller
      * @param  \App\Models\Transfer  $transfer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Transfer $transfer)
+    public function destroy(Request $request)
     {
-        //
+
+        //Delete the transfer entry
+        Transfer::find($request->id)->delete();
+
+        //Update - or rather change back - balances of the from and to account
+        $moneyAccountsController = new MoneyAccountsController;
+        $moneyAccountsController->editBalance($request->fromAccount['id'], $request->fromAccount['balance']);
+        $moneyAccountsController->editBalance($request->toAccount['id'], $request->toAccount['balance']);
+
     }
 }

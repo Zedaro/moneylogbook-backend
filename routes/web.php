@@ -56,6 +56,27 @@ Route::delete("/deleteTransfer", [TransferController::class, 'destroy']);
 
 
 
+Route::get('/{any}', function () {
+
+    return view('index');
+
+})->where('any', '.*');
+
+
+//Route::get('/{path}', function ($path) {
+//    if ($path === 'backend-tests') {
+//        $number = Number::first();
+//        $number->number++;
+//
+//        $number->save();
+//
+//        return view('index', ['number' => $number->number]);
+//    }
+//
+//    return view('index');
+//});
+
+
 //Route::get('/overview', function() {
 //   return "Here's the overview. Welcome!";
 //});
@@ -72,11 +93,11 @@ Route::delete("/deleteTransfer", [TransferController::class, 'destroy']);
 
 //Route::get('/post/{id}', [PostsController::class, 'index']);
 
-Route::resource('posts', PostsController::class);
-
-Route::get('/contact/{id}/{name}', [PostsController::class, 'contact']);
-
-Route::get('/contacts', [PostsController::class, 'contacts']);
+//Route::resource('posts', PostsController::class);
+//
+//Route::get('/contact/{id}/{name}', [PostsController::class, 'contact']);
+//
+//Route::get('/contacts', [PostsController::class, 'contacts']);
 
 
 
@@ -123,96 +144,67 @@ Route::get('/contacts', [PostsController::class, 'contacts']);
 |--------------------------------------------------------------------------
 */
 
-Route::get('/read/all', function() {
-
-    $posts = Post::all();
-
-    $postTitles = [];
-
-    foreach ($posts as $post) {
-        array_push($postTitles, $post->title);
-    }
-
-    return $postTitles;
-
-});
-
-Route::get('/find', function() {
-
-    $post = Post::find(1);
-
-    return $post->title;
-
-});
-
-Route::get('/findwhere', function() {
-
-    $post = Post::where('id', 1)->orderBy('id', 'desc')->take(1)->get();
-
-    return $post;
-
-});
-
-Route::get('/findmore', function() {
-
-//    $post = Post::findOrFail(5);
+//Route::get('/read/all', function() {
+//
+//    $posts = Post::all();
+//
+//    $postTitles = [];
+//
+//    foreach ($posts as $post) {
+//        array_push($postTitles, $post->title);
+//    }
+//
+//    return $postTitles;
+//
+//});
+//
+//Route::get('/find', function() {
+//
+//    $post = Post::find(1);
 //
 //    return $post->title;
-
-    $posts = Post::where('id', '<', 5)->get();
-
-    return $posts;
-
-});
-
-Route::get('/basicinsert', function() {
-
-    $post = new Post;
-
-    $post->title = 'new Eloquent title insert';
-    $post->content = 'Eloquent is so wow';
-
-    $post->save();
-
-});
-
-
-Route::get('/incrementNumber', function() {
-
-    $number = Number::first();
-    $number->number++;
-
-    $number->save();
-
-    return $number->number;
-
-});
-
-
-
-
-
-
-
-Route::get('/', function () {
-    return view('index');
-});
-
-Route::get('{path}', function ($path) {
-//    if ($path === 'backend-tests') {
-//        $number = Number::first();
-//        $number->number++;
 //
-//        $number->save();
+//});
 //
-//        return view('index', ['number' => $number->number]);
-//    }
-    return view('index');
-});
-
-
-
-
-
-
-
+//Route::get('/findwhere', function() {
+//
+//    $post = Post::where('id', 1)->orderBy('id', 'desc')->take(1)->get();
+//
+//    return $post;
+//
+//});
+//
+//Route::get('/findmore', function() {
+//
+////    $post = Post::findOrFail(5);
+////
+////    return $post->title;
+//
+//    $posts = Post::where('id', '<', 5)->get();
+//
+//    return $posts;
+//
+//});
+//
+//Route::get('/basicinsert', function() {
+//
+//    $post = new Post;
+//
+//    $post->title = 'new Eloquent title insert';
+//    $post->content = 'Eloquent is so wow';
+//
+//    $post->save();
+//
+//});
+//
+//
+//Route::get('/incrementNumber', function() {
+//
+//    $number = Number::first();
+//    $number->number++;
+//
+//    $number->save();
+//
+//    return $number->number;
+//
+//});

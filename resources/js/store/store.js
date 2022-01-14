@@ -647,6 +647,8 @@ export const store = new Vuex.Store({
 
                 //--------------------------------------------------------------------
 
+                //Version where I check which moneyAccounts changed just for error checking. Then I just update the transfer and the moneyAccounts by using all data.
+
                 //Which moneyAccounts were changed? From, to, or both? -> Needed for error checking
                 let changedMoneyAccounts = null;
                 if (oldTransfer.fromId !== transfer.fromId && oldTransfer.toId !== transfer.toId)
@@ -732,6 +734,7 @@ export const store = new Vuex.Store({
 
                 //--------------------------------------------------------------------
 
+                //version where I check which moneyAccounts changed, then did different (but very similar) things for each case
 
                 // //if BOTH (from & to) changed
                 // if (oldTransfer.fromId !== transfer.fromId && oldTransfer.toId !== transfer.toId) {
@@ -862,23 +865,51 @@ export const store = new Vuex.Store({
             //update localStorage
             context.dispatch('updateLocalStorage');
         },
-        async deleteTransfer(context, data) {
-            data.transferToDelete = context.state.localStorage.transfers[data.item];
+        /**
+         *
+         * @param context
+         * @param transferId {Number}
+         * @param transferIndex {Number}
+         * @returns {Promise<*>}
+         */
+        async deleteTransfer(context, { transferId, transferIndex }) {
 
-            data.fromAccount = context.state.localStorage.moneyAccounts.find(account => account.name === data.transferToDelete.from);
-            data.toAccount = context.state.localStorage.moneyAccounts.find(account => account.name === data.transferToDelete.to);
+            //Get transfer object from state
+            let transfer = context.state.localStorage.transfers[transferIndex];
 
-            //data.fromAccount = context.state.localStorage.moneyAccounts[fromIndex];
-            //data.toAccount = context.state.localStorage.moneyAccounts[toIndex];
+            //Get from and to account
+            let fromAccount = context.getters.getMoneyAccountById(transfer.fromId);
+            let toAccount = context.getters.getMoneyAccountById(transfer.toId);
 
-            //if balance of the to account would get negative, return dialog text
-            const toBalance = parseFloat( ( data.toAccount.money - data.transferToDelete.money ).toFixed(2) );
+            //Error checking: if balance of the to account would get negative, return dialog text
+            const toBalance = parseFloat( ( toAccount.money - transfer.money ).toFixed(2) );
             if(toBalance < 0) {
                 return i18n.t('form.errorMessages.delete.transfer');
             }
-            //else deleteTransfer
-            context.commit('deleteTransfer', data);
 
+
+            //Commit deletion
+            context.commit('deleteTransfer', {
+                transferMoney: transfer.money,
+                transferIndex: transferIndex,
+                fromAccount: fromAccount,
+                toAccount: toAccount
+            });
+
+            //Send delete request to server -> transfer entry is deleted + from and to account balances are updated
+            axios.delete('/deleteTransfer', {
+                data: {
+                    id: transferId,
+                    fromAccount: {
+                        id: transfer.fromId,
+                        balance: fromAccount.money
+                    },
+                    toAccount: {
+                        id: transfer.toId,
+                        balance: toAccount.money
+                    }
+                }
+            })
 
             //update localStorage
             context.dispatch('updateLocalStorage');
@@ -1114,16 +1145,23 @@ export const store = new Vuex.Store({
         //     //localStorage.setItem('state', JSON.stringify(state.localStorage));
         //
         // },
-        deleteTransfer(state, data) {
-            //Undo transfer in from and to
-            data.fromAccount.money += data.transferToDelete.money;
-            data.toAccount.money -= data.transferToDelete.money;
+        /**
+         *
+         * @param state
+         * @param transferMoney
+         * @param transferIndex {Number}
+         * @param fromAccount {Object}  state object
+         * @param toAccount {Object}    state object
+         */
+        deleteTransfer(state, { transferMoney, transferIndex, fromAccount, toAccount }) {
 
-            //delete transfer entry
-            state.localStorage.transfers.splice(data.item, 1);
+            //Undo transfer effects on the from and to account
+            fromAccount.money += transferMoney;
+            toAccount.money -= transferMoney;
 
-            //update localStorage
-            //localStorage.setItem('state', JSON.stringify(state.localStorage));
+            //delete transfer entry in state
+            state.localStorage.transfers.splice(transferIndex, 1);
+
         },
 
         /**

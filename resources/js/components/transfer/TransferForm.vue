@@ -323,12 +323,6 @@ export default {
             return `${day}.${month}.${year}`;
         },
         saveData() {
-            /*
-              if(typeof this.money == 'string') {
-                this.money = parseFloat(this.money);
-              }
-              */
-
 
             //Create transfer object. Will be used as an argument.
             const transfer = {
@@ -377,22 +371,12 @@ export default {
 
             }
 
-
-
         },
         deleteData() {
-            const data = {
-                item: this.$route.params.item,
-                name: this.name,
-                description: this.description,
-                from: this.from,
-                to: this.to,
-                money: parseFloat(this.money.toFixed(2)),   //.replace(/\./g, ','),
-                date: this.date,
-                //color: this.color
-            };
+            const transferId = this.id;
+            const transferIndex = this.$route.params.item;
 
-            this.$store.dispatch('deleteTransfer', data)
+            this.$store.dispatch('deleteTransfer', { transferId: transferId, transferIndex: transferIndex })
                 .then(() => {
                     this.$router.push({name: 'transfers'});
                 });
