@@ -1,7 +1,7 @@
 <template>
   <div>
-    <repeating-transaction-item v-for="(repeatingTransaction, index) in this.$store.getters.getRepeatingTransactions" :key="index"
-                      :color="repeatingTransaction.color" :name="repeatingTransaction.name" :description="repeatingTransaction.description" :money="repeatingTransaction.money" :moneyAccount="repeatingTransaction.moneyAccount" :startingDate="repeatingTransaction.startingDate" :endingDate="repeatingTransaction.endingDate" :rhythmNumber="repeatingTransaction.rhythmNumber" :rhythmType="repeatingTransaction.rhythmType" :index="index">
+    <repeating-transaction-item v-for="(repTransaction, index) in this.$store.getters.getRepeatingTransactions" :key="index"
+                      :id="repTransaction.id" :name="repTransaction.name" :description="repTransaction.description" :money="repTransaction.money" :moneyAccountId="repTransaction.moneyAccountId" :startingDate="repTransaction.startingDate" :endingDate="repTransaction.endingDate" :rhythmNumber="repTransaction.rhythmNumber" :rhythmType="repTransaction.rhythmType" :index="index">
     </repeating-transaction-item>
   </div>
 </template>

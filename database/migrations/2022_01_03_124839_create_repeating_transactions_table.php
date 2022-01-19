@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\RepeatingTransaction;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,18 +14,22 @@ class CreateRepeatingTransactionsTable extends Migration
      */
     public function up()
     {
+
         Schema::create('repeating_transactions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
+            $table->text('description') -> nullable();
             $table->integer('money_account_id');
             $table->float('money');
             $table->date('starting_date');
-            $table->date('ending_date');
+            $table->date('ending_date') -> nullable();
             $table->integer('interval_number');
-            $table->integer('interval_adverb_id');
+            $table->integer('interval_type');
             $table->timestamps();
         });
+
+        $this->insertInitialDatasets();
+
     }
 
     /**
@@ -35,5 +40,21 @@ class CreateRepeatingTransactionsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('repeating_transactions');
+    }
+
+    public function insertInitialDatasets() {
+
+        $repTransaction = new RepeatingTransaction;
+
+        $repTransaction->name = "Schweigegeld";
+        $repTransaction->description = "...";
+        $repTransaction->money_account_id = 1;
+        $repTransaction->money = 50.0;
+        $repTransaction->starting_date = "2021-11-20";
+        $repTransaction->ending_date = "2021-12-20";
+        $repTransaction->interval_number = 1;
+        $repTransaction->interval_type = 1;
+        $repTransaction->save();
+
     }
 }

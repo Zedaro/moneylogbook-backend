@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RepeatingTransactionController;
 use App\Http\Controllers\TransferController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,15 @@ Route::post('/saveNewTransfer', [TransferController::class, 'store']);
 Route::post('/updateTransfer', [TransferController::class, 'update']);
 
 Route::delete("/deleteTransfer", [TransferController::class, 'destroy']);
+
+
+Route::post('/saveNewRepeatingTransaction', [RepeatingTransactionController::class, 'store']);
+
+Route::post('/updateRepeatingTransaction', [RepeatingTransactionController::class, 'update']);
+
+Route::delete("/deleteRepeatingTransaction/{id}", function($id) {
+    (new RepeatingTransactionController) -> destroy($id);
+});
 
 
 

@@ -327,6 +327,7 @@ export default {
             //Create transfer object. Will be used as an argument.
             const transfer = {
                 id: null || this.id,
+                index: (this.$route.params.item === "new" ? null : this.$route.params.item),
                 name: this.name,
                 description: this.description,
                 fromId: this.fromId,

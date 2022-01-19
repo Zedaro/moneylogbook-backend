@@ -46,6 +46,7 @@ const messages = {
             interval: 'Intervall',
             rhythmNumbers: (ctx) => {
                 let every = "";
+
                 if(ctx.named('rhythmTypeIndex') === 0) {
                     every = "Jede ";
                 } else if(ctx.named('rhythmTypeIndex') === 1) {

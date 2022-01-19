@@ -144,7 +144,19 @@ export default {
         // let fruits = ['apple', 'banana', 'mango'];
         // console.table(fruits);
 
+        this.nextWeekday(2);
+
     },
+      nextWeekday(x) {
+
+          let n = x+1;
+          if(x == 6) n = 0;
+
+          var now = new Date();
+          now.setDate(now.getDate() + (n+(7-now.getDay())) % 7);
+          console.log(now.toISOString().substr(0, 10));
+
+      },
     newLocalStorage() {
       this.$store.dispatch('setLocalStorage', true);
     },

@@ -133,17 +133,16 @@ export const store = new Vuex.Store({
                 ],
                 repeatingTransactions: [
                     {
-                        color: '#EA0A8E',
+                        id: 1,
                         name: 'Schweigegeld',
                         description: '...',
-                        moneyAccount: 'Sparkasse',
+                        moneyAccountId: 1,
                         money: 50.0,
                         startingDate: '2021-11-20',
                         endingDate: '2021-12-20',
                         rhythmNumber: 1,
                         rhythmType: 1,
-                        weekdays: null,
-                        rhythmText: 'Jeden Monat'
+                        weekdays: null
                     }
                 ],
                 transfers: [
@@ -233,6 +232,9 @@ export const store = new Vuex.Store({
         },
         getRepeatingTransaction(state) {
             return (index) => state.localStorage.repeatingTransactions[index];
+        },
+        getRepeatingTransactionById(state) {
+            return (id) => state.localStorage.repeatingTransactions.find(repTransaction => repTransaction.id == id);
         },
         getTransfer(state) {
             return (index) => state.localStorage.transfers[index];
@@ -525,31 +527,63 @@ export const store = new Vuex.Store({
             context.dispatch('updateLocalStorage');
         },
 
-        saveRepeatingTransaction(context, data) {
-            data.accountIndex = context.state.localStorage.moneyAccounts.findIndex(account => account.name === data.moneyAccount);
+        async createRepeatingTransaction(context, repTransaction) {
 
-            if(data.item === 'new') {
-                context.commit('saveNewRepeatingTransaction', data);
-            } else {
-                //hol dir alte und neue Transaktion. Vergleiche die moneyAccount Einträge
-                /*
-                const oldTransaction = context.state.localStorage.transactions[data.item];
-                data.oldTransaction = oldTransaction;
-                if(oldTransaction.moneyAccount === data.moneyAccount) {
-                    context.commit('saveEditedTransaction', data);
-                } else {
-                    data.oldAccountIndex = context.state.localStorage.moneyAccounts.findIndex(account => account.name === oldTransaction.moneyAccount);
-                    context.commit('saveEditedTransactionWithNewMoneyAccount', data);
-                }
-                */
-                context.commit('saveEditedRepeatingTransaction', data);
-            }
+            //Send post request to server; create new repTransaction entry in DB
+            await axios.post("/saveNewRepeatingTransaction", repTransaction)
+                .then((response) => {
+
+                    const today = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10);
+                    //If the starting date is today, create the first transaction of this repeating transaction
+                    if(repTransaction.startingDate == today) {
+
+                        //Create transaction object
+                        let transaction = {
+                            item: "new",
+                            name: repTransaction.name,
+                            description: repTransaction.description,
+                            moneyAccount: context.getters.getMoneyAccountById(repTransaction.moneyAccountId),
+                            moneyAccountId: repTransaction.moneyAccountId,
+                            money: parseFloat(repTransaction.money.toFixed(2)),   //.replace(/\./g, ','),
+                            date: repTransaction.startingDate
+                        };
+
+                        //save the transaction
+                        context.dispatch("saveTransaction", transaction);
+
+                    }
+
+                    //Attach id to the repTransaction object, for saving it in the state via a mutation
+                    repTransaction.id = response.data;
+                    //commit the creation
+                    context.commit('saveNewRepeatingTransaction', repTransaction);
+
+                });
 
             //update localStorage
             context.dispatch('updateLocalStorage');
         },
-        deleteRepeatingTransaction(context, data) {
-            context.commit('deleteRepeatingTransaction', data);
+        async editRepeatingTransaction(context, repTransaction) {
+
+            //Send post request to server; edit repTransaction entry in DB
+            await axios.post("/updateRepeatingTransaction", repTransaction)
+                .then((response) => {
+
+                    //commit changes
+                    context.commit('saveEditedRepeatingTransaction', repTransaction);
+
+                });
+
+            //update localStorage
+            context.dispatch('updateLocalStorage');
+        },
+        async deleteRepeatingTransaction(context, { id, index }) {
+
+            //Send delete request to server; send with id used for deletion of the repTransaction entry in the DB
+            await axios.delete("/deleteRepeatingTransaction/" + id);
+
+            //commit deletion
+            context.commit('deleteRepeatingTransaction', index);
 
             //update localStorage
             context.dispatch('updateLocalStorage');
@@ -1043,30 +1077,23 @@ export const store = new Vuex.Store({
             //localStorage.setItem('state', JSON.stringify(state.localStorage));
         },
 
-        saveNewRepeatingTransaction(state, data) {
-            //save repeatingTransaction entry
-            state.localStorage.repeatingTransactions.push({ color: data.color, name: data.name, description: data.description, money: data.money, moneyAccount: data.moneyAccount, startingDate: data.startingDate, endingDate: data.endingDate, rhythmNumber: data.rhythmNumber, rhythmType: data.rhythmType, weekdays: data.weekdays, rhythmText: data.rhythmText });
-            //state.localStorage.moneyAccounts[data.accountIndex].money += data.money;
+        saveNewRepeatingTransaction(state, repTransaction) {
 
-            //update localStorage
-            //localStorage.setItem('state', JSON.stringify(state.localStorage));
-            //console.log(state.localStorage.repeatingTransactions);
+            //add the new repTransaction to state
+            state.localStorage.repeatingTransactions.push(repTransaction);
+
         },
-        saveEditedRepeatingTransaction(state, data) {
-            console.log('Hi');
+        saveEditedRepeatingTransaction(state, repTransaction) {
 
-            //update repTransaction entry
-            state.localStorage.repeatingTransactions[data.item] = { color: data.color, name: data.name, description: data.description, money: data.money, moneyAccount: data.moneyAccount, startingDate: data.startingDate, endingDate: data.endingDate, rhythmNumber: data.rhythmNumber, rhythmType: data.rhythmType, weekdays: data.weekdays, rhythmText: data.rhythmText };
+            //update the repeating transaction in state
+            state.localStorage.repeatingTransactions[repTransaction.index] = repTransaction;
 
-            //update localStorage
-            //localStorage.setItem('state', JSON.stringify(state.localStorage));
         },
-        deleteRepeatingTransaction(state, data) {
-            //delete repTransaction entry
-            state.localStorage.repeatingTransactions.splice(data.item, 1);
+        deleteRepeatingTransaction(state, index) {
 
-            //update localStorage
-            //localStorage.setItem('state', JSON.stringify(state.localStorage));
+            //delete the repTransaction in state
+            state.localStorage.repeatingTransactions.splice(index, 1);
+
         },
 
         saveNewTransfer(state, { transfer, from, to }) {
@@ -1079,7 +1106,7 @@ export const store = new Vuex.Store({
             to.moneyAccount.money = to.newBalance;      //parseFloat( ( data.toAccount.money + data.money ).toFixed(2) );
 
         },
-        // saveEditedTransfer(state, data) {
+        // old saveEditedTransfer(state, data) {
         //     const oldTransfer = data.oldTransfer.money;
         //     const newTransfer = data.money;
         //
@@ -1148,37 +1175,18 @@ export const store = new Vuex.Store({
         /**
          *
          * @param state
-         * @param transferMoney
-         * @param transferIndex {Number}
-         * @param fromAccount {Object}  state object
-         * @param toAccount {Object}    state object
-         */
-        deleteTransfer(state, { transferMoney, transferIndex, fromAccount, toAccount }) {
-
-            //Undo transfer effects on the from and to account
-            fromAccount.money += transferMoney;
-            toAccount.money -= transferMoney;
-
-            //delete transfer entry in state
-            state.localStorage.transfers.splice(transferIndex, 1);
-
-        },
-
-        /**
-         *
-         * @param state
          * @param changedMoneyAccounts {String} Shows if and which moneyAccounts changed (in comparison to the old transfer)
          * @param transfer {Object} Transfer Object, used for calculation and updating the entry in state.localStorage
          * @param transferIndex {Number} Used for finding the transfer entry in state.localStorage that will be updated
          * @param current {Object} As in "current transfer"
-            * @property fromAccount {Object}
-                * When called with 'none', has properties 'account' and 'newBalance
-            * @property toAccount {Object}
+         * @property fromAccount {Object}
+         * When called with 'none', has properties 'account' and 'newBalance
+         * @property toAccount {Object}
          * @param old {Object}
-            * @property fromAccount {Object}
-            * @property toAccount {Object}
-            * @property transfer {Object} Only has property money
-                * @property money {Float} Money of oldTransfer
+         * @property fromAccount {Object}
+         * @property toAccount {Object}
+         * @property transfer {Object} Only has property money
+         * @property money {Float} Money of oldTransfer
          */
         saveEditedTransfer(state, { changedMoneyAccounts, transfer, transferIndex, current, old }) {
 
@@ -1263,7 +1271,27 @@ export const store = new Vuex.Store({
 
             //state.localStorage.transfers[data.item] = transfer;
 
+        },
+        /**
+         *
+         * @param state
+         * @param transferMoney
+         * @param transferIndex {Number}
+         * @param fromAccount {Object}  state object
+         * @param toAccount {Object}    state object
+         */
+        deleteTransfer(state, { transferMoney, transferIndex, fromAccount, toAccount }) {
+
+            //Undo transfer effects on the from and to account
+            fromAccount.money += transferMoney;
+            toAccount.money -= transferMoney;
+
+            //delete transfer entry in state
+            state.localStorage.transfers.splice(transferIndex, 1);
+
         }
+
+
     }
 });
 
