@@ -25,6 +25,7 @@ class CreateRepeatingTransactionsTable extends Migration
             $table->date('ending_date') -> nullable();
             $table->integer('interval_number');
             $table->integer('interval_type');
+            $table->boolean('expired') -> default(false);
             $table->timestamps();
         });
 
@@ -49,11 +50,14 @@ class CreateRepeatingTransactionsTable extends Migration
         $repTransaction->name = "Schweigegeld";
         $repTransaction->description = "...";
         $repTransaction->money_account_id = 1;
-        $repTransaction->money = 50.0;
-        $repTransaction->starting_date = "2021-11-20";
-        $repTransaction->ending_date = "2021-12-20";
+        $repTransaction->money = 500.0;
+        $repTransaction->starting_date = "2021-07-16";
+        $repTransaction->ending_date = null;
+        //$repTransaction->starting_date = "2021-11-20";
+        //$repTransaction->ending_date = "2021-12-20";
         $repTransaction->interval_number = 1;
         $repTransaction->interval_type = 1;
+        $repTransaction->expired = false;
         $repTransaction->save();
 
     }

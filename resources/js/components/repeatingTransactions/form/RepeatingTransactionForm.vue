@@ -79,7 +79,7 @@
                                 no-title
                                 scrollable
                                 @input="menuStart = false"
-                                :allowed-dates="allowedStartingDates"
+
                                 :disabled="disabled"
                             ></v-date-picker>
                         </v-menu>
@@ -211,7 +211,7 @@
                             no-title
                             scrollable
                             @input="menuEnd = false"
-                            :allowed-dates="allowedEndingDates"
+
                         ></v-date-picker>
                     </v-menu>
 
@@ -410,8 +410,8 @@ export default {
 
             //When you pick "every friday" and 19.01.2022 as the startingDate, but this date is a monday, the date should rather be the date of the friday
             let startingDate = null;
-            //If weekdays are selected
-            if(this.weekdays.length > 0) {
+            //If weekdays are selected -> calculate starting and ending date based on the selectes weekdays
+            if(this.weekdayIndexes.length > 0) {
 
                 //Calculate the date of the earliest weekday that was selected ( [TUE, MON, FRI] -> date of next MON, or today if today is monday )
                 //param: weekday index as used in this app, e.g. 0 => MON, 1 => TUE, ...
@@ -448,7 +448,7 @@ export default {
                 description: this.description,
                 moneyAccountId: this.moneyAccountId,
                 money: parseFloat(this.money.toFixed(2)),   //.replace(/\./g, ','),
-                startingDate: startingDate,
+                startingDate: startingDate || this.startingDate,
                 endingDate: this.endingDate,
                 rhythmNumber: this.rhythmNumberIndex,
                 rhythmType: this.rhythmTypeIndex,
@@ -530,3 +530,29 @@ export default {
 }
 
 </style>
+
+<!--
+
+<v-date-picker
+    v-model="startingDate"
+    no-title
+    scrollable
+    @input="menuStart = false"
+    :allowed-dates="allowedStartingDates"
+    :disabled="disabled"
+></v-date-picker>
+
+-->
+
+
+<!--
+
+<v-date-picker
+    v-model="endingDate"
+    no-title
+    scrollable
+    @input="menuEnd = false"
+    :allowed-dates="allowedEndingDates"
+></v-date-picker>
+
+-->

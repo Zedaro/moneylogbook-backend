@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\RepeatingTransactionController;
 use App\Http\Controllers\TransferController;
+use App\Models\MoneyAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostsController;
@@ -61,8 +62,29 @@ Route::post('/saveNewRepeatingTransaction', [RepeatingTransactionController::cla
 Route::post('/updateRepeatingTransaction', [RepeatingTransactionController::class, 'update']);
 
 Route::delete("/deleteRepeatingTransaction/{id}", function($id) {
+
     (new RepeatingTransactionController) -> destroy($id);
+
 });
+
+
+Route::get("/test", function() {
+
+    //error_log('2022-01-25' > today());
+
+    //return('2022-01-20' == substr(today(), 0, 10));
+
+    //return substr(today(), 0, 10);
+
+    //return strtotime("+1 month");
+
+    //Was bekomme ich bei SELECT zurückgegeben?
+
+
+
+
+});
+
 
 
 

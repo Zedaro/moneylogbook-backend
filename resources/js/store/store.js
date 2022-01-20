@@ -534,6 +534,7 @@ export const store = new Vuex.Store({
                 .then((response) => {
 
                     const today = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10);
+
                     //If the starting date is today, create the first transaction of this repeating transaction
                     if(repTransaction.startingDate == today) {
 

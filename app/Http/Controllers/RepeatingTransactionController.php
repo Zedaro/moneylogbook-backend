@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RepeatingTransaction;
+use App\Models\RepeatingTransactionWeekday;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
@@ -48,6 +49,21 @@ class RepeatingTransactionController extends Controller
         $repTransaction->interval_number = $request->rhythmNumber;
         $repTransaction->interval_type = $request->rhythmType;
         $repTransaction->save();
+
+        //If user selected weekdays
+        if($request->weekdays != null) {
+
+            //Save each selected weekday in repeating_transactions_weekdays table
+            foreach($request->weekdays as $weekdayIndex) {
+
+                $repTransactionsWeekdays = new RepeatingTransactionWeekday;
+                $repTransactionsWeekdays->repeating_transaction_id = $repTransaction->id;
+                $repTransactionsWeekdays->weekday_id = $weekdayIndex + 1;
+                $repTransactionsWeekdays->save();
+
+            }
+
+        }
 
 //        $today = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10);
 //        if($repTransaction->starting_date == today) {
