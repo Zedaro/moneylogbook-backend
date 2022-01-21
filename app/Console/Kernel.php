@@ -6,8 +6,10 @@ use App\Models\MoneyAccount;
 use App\Models\RepeatingTransaction;
 use App\Models\RepeatingTransactionWeekday;
 use App\Models\Transaction;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -36,6 +38,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function() {
 
+            DebugBar::debug("Hello Worldo");
 
             $today = substr(today(), 0, 10);
             $testToday = '2021-08-16';
@@ -74,9 +77,11 @@ class Kernel extends ConsoleKernel
 
                             $weekdays = [];
 
-                            error_log($repTransaction->weekdays());
 
-                            if($repTransaction->weekdays() != undefined) {
+
+                            //Log::channel('errorlog')->debug(print_r($repTransaction->weekdays()));
+
+                            if($repTransaction->weekdays() != 'undefined') {
 
                                 $repTransWeekdays = $repTransaction->weekdays();
 
@@ -88,7 +93,7 @@ class Kernel extends ConsoleKernel
 
                             }
 
-                            error_log($weekdays);
+                            //Log::channel('errorlog')->debug(print_r($weekdays));
 
                             $intervalTypes = ['weeks', 'months', 'years'];
 

@@ -10,6 +10,6 @@ class Transaction extends Model
     use HasFactory;
 
     public function moneyAccount() {
-        return $this->belongsTo(MoneyAccount::class);
+        return $this->belongsTo(MoneyAccount::class, 'money_account_id');
     }
 }

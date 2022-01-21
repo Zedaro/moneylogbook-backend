@@ -10,6 +10,6 @@ class MoneyAccount extends Model
     use HasFactory;
 
     public function transactions () {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(Transaction::class, 'money_account_id');
     }
 }

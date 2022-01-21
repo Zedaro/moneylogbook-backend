@@ -11,7 +11,7 @@ class RepeatingTransaction extends Model
 
     public function weekdays() {
 
-        return $this->hasMany(RepeatingTransactionWeekday::class, 'id', 'repeating_transaction_id');
+        return $this->hasMany(RepeatingTransactionWeekday::class, 'repeating_transaction_id');
 
     }
 

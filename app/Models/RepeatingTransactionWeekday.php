@@ -17,7 +17,7 @@ class RepeatingTransactionWeekday extends Model
 
     public function weekday() {
 
-        return $this->hasOne(Weekday::class, 'weekday_id', 'id');
+        return $this->belongsTo(Weekday::class, 'weekday_id');
 
     }
 

@@ -10,9 +10,9 @@ class Weekday extends Model
 
     use HasFactory;
 
-    public function repeatingTransactionWeekday() {
+    public function repeatingTransactionWeekdays() {
 
-        return $this->belongsToMany(RepeatingTransactionWeekday::class, 'id', 'weekday_id');
+        return $this->hasMany(RepeatingTransactionWeekday::class, 'weekday_id');
 
     }
 
