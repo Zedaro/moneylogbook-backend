@@ -90,12 +90,42 @@ Route::get("/test", function() {
     //DebugBar::debug("Hello Worldo");
 
 
+
+//    //z.B. 1 * 2 Monate, 2 * 2 Monate, 3 * 2 Monate, ...
+//    $intervalString = "+2 mondays";
+//
+//    //datetime(2.Argument): Startdatum + i * Intervall als Zahl. Wird umformatiert zu einem Datum im Format 'Y-m-d'
+//    $nextDate = date('Y-m-d', strtotime( "2021-08-15" . " " . $intervalString ));
+//
+//    return $nextDate;
+
+
     //---------------------------------------------------
 
 
 
     $today = substr(today(), 0, 10);
     $testToday = '2021-08-16';
+
+
+    //Heutiger Wochentag (z.B. Montag) als Zahl
+    $wDayToday = getdate(strtotime("2021-08-16"))['wday'];
+    //Wenn $wday == 0, ist heute ein Sonntag -> setz wday auf 7 (damit ich damit arbeiten kann)
+    if( $wDayToday == 0 ) $wDayToday = 7;
+
+    //Wochentag von startingDate (z.B. Montag) als Zahl
+    $wDayStartingDate = getdate(strtotime('2021-08-12'))['wday'];
+    //Wenn $wday == 0, ist heute ein Sonntag -> setz wday auf 7 (damit ich damit arbeiten kann)
+    if( $wDayStartingDate == 0 ) $wDayStartingDate = 7;
+
+    $difference = abs($wDayToday - $wDayStartingDate);
+
+    $intervalString = "+" . 1 * (2) . " weeks - " . $difference . " days";
+    //datetime(2.Argument): Startdatum + i * Intervall als Zahl. Wird umformatiert zu einem Datum im Format 'Y-m-d'
+    $nextDate = date('Y-m-d', strtotime( "2021-08-12" . " " . $intervalString ));
+
+    return $nextDate;
+
 
 
     //Geh jeden Dauerauftrag in der DB durch
@@ -128,19 +158,40 @@ Route::get("/test", function() {
 
             }
 
-            //Wenn der Dauerauftrag tatsächlich gültig ist
-            //Und der Dauerauftrag bereits begonnen hat oder heute beginnt
+            //Kommt das Programm an diese Stelle, ist der Dauerauftrag tatsächlich noch gültig.
+            //Überprüfe, ob der Dauerauftrag bereits begonnen hat oder heute beginnt
             if( $repTransaction->starting_date <= $testToday ) {
 
                 //Überprüfe, ob heute eine Transaktion anfällt
-                //Vergrößere dafür das Intervall solange, bis ein nächstes Datum größer oder gleich heute ist
-                //Beginne mit dem Startdatum
+                //Beginne mit dem Startdatum.
+                //Dann vergrößere das Intervall solange, bis ein nächstes Datum größer oder gleich heute ist
                 $nextDate = $repTransaction->starting_date;
                 //i wird benutzt, um das Intervall zu vergrößern (zB. 1 * 2 Monate, 2 * 2 Monate, 3 * 2 Monate, ...)
                 $i = 0;
                 while($nextDate <= $testToday) {
 
                     //Wenn Wochentage ausgewählt wurden -> Wenn heute Montag oder Donnerstag ist -> Weiter; sonst: brich die Schleife für diesen Dauerauftrag ab
+
+
+                    //Nimm den Wochentag des startingDates als Zahl. Nimm den heutigen Wochentag als Zahl. Berechne die Differenz.
+                    //Dann geh das Intervall durch und erhöhe es. Dabei machst du zB: startingDate + 1 weeks - differenz.
+
+                    //Heutiger Wochentag (z.B. Montag) als Zahl
+                    $wdayToday = getdate()['wday'];
+                    //Wenn $wday == 0, ist heute ein Sonntag -> setz wday auf 7 (damit ich damit arbeiten kann)
+                    if( $wday == 0 ) $wday = 7;
+
+                    //Wochentag von startingDate (z.B. Montag) als Zahl
+                    $wdayStartingDate = getdate(strtotime($repTransaction->starting_date))['wday'];
+                    //Wenn $wday == 0, ist heute ein Sonntag -> setz wday auf 7 (damit ich damit arbeiten kann)
+                    if( $wday == 0 ) $wday = 7;
+
+                    $difference = abs($wdayToday - $wdayStartingDate);
+
+                    $intervalString = "+" . $i * ($repTransaction->interval_number + 1) . " weeks - " . difference . " days";
+                    //datetime(2.Argument): Startdatum + i * Intervall als Zahl. Wird umformatiert zu einem Datum im Format 'Y-m-d'
+                    $nextDate = date('Y-m-d', strtotime( $repTransaction->starting_date . " " . $intervalString ));
+
 
 
                     $weekdays = [];
@@ -180,7 +231,7 @@ Route::get("/test", function() {
                         //Wenn $wday == 0, ist heute ein Sonntag -> setz wday auf 7 (damit ich damit arbeiten kann)
                         if( $wday == 0 ) $wday = 7;
 
-                        //Überprüfen, ob heute einer der im Intrvall ausgewählten Wochentage ist (Bsp: Intervall beinhaltert Montag -> Ist heute ein Montag?)
+                        //Überprüfen, ob heute einer der im Intervall ausgewählten Wochentage ist (Bsp: Intervall beinhaltet Montag -> Ist heute ein Montag?)
                         foreach($weekdays as $weekday) {
 
                             if($weekday['id'] == $wday) {
@@ -202,6 +253,14 @@ Route::get("/test", function() {
 
 
 
+
+
+
+
+
+
+
+
                     $intervalTypes = ['weeks', 'months', 'years'];
 
                     //z.B. 1 * 2 Monate, 2 * 2 Monate, 3 * 2 Monate, ...
@@ -216,7 +275,7 @@ Route::get("/test", function() {
                     //Wenn ein nächstes Datum des Dauerauftrags gleich heute ist,
                     if( $nextDate == $testToday ) {
 
-                        //Erstelle eine neue Transaktion
+                        //erstelle eine neue Transaktion
                         $transaction = new Transaction;
                         $transaction->name = $repTransaction->name;
                         $transaction->description = $repTransaction->description;
@@ -236,6 +295,9 @@ Route::get("/test", function() {
                             $moneyAccount->save();
 
                         }
+
+                        //Gehe zum nächsten Dauerauftrag
+                        break;
 
                     }
 

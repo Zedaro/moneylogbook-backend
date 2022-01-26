@@ -141,10 +141,13 @@ export default {
             //console.log( parseFloat((10.05 + 10.05).toFixed(2)) );
             //console.log(10.1 > 0);
 
+
             //console.log('Test result:', this.testFunc('prop1'));
+
 
             // let fruits = ['apple', 'banana', 'mango'];
             // console.table(fruits);
+
 
             axios.get("/test")
                 .then((response) => {
@@ -155,6 +158,43 @@ export default {
                 });
 
 
+            // //Heutiger Wochentag (z.B. Montag) als Zahl
+            // const d = new Date('2021-08-19');
+            // let wday = d.getDay();
+            // //Wenn $wday == 0, ist heute ein Sonntag -> setz wday auf 7 (damit ich damit arbeiten kann)
+            // if( wday == 0 ) wday = 7;
+            //
+            // console.log(wday);
+
+
+            // let obj = {
+            //
+            //   apple: 'apple',
+            //   banana: 'banana',
+            //   three: 'three',
+            //   four: 'four',
+            //   five: 'five'
+            //
+            // };
+            //
+            // let a = 1;
+            // let b = 5;
+            //
+            // obj[a] = 'hello';
+            // obj[b] = 'world';
+            //
+            // console.log(obj[5]);
+
+
+            // let arr = [1, 2, 3];
+            // arr.foo = 't';
+            //
+            // console.log(arr);
+            // console.log(arr['foo']);
+
+
+            // console.log(this.nextOrThisWeekday('2021-08-16', [6, 3]));
+
         },
         newLocalStorage() {
             this.$store.dispatch('setLocalStorage', true);
@@ -164,6 +204,96 @@ export default {
         },
         changeLanguage() {
             this.$root.$i18n.locale = this.selectedLangAbbreviation;
+        },
+        nextOrThisWeekday(startingDate, selectedWeekdaysIndexes) {
+
+            // let n = x+1;
+            // if(x == 6) n = 0;
+            //
+            // var now = new Date();
+            // now.setDate(now.getDate() + (n+(7-now.getDay())) % 7);
+            //
+            // return now.toISOString().substr(0, 10);
+
+
+            // let testD = new Date('2021-08-31');
+            //
+            // testD.setDate(36);
+            // console.log(testD);
+            //
+            // return ;
+
+
+
+            //Heutiger Wochentag (z.B. Montag) als Zahl
+            const d = new Date(startingDate);
+            let startingDateWeekday = d.getDay();
+            //Wenn $startingDateWeekday == 0, ist heute ein Sonntag -> setz startingDateWeekday auf 7 (damit ich damit arbeiten kann)
+            if( startingDateWeekday == 0 ) startingDateWeekday = 7;
+            //Make it an index
+            startingDateWeekday = startingDateWeekday - 1;
+
+            //Wenn der Wochentag des startingDates und einer der ausgewählten Wochentage übereinstimmen, dann returne das startingDate.
+            if( selectedWeekdaysIndexes.includes(startingDateWeekday) ) return startingDate;
+
+
+
+
+            //Gehe alle ausgewählten Wochentage durch.
+            //Finde heraus, wie viele Tage Startdatumswochentag und dem nächsten ausgewählten Wochentag besteht. Mache dies für jeden ausgewählten Wochentag.
+
+            const weekdayIndexes = [0, 1, 2, 3, 4, 5, 6];
+
+            let wdIndex = (startingDateWeekday + 1 > 6) ? 0 : startingDateWeekday + 1;
+            let distances = {};
+            let daysUntilReached = 1;
+
+            //debugger;
+
+            for(let selectedWeekdayIndex of selectedWeekdaysIndexes) {
+
+                //calculate distances
+                while(wdIndex !== selectedWeekdayIndex) {
+
+                    wdIndex = (wdIndex + 1 > 6) ? 0 : wdIndex + 1;
+                    daysUntilReached++;
+
+                }
+
+                distances[selectedWeekdayIndex] = daysUntilReached;
+                wdIndex = startingDateWeekday + 1;
+                daysUntilReached = 1;
+
+            }
+
+            //debugger;
+
+            let smallestDistance = Math.min(...Object.values(distances));
+
+            //debugger;
+
+            let nextWeekdayIndex = null;
+            for(let [key, value] of Object.entries(distances)) {
+
+                if( value === smallestDistance ) nextWeekdayIndex = key;
+
+            }
+            //let nextWeekdayIndex = distances.findKey(index => distances.index === smallestDistance);
+
+            console.log("distances:", distances);
+            console.log("smallestDistance:", smallestDistance);
+            console.log("nextWeekdayIndex:", nextWeekdayIndex);
+
+            //debugger;
+
+            let n = nextWeekdayIndex+1;
+            if(nextWeekdayIndex == 6) n = 0;
+
+            var date = new Date(startingDate);
+            date.setDate(date.getDate() + smallestDistance);
+
+            return date.toISOString().substr(0, 10);
+
         }
     },
     watch: {

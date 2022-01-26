@@ -386,15 +386,85 @@ export default {
             const [year, month, day] = date.split('-');
             return `${day}.${month}.${year}`;
         },
-        nextOrThisWeekday(x) {
+        nextOrThisWeekday(startingDate, selectedWeekdaysIndexes) {
 
-            let n = x+1;
-            if(x == 6) n = 0;
+            // let n = x+1;
+            // if(x == 6) n = 0;
+            //
+            // var now = new Date();
+            // now.setDate(now.getDate() + (n+(7-now.getDay())) % 7);
+            //
+            // return now.toISOString().substr(0, 10);
 
-            var now = new Date();
-            now.setDate(now.getDate() + (n+(7-now.getDay())) % 7);
 
-            return now.toISOString().substr(0, 10);
+            //Heutiger Wochentag (z.B. Montag) als Zahl
+            const d = new Date(startingDate);
+            let startingDateWeekday = d.getDay();
+            //Wenn $startingDateWeekday == 0, ist heute ein Sonntag -> setz startingDateWeekday auf 7 (damit ich damit arbeiten kann)
+            if( startingDateWeekday == 0 ) startingDateWeekday = 7;
+            //Make it an index
+            startingDateWeekday = startingDateWeekday - 1;
+
+            //Wenn der Wochentag des startingDates und einer der ausgewählten Wochentage übereinstimmen, dann returne das startingDate.
+            if( selectedWeekdaysIndexes.includes(startingDateWeekday) ) return startingDate;
+
+
+
+
+            //Gehe alle ausgewählten Wochentage durch.
+            //Finde heraus, wie viele Tage Startdatumswochentag und dem nächsten ausgewählten Wochentag besteht. Mache dies für jeden ausgewählten Wochentag.
+
+            const weekdayIndexes = [0, 1, 2, 3, 4, 5, 6];
+
+            let wdIndex = (startingDateWeekday + 1 > 6) ? 0 : startingDateWeekday + 1;
+            let distances = {};
+            let daysUntilReached = 1;
+
+            //debugger;
+
+            for(let selectedWeekdayIndex of selectedWeekdaysIndexes) {
+
+                //calculate distances
+                while(wdIndex !== selectedWeekdayIndex) {
+
+                    wdIndex = (wdIndex + 1 > 6) ? 0 : wdIndex + 1;
+                    daysUntilReached++;
+
+                }
+
+                distances[selectedWeekdayIndex] = daysUntilReached;
+                wdIndex = startingDateWeekday + 1;
+                daysUntilReached = 1;
+
+            }
+
+            //debugger;
+
+            let smallestDistance = Math.min(...Object.values(distances));
+
+            //debugger;
+
+            let nextWeekdayIndex = null;
+            for(let [key, value] of Object.entries(distances)) {
+
+                if( value === smallestDistance ) nextWeekdayIndex = key;
+
+            }
+            //let nextWeekdayIndex = distances.findKey(index => distances.index === smallestDistance);
+
+            console.log("distances:", distances);
+            console.log("smallestDistance:", smallestDistance);
+            console.log("nextWeekdayIndex:", nextWeekdayIndex);
+
+            //debugger;
+
+            let n = nextWeekdayIndex+1;
+            if(nextWeekdayIndex == 6) n = 0;
+
+            var date = new Date(startingDate);
+            date.setDate(date.getDate() + smallestDistance);
+
+            return date.toISOString().substr(0, 10);
 
         },
         saveData() {
@@ -410,12 +480,12 @@ export default {
 
             //When you pick "every friday" and 19.01.2022 as the startingDate, but this date is a monday, the date should rather be the date of the friday
             let startingDate = null;
-            //If weekdays are selected -> calculate starting and ending date based on the selectes weekdays
+            //If weekdays are selected -> calculate starting and ending date based on the selected weekdays
             if(this.weekdayIndexes.length > 0) {
 
                 //Calculate the date of the earliest weekday that was selected ( [TUE, MON, FRI] -> date of next MON, or today if today is monday )
                 //param: weekday index as used in this app, e.g. 0 => MON, 1 => TUE, ...
-                startingDate = this.nextOrThisWeekday(orderedWeekdayIndexes[0]);
+                startingDate = this.nextOrThisWeekday(this.startingDate, orderedWeekdayIndexes);
 
                 //Now the ending date could be an earlier date than the starting date
                 //if the user chose an endingDate
