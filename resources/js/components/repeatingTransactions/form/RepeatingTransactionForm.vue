@@ -485,27 +485,15 @@ export default {
 
                 //Calculate the date of the earliest weekday that was selected ( [TUE, MON, FRI] -> date of next MON, or today if today is monday )
                 //param: weekday index as used in this app, e.g. 0 => MON, 1 => TUE, ...
-                startingDate = this.nextOrThisWeekday(this.startingDate, orderedWeekdayIndexes);
+                this.startingDate = this.nextOrThisWeekday(this.startingDate, orderedWeekdayIndexes);
 
                 //Now the ending date could be an earlier date than the starting date
                 //if the user chose an endingDate
                 if(this.endingDate !== '') {
 
-                    //get the day of the starting and ending date (e.g. 2022-01-19 -> 19)
-                    let startingDateDay = startingDate.substr(8, 10);
-                    let endingDateDay = this.endingDate.substr(8, 10);
-
-                    //get the month of the starting and ending date (e.g. 2022-01-19 -> 01)
-                    let startingDateMonth = startingDate.substr(5, 7);
-                    let endingDateMonth = this.endingDate.substr(5, 7);
-
-                    //get the year of the starting and ending date (e.g. 2022-01-19 -> 2022)
-                    let startingDateYear = startingDate.substr(0, 4);
-                    let endingDateYear = this.endingDate.substr(0, 4);
-
-                    //If endingDate now
-                    if(endingDateDay < startingDateDay  ||  endingDateMonth < startingDateMonth  ||  endingDateYear < startingDateYear) {
-                        this.endingDate = startingDate;
+                    //If endingDate < startingDate
+                    if(this.endingDate < this.startingDate) {
+                        this.endingDate = this.startingDate;
                     }
 
                 }
@@ -523,6 +511,7 @@ export default {
                 rhythmNumber: this.rhythmNumberIndex,
                 rhythmType: this.rhythmTypeIndex,
                 weekdays: (this.weekdayIndexes.length == 0) ? [] : orderedWeekdayIndexes,
+                expired: false
             };
 
             //create new repTransaction
