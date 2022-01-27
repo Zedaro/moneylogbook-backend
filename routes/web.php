@@ -32,7 +32,8 @@ Route::get('/getData', function() {
     $data = [
         'moneyAccounts' => ( new MoneyAccountsController() ) -> show(),
         'transactions' => ( new TransactionsController() ) -> show(),
-        'transfers' => ( new TransferController() ) -> show()
+        'transfers' => ( new TransferController() ) -> show(),
+        'repTransactions' => ( new RepeatingTransactionController() ) -> getAll()
     ];
 
     return $data;
@@ -93,7 +94,7 @@ Route::get("/test", function() {
 //    if( empty($arr) ) return '$arr is empty';
 //    else return '$arr is not empty?';
 
-
+    
 
     //---------------------------------------------------
 

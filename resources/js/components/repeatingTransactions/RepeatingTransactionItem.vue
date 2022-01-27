@@ -1,6 +1,6 @@
 <template>
 
-    <v-card class="list-item" :to="moneyAccountsExist ? item : ''">
+    <v-card class="list-item" :to="(moneyAccountsExist && this.expired == false) ? item : ''">
         <div class="color" :style="{ backgroundColor: this.color }"></div>
         <v-card-title class="card-title">{{ this.name }}</v-card-title>
         <v-card-text class="text-center grey--text">{{ this.description }}</v-card-text>
@@ -16,7 +16,7 @@
 <script>
 export default {
     name: "RepeatingTransactionItem",
-    props: ['id', 'name', 'description', 'money', 'moneyAccountId', 'startingDate', 'endingDate', 'rhythmNumber', 'rhythmType', 'index'],
+    props: ['id', 'name', 'description', 'money', 'moneyAccountId', 'startingDate', 'endingDate', 'rhythmNumber', 'rhythmType', 'expired', 'index'],
     computed: {
         moneyAccountsExist() {
             const account = this.$store.getters.getMoneyAccounts.find(account => account.id === this.moneyAccountId);

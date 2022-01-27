@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RepeatingTransaction;
 use App\Models\RepeatingTransactionWeekday;
 use App\Models\Transaction;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 
 class RepeatingTransactionController extends Controller
@@ -83,15 +84,48 @@ class RepeatingTransactionController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+
+    public function getAll()
     {
-        //
+
+        $repTransactions = RepeatingTransaction::all();
+
+        $obj = [];
+
+        foreach ($repTransactions as $repTransaction) {
+
+            $weekdays = null;
+
+            if($repTransaction->weekdays->first() != null) {
+
+                foreach($repTransaction->weekdays as $weekday) {
+
+                    $weekdays[] = $weekday->weekday_id - 1;
+
+                }
+
+            }
+
+
+            $obj[] = [
+
+                'id' => $repTransaction->id,
+                'name' => $repTransaction->name,
+                'description' => $repTransaction->description,
+                'moneyAccountId' => $repTransaction->money_account_id,
+                'money' => $repTransaction->money,
+                'rhythmNumber' => $repTransaction->interval_number,
+                'rhythmType' => $repTransaction->interval_type,
+                'startingDate' => $repTransaction->starting_date,
+                'endingDate' => ($repTransaction->ending_date == null) ? '' : $repTransaction->ending_date,
+                'weekdays' => $weekdays,
+                'expired' => boolval($repTransaction->expired)
+
+            ];
+        }
+
+        return $obj;
+
     }
 
     /**

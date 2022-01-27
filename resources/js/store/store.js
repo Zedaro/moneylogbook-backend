@@ -132,18 +132,18 @@ export const store = new Vuex.Store({
                     // }
                 ],
                 repeatingTransactions: [
-                    {
-                        id: 1,
-                        name: 'Schweigegeld',
-                        description: '...',
-                        moneyAccountId: 1,
-                        money: 50.0,
-                        startingDate: '2021-11-20',
-                        endingDate: '2021-12-20',
-                        rhythmNumber: 1,
-                        rhythmType: 1,
-                        weekdays: null
-                    }
+                    // {
+                    //     id: 1,
+                    //     name: 'Schweigegeld',
+                    //     description: '...',
+                    //     moneyAccountId: 1,
+                    //     money: 50.0,
+                    //     startingDate: '2021-11-20',
+                    //     endingDate: '2021-12-20',
+                    //     rhythmNumber: 1,
+                    //     rhythmType: 1,
+                    //     weekdays: null
+                    // }
                 ],
                 transfers: [
                     // {
@@ -171,6 +171,9 @@ export const store = new Vuex.Store({
             });
             data.transfers.forEach(transfer => {
                 obj.transfers.push(transfer);
+            });
+            data.repTransactions.forEach(repTransaction => {
+                obj.repeatingTransactions.push(repTransaction);
             });
 
             return obj;
