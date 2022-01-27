@@ -89,6 +89,7 @@
                 no-title
                 scrollable
                 @input="menu = false"
+                first-day-of-week="1"
             ></v-date-picker>
           </v-menu>
           </validation-provider>

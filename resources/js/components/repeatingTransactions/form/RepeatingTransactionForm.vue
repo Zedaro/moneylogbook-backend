@@ -79,6 +79,7 @@
                                 no-title
                                 scrollable
                                 @input="menuStart = false"
+                                first-day-of-week="1"
 
                                 :disabled="disabled"
                             ></v-date-picker>
@@ -180,6 +181,7 @@
                                     v-for="(day, index) in weekdays"
                                     :key="index"
                                     name="chipGroup"
+                                    :disabled="disabled"
                                 >
                                     {{ day }}
                                 </v-chip>
@@ -211,6 +213,7 @@
                             no-title
                             scrollable
                             @input="menuEnd = false"
+                            first-day-of-week="1"
 
                         ></v-date-picker>
                     </v-menu>
@@ -412,7 +415,7 @@ export default {
 
 
             //Gehe alle ausgewählten Wochentage durch.
-            //Finde heraus, wie viele Tage Startdatumswochentag und dem nächsten ausgewählten Wochentag besteht. Mache dies für jeden ausgewählten Wochentag.
+            //Finde heraus, wie viele Tage zwischen dem Startdatumswochentag und dem nächsten ausgewählten Wochentag liegen. Mache dies für jeden ausgewählten Wochentag.
 
             const weekdayIndexes = [0, 1, 2, 3, 4, 5, 6];
 
@@ -544,15 +547,7 @@ export default {
                     this.$router.push({name: 'repeatingTransactions'});
                 });
         }
-    },
-    /*
-    beforeMounted() {
-      if(this.$route.params.item === 'new')
-        this.$store.dispatch('setTitle', 'Neues Konto');
-      else
-        this.$store.dispatch('setTitle', 'Konto bearbeiten');
     }
-     */
 }
 </script>
 

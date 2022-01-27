@@ -171,6 +171,9 @@ class RepeatingTransactionController extends Controller
      */
     public function destroy($id)
     {
-        RepeatingTransaction::find($id) -> delete();
+        $repTransaction = RepeatingTransaction::find($id);
+        RepeatingTransactionWeekday::where('repeating_transaction_id', $repTransaction->id)->delete();
+        $repTransaction->delete();
+
     }
 }
