@@ -968,7 +968,8 @@ export const store = new Vuex.Store({
         },
         */
         setLocalStorage(state, data) {
-            state.localStorage = localStorage.getItem('state') ? JSON.parse(localStorage.getItem('state')) : state.initialLocalStorageLaravel(data);
+            //state.localStorage = localStorage.getItem('state') ? JSON.parse(localStorage.getItem('state')) : state.initialLocalStorageLaravel(data);
+            state.localStorage = state.initialLocalStorageLaravel(data);
 
             state.moneyAccounts = data.moneyAccounts;
             state.transactions = data.transactions;
