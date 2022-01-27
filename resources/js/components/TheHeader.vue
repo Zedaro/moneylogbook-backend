@@ -154,7 +154,7 @@ export default {
                     //console.log("date < today:", response.data);
                     //console.log("php today():", response.data);
                     //console.log("strtotime:", response.data);
-                    console.log("Test", response.data);
+                    console.log("Test:", response.data);
                 });
 
 
