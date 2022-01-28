@@ -17,13 +17,11 @@
         <div class="form-group">
             <label>Benutzername</label>
             <input type="text" name="username" class="form-control">
-            <span class="invalid-feedback"><?php echo $username_err; ?></span>
         </div>
         <!--Passwort-->
         <div class="form-group">
             <label>Passwort</label>
             <input type="password" name="password" class="form-control">
-            <span class="invalid-feedback"><?php echo $password_err; ?></span>
         </div>
         <!--Submit-->
         <div class="form-group">
@@ -77,5 +75,29 @@ export default {
 </script>
 
 <style scoped>
+
+    html {
+        box-sizing: border-box;
+        height: 100%;
+    }
+
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
+
+    body {
+        font: 14px sans-serif;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .wrapper {
+        width: 360px;
+        padding: 20px;
+        border: solid 2px;
+        box-shadow: 5px 10px;
+    }
 
 </style>

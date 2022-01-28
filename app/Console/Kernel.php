@@ -104,11 +104,13 @@ class Kernel extends ConsoleKernel
 
                             //Wochentag von startingDate (z.B. Montag) als Zahl
                             $wDayStartingDate = getdate(strtotime($repTransaction->starting_date))['wday'];
-                            //Wenn $wday == 0, ist heute ein Sonntag -> setz wday auf 7 (damit ich damit arbeiten kann)
+                            //Mach SO = 0 zu SO = 7 (um 1 bis 7, beginnend mit Montag, zu haben)
                             if( $wDayStartingDate == 0 ) $wDayStartingDate = 7;
 
+                            //Berechne die Differenz zwischen dem heutigen Wochentag und dem Wochentag des startingDates (Bsp: Differenz MO DO = Differenz 1 4 = 3)
                             $difference = abs($wDayToday - $wDayStartingDate);
 
+                            //Fang mit dem Startdatum an. Vergrößere das Intervall so lange, bis $nextDate heute oder später als heute ist.
                             while ($nextDate <= $today) {
 
                                 $intervalString = "+" . $i * ($repTransaction->interval_number + 1) . " weeks - " . $difference . " days";
@@ -154,8 +156,10 @@ class Kernel extends ConsoleKernel
                         //Wenn User keine Wochentage ausgewählt hat
                         else {
 
+                            //Fang mit dem Startdatum an. Vergrößere das Intervall so lange, bis $nextDate heute oder später als heute ist.
                             while($nextDate <= $today) {
 
+                                //Für die Erstellung von $intervalString
                                 $intervalTypes = ['weeks', 'months', 'years'];
 
                                 //z.B. 1 * 2 Monate, 2 * 2 Monate, 3 * 2 Monate, ...

@@ -13,12 +13,19 @@ import TransfersPage from "./components/transfer/TransfersPage";
 import TransferForm from "./components/transfer/TransferForm";
 import TestCSS from "./components/TestCSS";
 import BackendTests from "./components/BackendTests";
+import SignUp from "./components/signup/SignUp";
 
 
 const routes = [
     {
         path: '/',
         redirect: 'overview'
+    },
+    {
+        path: '/signup',
+        name: 'signup',
+        component: SignUp,
+        meta: { title: 'Sign Up' }
     },
     {
         path: '/testcss',

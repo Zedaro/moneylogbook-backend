@@ -149,13 +149,13 @@ export default {
             // console.table(fruits);
 
 
-            // axios.get("/test")
-            //     .then((response) => {
-            //         //console.log("date < today:", response.data);
-            //         //console.log("php today():", response.data);
-            //         //console.log("strtotime:", response.data);
-            //         console.log("Test:", response.data);
-            //     });
+            axios.get("/test")
+                .then((response) => {
+                    //console.log("date < today:", response.data);
+                    //console.log("php today():", response.data);
+                    //console.log("strtotime:", response.data);
+                    console.log("Test:", response.data);
+                });
 
 
             // //Heutiger Wochentag (z.B. Montag) als Zahl
@@ -195,10 +195,9 @@ export default {
 
             // console.log(this.nextOrThisWeekday('2021-08-16', [6, 3]));
 
-            const startingDate = '2021-08-16';
-            const endingDate = '2021-08-16';
-
-            console.log(startingDate < endingDate);
+            // const startingDate = '2021-08-16';
+            // const endingDate = '2021-08-16';
+            // console.log(startingDate < endingDate);
 
         },
         newLocalStorage() {

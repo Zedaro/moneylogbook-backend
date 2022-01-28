@@ -73,6 +73,8 @@ Route::delete("/deleteRepeatingTransaction/{id}", function($id) {
 
 });
 
+//Route::post('/signup', [\App\Http\Controllers\UserController::])
+
 
 Route::get("/test", function() {
 
@@ -94,7 +96,7 @@ Route::get("/test", function() {
 //    if( empty($arr) ) return '$arr is empty';
 //    else return '$arr is not empty?';
 
-    
+
 
     //---------------------------------------------------
 
