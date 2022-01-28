@@ -63,7 +63,7 @@ export default {
     data() {
         return {
             menu: false,
-            selectedLangIndex: Object.keys(this.$store.state.localStorage.languages).findIndex(language => language === 'de'),
+            selectedLangIndex: Object.keys(this.$store.state.userData.languages).findIndex(language => language === 'de'),
         }
     },
     computed: {
@@ -111,10 +111,10 @@ export default {
             }
         },
         languages() {
-            return Object.values(this.$store.state.localStorage.languages);
+            return Object.values(this.$store.state.userData.languages);
         },
         languageAbbreviations() {
-            return Object.keys(this.$store.state.localStorage.languages);
+            return Object.keys(this.$store.state.userData.languages);
         },
         selectedLangText() {
             return this.languages[this.selectedLangIndex];
