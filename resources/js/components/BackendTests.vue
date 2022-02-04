@@ -8,27 +8,25 @@
 <!--    </div>-->
 
     <div class="wrapper">
-        <h2>Login</h2>
+        <h2>Registrieren</h2>
         <p>Bitte geben Sie Ihre Nutzerdaten ein, um sich einzuloggen.</p>
 
         <!--Login-Form-->
-        <form method="post">
-        <!--Benutzername-->
-        <div class="form-group">
-            <label>Benutzername</label>
-            <input type="text" name="username" class="form-control">
-        </div>
-        <!--Passwort-->
-        <div class="form-group">
-            <label>Passwort</label>
-            <input type="password" name="password" class="form-control">
-        </div>
-        <!--Submit-->
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Login">
-        </div>
-        <!--Link zum Registrieren-->
-        <p>Sie haben noch keinen Account? <a href="signup.php">Registrieren Sie sich hier</a>.</p>
+        <form @submit.prevent="submit">
+            <!--Benutzername-->
+            <div class="form-group">
+                <v-text-field label="Username"></v-text-field>
+            </div>
+            <!--Passwort-->
+            <div class="form-group">
+                <v-text-field type="password" label="Password"></v-text-field>
+            </div>
+            <!--Submit-->
+            <div class="form-group">
+                <v-btn>Submit</v-btn>
+            </div>
+            <!--Link zum Registrieren-->
+<!--            <p>Sie haben noch keinen Account? <a href="signup.php">Registrieren Sie sich hier</a>.</p>-->
         </form>
     </div>
 
@@ -51,6 +49,11 @@ export default {
                 .then ( function(response) {
                     console.log(response);
                 })
+        },
+        submit() {
+
+
+
         }
     },
     beforeMount() {
@@ -98,6 +101,7 @@ export default {
         padding: 20px;
         border: solid 2px;
         box-shadow: 5px 10px;
+        margin: 50px auto auto;
     }
 
 </style>

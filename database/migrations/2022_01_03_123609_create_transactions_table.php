@@ -14,6 +14,7 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
+
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -24,7 +25,8 @@ class CreateTransactionsTable extends Migration
             $table->timestamps();
         });
 
-        $this->insertInitialDatasets();
+        //$this->insertInitialDatasets();
+
     }
 
     /**
@@ -38,6 +40,7 @@ class CreateTransactionsTable extends Migration
     }
 
     public function insertInitialDatasets() {
+
         $transaction = new Transaction();
 
         $transaction->name = 'Robux';
@@ -46,5 +49,6 @@ class CreateTransactionsTable extends Migration
         $transaction->money = 10.0;
         $transaction->date = '2021-11-05';
         $transaction->save();
+
     }
 }

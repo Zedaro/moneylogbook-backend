@@ -7,6 +7,7 @@ use App\Models\RepeatingTransaction;
 use App\Models\Transaction;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostsController;
@@ -95,6 +96,14 @@ Route::get("/test", function() {
 //    $arr = [];
 //    if( empty($arr) ) return '$arr is empty';
 //    else return '$arr is not empty?';
+
+    //return MoneyAccount::all()->count();
+    //return MoneyAccount::orderBy('id', 'desc')->first()->id;
+
+//    return (new MoneyAccountsController) -> update([
+//        'id' => 2,
+//        'name' =>
+//    ]);
 
 
 
@@ -301,7 +310,15 @@ Route::get("/test", function() {
 
 });
 
+Route::get('/refreshDB', function() {
 
+    Artisan::call('migrate:refresh');
+    Artisan::call('db:seed');
+
+});
+
+
+Auth::routes();
 
 
 Route::get('/{any}', function () {

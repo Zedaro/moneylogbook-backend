@@ -14,7 +14,7 @@
                 <v-icon>mdi-head-question-outline</v-icon>
             </v-btn>
 
-            <v-btn class="newLocalStorageButton my-auto" @click="newLocalStorage" fab depressed>
+            <v-btn class="newLocalStorageButton my-auto" @click="refreshDB" fab depressed>
                 <v-icon>mdi-reload</v-icon>
             </v-btn>
 
@@ -200,8 +200,8 @@ export default {
             // console.log(startingDate < endingDate);
 
         },
-        newLocalStorage() {
-            this.$store.dispatch('setLocalStorage', true);
+        refreshDB() {
+            this.$store.dispatch('refreshDB');
         },
         deleteLocalStorage() {
             localStorage.removeItem('state');

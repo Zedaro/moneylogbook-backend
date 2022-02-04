@@ -22,7 +22,7 @@ class CreateMoneyAccounts extends Migration
             $table->timestamps();
         });
 
-        $this->insertInitialDatasets();
+        //$this->insertInitialDatasets();
     }
 
     /**

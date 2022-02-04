@@ -221,63 +221,15 @@ export const store = new Vuex.Store({
         getMoneyAccount(state) {
             return (accountName) => state.userData.moneyAccounts.find(account => account.name === accountName);
         },
+        getMoneyAccounts(state) {
+            return state.userData.moneyAccounts; //state.moneyAccounts;
+        },
         getMoneyAccountById(state) {
             return (id) => state.userData.moneyAccounts.find(account => account.id === id);
         },
         getMoneyAccountByIndex(state) {
             return (index) => state.userData.moneyAccounts[index];
         },
-        getTransaction(state) {
-            return (index) => state.userData.transactions[index];
-        },
-        getTransactionById(state) {
-            return (id) => state.userData.transactions.find(transaction => transaction.id == id);
-        },
-        getRepeatingTransaction(state) {
-            return (index) => state.userData.repeatingTransactions[index];
-        },
-        getRepeatingTransactionById(state) {
-            return (id) => state.userData.repeatingTransactions.find(repTransaction => repTransaction.id == id);
-        },
-        getTransfer(state) {
-            return (index) => state.userData.transfers[index];
-        },
-        getTransferByIndex(state) {
-          return (index) => state.userData.transfers[index];
-        },
-        getColor(state, getters) {
-            return (id) => getters.getMoneyAccountById(id).color;
-        },
-
-
-
-        getLocalStorage() {
-            return JSON.parse(localStorage.getItem('state'));
-        },
-        getState(state) {
-            return state;
-        },
-        getDrawer: state => {
-            return state.drawer;
-        },
-        getDrawerListItems(state) {
-            return state.drawerListItems;
-        },
-        getToolbarTitle(state) {
-            return state.userData.toolbarTitle;
-        },
-        getMoneyAccounts(state) {
-            return state.userData.moneyAccounts; //state.moneyAccounts;
-        },
-        getMoney(state) {
-            const unformattedMoney = state.userData.moneyAccounts[this.$route.params.item].money;
-            const formattedMoney = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(unformattedMoney).replace('€');
-            return formattedMoney;
-        },
-        getTotalMoney(state) {
-            return state.userData.totalMoney;
-        },
-
         getMoneyAccountNames(state) {
             let names = [];
             state.userData.moneyAccounts.forEach( (account) => names.push(account.name) );
@@ -296,24 +248,67 @@ export const store = new Vuex.Store({
 
             return selectionItems;
         },
+
+        getTransaction(state) {
+            return (index) => state.userData.transactions[index];
+        },
         getTransactions(state) {
             return state.userData.transactions;
+        },
+        getTransactionById(state) {
+            return (id) => state.userData.transactions.find(transaction => transaction.id == id);
+        },
+
+        getRepeatingTransaction(state) {
+            return (index) => state.userData.repeatingTransactions[index];
         },
         getRepeatingTransactions(state) {
             return state.userData.repeatingTransactions;
         },
+        getRepeatingTransactionById(state) {
+            return (id) => state.userData.repeatingTransactions.find(repTransaction => repTransaction.id == id);
+        },
+
+        getTransfer(state) {
+            return (index) => state.userData.transfers[index];
+        },
         getTransfers(state) {
             return state.userData.transfers;
-        }
+        },
+        getTransferByIndex(state) {
+          return (index) => state.userData.transfers[index];
+        },
+
+        getMoney(state) {
+            const unformattedMoney = state.userData.moneyAccounts[this.$route.params.item].money;
+            const formattedMoney = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(unformattedMoney).replace('€');
+            return formattedMoney;
+        },
+        getTotalMoney(state) {
+            return state.userData.totalMoney;
+        },
+
+        getState(state) {
+            return state;
+        },
+        getColor(state, getters) {
+            return (id) => getters.getMoneyAccountById(id).color;
+        },
+        getToolbarTitle(state) {
+            return state.userData.toolbarTitle;
+        },
+
+        getDrawer: state => {
+            return state.drawer;
+        },
+        getDrawerListItems(state) {
+            return state.drawerListItems;
+        },
+
     },
     actions: {
 
-        updateLocalStorage(context) {
-
-            localStorage.setItem('state', JSON.stringify(context.state.userData));
-
-        },
-        async setLocalStorage(context, reset) {
+        async getUserData(context) {
 
             let data = null;
 
@@ -324,28 +319,17 @@ export const store = new Vuex.Store({
                     data = response.data
                 });
 
-            // await axios.post('/testMoneyAccountsController', { moneyAccountId: 2, newBalance: 5000.00 })
-            //     .then((response) => {
-            //        console.log('test:');
-            //        console.log(response.data);
-            //     });
+            context.commit('setUserData', data);
 
-            if(reset) {
-                localStorage.clear();
-
-                localStorage.setItem('state', JSON.stringify(context.state.initialUserData(data)));
-                console.log("state.userData after reset:", context.state.userData);
-                window.location.reload();
-            }
-
-            context.commit('setLocalStorage', data);
         },
+        async refreshDB(context) {
 
-        getAllData(context) {
-            axios.get('/getData')
+            await axios.get('/refreshDB')
+                .then(() => {
+                    window.location.reload();
+                })
+
         },
-
-
 
         setState(context) {
             context.commit('setState');
@@ -364,6 +348,7 @@ export const store = new Vuex.Store({
         },
 
         async saveMoneyAccount(context, data) {
+
             //New MoneyAccount
             if(data.item === 'new') {
 
@@ -397,11 +382,6 @@ export const store = new Vuex.Store({
 
             }
 
-
-
-            //update localStorage
-            context.dispatch('updateLocalStorage');
-            console.log('localStorage updated');
         },
         async deleteMoneyAccount(context, data) {
 
@@ -410,13 +390,12 @@ export const store = new Vuex.Store({
 
                     context.commit('deleteMoneyAccount', { index: data.index });
 
-                    //update localStorage
-                    context.dispatch('updateLocalStorage');
                 });
 
         },
 
         async saveTransaction(context, data) {
+
             //New Transaction
             if(data.item === 'new') {
                 const balance = data.moneyAccount.money;
@@ -500,10 +479,9 @@ export const store = new Vuex.Store({
                 }
             }
 
-            //update localStorage
-            context.dispatch('updateLocalStorage');
         },
         async deleteTransaction(context, data) {
+
             data.transactionToDelete = context.getters.getTransaction(data.item); //context.state.userData.transactions[data.item];
             data.account = context.getters.getMoneyAccountById(data.transactionToDelete.moneyAccountId);  //context.getters.getMoneyAccount(data.transactionToDelete.moneyAccount); //context.state.userData.moneyAccounts.find(account => account.name === data.transactionToDelete.moneyAccount);
 
@@ -526,8 +504,6 @@ export const store = new Vuex.Store({
 
             }
 
-            //update localStorage
-            context.dispatch('updateLocalStorage');
         },
 
         async createRepeatingTransaction(context, repTransaction) {
@@ -564,8 +540,6 @@ export const store = new Vuex.Store({
 
                 });
 
-            //update localStorage
-            context.dispatch('updateLocalStorage');
         },
         async editRepeatingTransaction(context, repTransaction) {
 
@@ -578,8 +552,6 @@ export const store = new Vuex.Store({
 
                 });
 
-            //update localStorage
-            context.dispatch('updateLocalStorage');
         },
         async deleteRepeatingTransaction(context, { id, index }) {
 
@@ -589,8 +561,6 @@ export const store = new Vuex.Store({
             //commit deletion
             context.commit('deleteRepeatingTransaction', index);
 
-            //update localStorage
-            context.dispatch('updateLocalStorage');
         },
 
         /**
@@ -626,9 +596,6 @@ export const store = new Vuex.Store({
 
                 });
 
-
-            //update localStorage
-            context.dispatch('updateLocalStorage');
         },
         async editTransfer(context, { transfer, transferIndex }) {
 
@@ -899,9 +866,6 @@ export const store = new Vuex.Store({
 
             }
 
-
-            //update localStorage
-            context.dispatch('updateLocalStorage');
         },
         /**
          *
@@ -949,34 +913,17 @@ export const store = new Vuex.Store({
                 }
             })
 
-            //update localStorage
-            context.dispatch('updateLocalStorage');
         },
-
-        // eslint-disable-next-line no-unused-vars
-        test(context, data) {
-            return "Hello World";
-        }
     },
     mutations: {
-        /*
-        updateLocalStorage(state) {
-            localStorage.setItem('state', JSON.stringify(state));
-        },
-        setState(state) {
-            state.moneyAccounts = JSON.parse(localStorage.getItem('state')).moneyAccounts;
-        },
-        */
-        setLocalStorage(state, data) {
-            //state.userData = localStorage.getItem('state') ? JSON.parse(localStorage.getItem('state')) : state.initialUserData(data);
+
+        setUserData(state, data) {
+
             state.userData = state.initialUserData(data);
 
-            state.moneyAccounts = data.moneyAccounts;
-            state.transactions = data.transactions;
-            state.transfers = data.transfers;
-            console.log('Money Accounts from DB:', state.moneyAccounts);
-
             state.loading = false;
+
+            //state.userData = localStorage.getItem('state') ? JSON.parse(localStorage.getItem('state')) : state.initialUserData(data);
 
             // axios.get('/getData')
             //     .then( function(response) {
@@ -995,35 +942,26 @@ export const store = new Vuex.Store({
         updateTotalMoney(state, updatedTotalMoney) {
             //update totalMoney entry in state
             state.userData.totalMoney = updatedTotalMoney;
-
-            //update localStorage
-            localStorage.setItem('state', JSON.stringify(state.userData));
         },
 
         saveNewMoneyAccount(state, moneyAccount) {
+
             //save moneyAccount in state
             state.userData.moneyAccounts.push(moneyAccount);
 
-            console.log('committed');
-
-            //update localStorage
-            //localStorage.setItem('state', JSON.stringify(state.userData));
         },
         saveEditedMoneyAccount(state, { moneyAccountIndex, updatedData }) {
+
             //update moneyAccount entry in state
             //state.userData.moneyAccounts[data.item] = { name: data.name, money: data.money, color: data.color };
             state.userData.moneyAccounts[moneyAccountIndex] = updatedData;
 
-
-            //update localStorage
-            //localStorage.setItem('state', JSON.stringify(state.userData));
         },
         deleteMoneyAccount(state, { index }) {
+
             //delete moneyAccount in state
             state.userData.moneyAccounts.splice(index, 1);
 
-            //update localStorage
-            //localStorage.setItem('state', JSON.stringify(state.userData‚));
         },
 
         saveNewTransaction(state, {transaction, moneyAccount, newBalance}) {
@@ -1051,8 +989,6 @@ export const store = new Vuex.Store({
 
             console.log("saveEditedTransaction - transactions[transactionIndex after store entry is edited:]", state.userData.transactions[transactionIndex]);
 
-            //update localStorage
-            //localStorage.setItem('state', JSON.stringify(state.userData));
         },
         saveEditedTransactionWithNewMoneyAccount(state, { data, transaction }) {
             //const newTransaction = data.money;
@@ -1069,17 +1005,14 @@ export const store = new Vuex.Store({
             //update transaction entry in state
             state.userData.transactions[data.item] = transaction; /*name: data.name, description: data.description, money: data.money, moneyAccount: data.moneyAccountId, date: data.date*/
 
-            //update localStorage
-            //localStorage.setItem('state', JSON.stringify(state.userData));
         },
         deleteTransaction(state, data) {
+
             //undo transaction
             data.account.money =  data.newBalance;
             //delete transaction entry in state
             state.userData.transactions.splice(data.item, 1);
 
-            //update localStorage
-            //localStorage.setItem('state', JSON.stringify(state.userData));
         },
 
         saveNewRepeatingTransaction(state, repTransaction) {
@@ -1295,7 +1228,6 @@ export const store = new Vuex.Store({
             state.userData.transfers.splice(transferIndex, 1);
 
         }
-
 
     }
 });

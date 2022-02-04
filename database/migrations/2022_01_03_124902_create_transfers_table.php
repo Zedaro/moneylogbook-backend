@@ -14,6 +14,7 @@ class CreateTransfersTable extends Migration
      */
     public function up()
     {
+
         Schema::create('transfers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -25,7 +26,8 @@ class CreateTransfersTable extends Migration
             $table->timestamps();
         });
 
-        $this->insertInitialDatasets();
+        //$this->insertInitialDatasets();
+
     }
 
     /**
