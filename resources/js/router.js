@@ -14,6 +14,8 @@ import TransferForm from "./components/transfer/TransferForm";
 import TestCSS from "./components/TestCSS";
 import BackendTests from "./components/BackendTests";
 import SignUp from "./components/signup/SignUp";
+import LoginPage from "./components/login/LoginPage";
+
 
 
 const routes = [
@@ -26,6 +28,12 @@ const routes = [
         name: 'signup',
         component: SignUp,
         meta: { title: 'Sign Up' }
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: LoginPage,
+        meta: { title: 'Login' }
     },
     {
         path: '/testcss',

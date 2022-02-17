@@ -17,9 +17,25 @@
 
                 <validation-provider rules="required">
                     <v-text-field
+                        label="E-Mail"
+                        type="email"
+                        v-model="email"
+                    ></v-text-field>
+                </validation-provider>
+
+                <validation-provider rules="required">
+                    <v-text-field
                         label="Password"
                         type="password"
                         v-model="password"
+                    ></v-text-field>
+                </validation-provider>
+
+                <validation-provider rules="required">
+                    <v-text-field
+                        label="Confirm password"
+                        type="password"
+                        v-model="password_confirmation"
                     ></v-text-field>
                 </validation-provider>
 
@@ -45,7 +61,9 @@ export default {
         return {
 
             username: null,
-            password: null
+            email: null,
+            password: null,
+            password_confirmation: null
 
         }
     },
@@ -56,7 +74,9 @@ export default {
             let userData = {
 
                 username: this.username,
-                password: this.password
+                email: this.email,
+                password: this.password,
+                password_confirmation: this.password_confirmation
 
             }
 
