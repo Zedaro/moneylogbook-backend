@@ -318,7 +318,7 @@ Route::get('/refreshDB', function() {
 });
 
 
-Auth::routes();
+//Auth::routes();
 
 
 Route::get('/{any}', function () {
