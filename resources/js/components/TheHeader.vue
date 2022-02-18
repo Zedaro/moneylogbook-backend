@@ -51,6 +51,8 @@
                 </v-list>
             </v-menu>
 
+            <v-btn @click="logout">{{ this.$t('logout') }}</v-btn>
+
         </div>
 
 
@@ -298,7 +300,10 @@ export default {
 
             return date.toISOString().substr(0, 10);
 
-        }
+        },
+        logout() {
+            axios.post('/logout');
+        },
     },
     watch: {
         selectedLangIndex() {

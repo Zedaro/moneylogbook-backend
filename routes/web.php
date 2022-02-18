@@ -338,7 +338,7 @@ Route::get('/{any}', function () {
 
     return view('index')->with('authenticated', 'yes');
 
-})->where('any', '.*')->middleware('auth');
+})->where('any', '.*')->middleware('auth:sanctum');
 
 
 //Route::get('/{path}', function ($path) {

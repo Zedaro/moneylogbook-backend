@@ -115,6 +115,7 @@ const messages = {
             password: 'Passwort',
             confirmPassword: 'Passwort wiederholen'
         },
+        logout: 'Ausloggen',
         moneyFormat: {
             monetaryUnit: '€',
             format: () => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
@@ -221,6 +222,7 @@ const messages = {
             password: 'Password',
             confirmPassword: 'Repeat Password'
         },
+        logout: 'Logout',
         moneyFormat: {
             monetaryUnit: '$',
             format: () => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
