@@ -30,7 +30,7 @@ import axios from "axios";
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
+Vue.component('app-component', require('./components/App.vue').default);
 
 
 //Vue App erstellen und rendern
@@ -56,5 +56,5 @@ new Vue({
             .then( () => console.log("store state:", this.$store.getters.getState));
 
     },
-    render: h => h(App)
+    //render: h => h(App)
 })

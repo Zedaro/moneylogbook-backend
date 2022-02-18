@@ -318,14 +318,27 @@ Route::get('/refreshDB', function() {
 });
 
 
-//Auth::routes();
+Route::get('/login', function() {
+
+    return view('index')
+        ->with('authenticated', 'no');
+
+})->middleware('guest:web')->name('login');
+
+
+Route::get('/signup', function() {
+
+    return view('index')
+        ->with('authenticated', 'no');
+
+})->middleware('guest:web')->name('signup');
 
 
 Route::get('/{any}', function () {
 
-    return view('index');
+    return view('index')->with('authenticated', 'yes');
 
-})->where('any', '.*');
+})->where('any', '.*')->middleware('auth');
 
 
 //Route::get('/{path}', function ($path) {

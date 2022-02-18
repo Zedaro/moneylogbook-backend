@@ -23,7 +23,7 @@
                     ></v-text-field>
                 </validation-provider>
 
-                <v-btn>{{ $t('authenticationForms.loginLabel') }}</v-btn>
+                <v-btn type="submit">{{ $t('authenticationForms.loginLabel') }}</v-btn>
 
                 <a href="/signup" class="signup-link">{{ $t('authenticationForms.signupLabel') }}</a>
 
@@ -47,28 +47,22 @@ export default {
         return {
 
             //username: null,
-            email: null,
-            password: null
+            email: 'Bobsen24@Bob.com',
+            password: 'testtesttest'
 
         }
     },
     methods: {
-
         login() {
 
-            let userData = {
+            axios.get('/sanctum/csrf-cookie').then(response => {
 
-                //username: this.username,
-                email: this.email,
-                password: this.password
+                axios.post('/login', this.$data);
 
-            }
-
-            axios.post('/login', userData);
+            });
 
         }
-
-    }
+    },
 
 }
 </script>

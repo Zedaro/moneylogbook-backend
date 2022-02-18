@@ -110,7 +110,7 @@ const messages = {
         authenticationForms: {
             loginLabel: 'Einloggen',
             signupLabel: 'Registrieren',
-            username: 'Benutzername',
+            name: 'Name',
             email: 'E-Mail',
             password: 'Passwort',
             confirmPassword: 'Passwort wiederholen'
@@ -216,7 +216,7 @@ const messages = {
         authenticationForms: {
             loginLabel: 'Login',
             signupLabel: 'Sign up',
-            username: 'Username',
+            name: 'Name',
             email: 'Email',
             password: 'Password',
             confirmPassword: 'Repeat Password'

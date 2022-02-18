@@ -9,9 +9,9 @@
 
                 <validation-provider rules="required">
                     <v-text-field
-                        :label="$t('authenticationForms.username')"
+                        :label="$t('authenticationForms.name')"
                         type="text"
-                        v-model="username"
+                        v-model="name"
                     ></v-text-field>
                 </validation-provider>
 
@@ -39,7 +39,7 @@
                     ></v-text-field>
                 </validation-provider>
 
-                <v-btn>{{ $t('authenticationForms.signupLabel') }}</v-btn>
+                <v-btn type="submit">{{ $t('authenticationForms.signupLabel') }}</v-btn>
 
                 <a href="/login" class="login-link">{{ $t('authenticationForms.loginLabel') }}</a>
 
@@ -62,27 +62,20 @@ export default {
     data() {
         return {
 
-            username: null,
-            email: null,
-            password: null,
-            password_confirmation: null
+            name: 'Bob Bobsen',
+            email: 'Bobsen24@Bob.de',
+            password: 'testtesttest',
+            password_confirmation: 'testtesttest'
 
         }
     },
     methods: {
 
-        signUp() {
+        async signUp() {
 
-            let userData = {
-
-                username: this.username,
-                email: this.email,
-                password: this.password,
-                password_confirmation: this.password_confirmation
-
-            }
-
-            axios.post('/signup', userData);
+            console.log('hi');
+            await axios.get('/sanctum/csrf-cookie');
+            await axios.post('/register', this.$data);
 
         }
 
