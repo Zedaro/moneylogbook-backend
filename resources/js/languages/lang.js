@@ -107,6 +107,14 @@ const messages = {
             weekdays: ['MO', 'DI', 'MI', 'DO', 'FR', 'SA', 'SO'],
 
         },
+        authenticationForms: {
+            loginLabel: 'Einloggen',
+            signupLabel: 'Registrieren',
+            username: 'Benutzername',
+            email: 'E-Mail',
+            password: 'Passwort',
+            confirmPassword: 'Passwort wiederholen'
+        },
         moneyFormat: {
             monetaryUnit: '€',
             format: () => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
@@ -204,6 +212,14 @@ const messages = {
                     transfer: 'Würden Sie diese Umbuchung löschen, würde der Kontostand des Kontos, auf das Sie umgebucht haben, negativ werden.'
                 }
             },
+        },
+        authenticationForms: {
+            loginLabel: 'Login',
+            signupLabel: 'Sign up',
+            username: 'Username',
+            email: 'Email',
+            password: 'Password',
+            confirmPassword: 'Repeat Password'
         },
         moneyFormat: {
             monetaryUnit: '$',

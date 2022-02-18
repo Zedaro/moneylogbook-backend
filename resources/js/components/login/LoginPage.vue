@@ -5,11 +5,11 @@
         <validation-observer v-slot="{ handleSubmit }">
             <v-form class="form" @submit.prevent="handleSubmit(login)">
 
-                <h1>Login</h1>
+                <h1>{{ $t('authenticationForms.loginLabel') }}</h1>
 
                 <validation-provider rules="required">
                     <v-text-field
-                        label="E-Mail"
+                        :label="$t('authenticationForms.email')"
                         type="email"
                         v-model="email"
                     ></v-text-field>
@@ -17,15 +17,15 @@
 
                 <validation-provider rules="required">
                     <v-text-field
-                        label="Password"
+                        :label="$t('authenticationForms.password')"
                         type="password"
                         v-model="password"
                     ></v-text-field>
                 </validation-provider>
 
-                <v-btn>Login</v-btn>
+                <v-btn>{{ $t('authenticationForms.loginLabel') }}</v-btn>
 
-                <a href="/signup" class="signup-link">Signup</a>
+                <a href="/signup" class="signup-link">{{ $t('authenticationForms.signupLabel') }}</a>
 
             </v-form>
 
@@ -86,7 +86,7 @@ export default {
 
 .signup-link {
 
-
+    margin-left: 16px;
 
 }
 

@@ -5,11 +5,11 @@
         <validation-observer v-slot="{ handleSubmit }">
             <v-form class="form" @submit.prevent="handleSubmit(signUp)">
 
-                <h1>Sign up</h1>
+                <h1>{{ $t('authenticationForms.signupLabel') }}</h1>
 
                 <validation-provider rules="required">
                     <v-text-field
-                        label="Username"
+                        :label="$t('authenticationForms.username')"
                         type="text"
                         v-model="username"
                     ></v-text-field>
@@ -17,7 +17,7 @@
 
                 <validation-provider rules="required">
                     <v-text-field
-                        label="E-Mail"
+                        :label="$t('authenticationForms.email')"
                         type="email"
                         v-model="email"
                     ></v-text-field>
@@ -25,7 +25,7 @@
 
                 <validation-provider rules="required">
                     <v-text-field
-                        label="Password"
+                        :label="$t('authenticationForms.password')"
                         type="password"
                         v-model="password"
                     ></v-text-field>
@@ -33,13 +33,15 @@
 
                 <validation-provider rules="required">
                     <v-text-field
-                        label="Confirm password"
+                        :label="$t('authenticationForms.confirmPassword')"
                         type="password"
                         v-model="password_confirmation"
                     ></v-text-field>
                 </validation-provider>
 
-                <v-btn>Sign up</v-btn>
+                <v-btn>{{ $t('authenticationForms.signupLabel') }}</v-btn>
+
+                <a href="/login" class="login-link">{{ $t('authenticationForms.loginLabel') }}</a>
 
             </v-form>
 
@@ -97,6 +99,12 @@ export default {
         margin: auto;
         margin-top: 10%;
         padding: 20px;
+
+    }
+
+    .login-link {
+
+        margin-left: 16px;
 
     }
 
