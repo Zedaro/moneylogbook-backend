@@ -104,7 +104,13 @@ const routes = [
         name: 'transferForm',
         component: TransferForm,
         meta: { formType: 'transfer' }
-    }
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'notDefined',
+        redirect: 'overview'
+    },
+
     /*
   {
     path: '/moneyAccounts/new',
