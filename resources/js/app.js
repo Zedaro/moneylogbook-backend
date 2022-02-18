@@ -50,11 +50,11 @@ new Vue({
         }) ;
   },
   */
-    created () {
+    /*created () {
 
         store.dispatch('getUserData')
             .then( () => console.log("store state:", this.$store.getters.getState));
 
-    },
+    },*/
     //render: h => h(App)
 })
