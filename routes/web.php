@@ -335,6 +335,11 @@ Route::get('/signup', function() {
 
 })->middleware('guest:web')->name('signup');
 
+Route::get('/home', function() {
+
+    return view('home');
+
+});
 
 Route::get('/{any}', function () {
 
