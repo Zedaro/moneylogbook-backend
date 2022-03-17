@@ -2,7 +2,7 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="../../css/header.css">
+        <link rel="stylesheet" href="header.css">
 <!--        <style>
             h1 {
                 color: red;

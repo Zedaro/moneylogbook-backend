@@ -6,6 +6,8 @@
       <v-card-text class="text-center">{{ totalMoney }}</v-card-text>
     </v-card>
     <money-accounts-list></money-accounts-list>
+
+
     <!-- <button @click="test">Test</button> -->
     <!-- <button id="newLocalStorageButton" @click="newLocalStorage">New localStorage</button> -->
   </div>
@@ -57,6 +59,11 @@ export default {
 
   .v-card__title {
     justify-content: center;
+  }
+
+  #total-money-list-item {
+      padding-left: 4% !important;
+      padding-right: 4% !important;
   }
 
   #total-money-list-item {

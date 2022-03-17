@@ -9,16 +9,12 @@ require('./bootstrap');
 
 window.Vue = require('vue').default;
 import App from "./components/App";
-//Store
 import {store} from "./store/store";
-//<editor-fold desc="Router">
 import {router} from "./router";
-//</editor-fold>
-//Vuetify
 import vuetify from './plugins/vuetify'
-//import i18n
 import { i18n } from './languages/lang';
 import axios from "axios";
+import VuexFlash from 'vuex-flash';
 
 /**
  * The following block of code may be used to automatically register your
@@ -31,7 +27,7 @@ import axios from "axios";
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 Vue.component('app-component', require('./components/App.vue').default);
-
+Vue.use(VuexFlash, { mixin: true });
 
 //Vue App erstellen und rendern
 new Vue({
@@ -40,7 +36,7 @@ new Vue({
     router,
     vuetify,
     i18n,
-    axios,
+    axios
     /*
   created: function() {
     this.$store.dispatch('setState')

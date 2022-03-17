@@ -5,6 +5,7 @@
         <v-main>
             <router-view/>
             <plus v-if="noForm"></plus>
+            <flash-message variant="success"></flash-message>
         </v-main>
     </div>
 </template>
@@ -15,12 +16,13 @@ import TheHeader from "./TheHeader";
 import Plus from "./buttons/Plus";
 import SignUp from "./signup/SignUp";
 import LoginPage from "./login/LoginPage";
+
 export default {
     name: "UserApp",
     components: {
         NavigationDrawer,
         TheHeader,
-        Plus,
+        Plus
     },
     computed: {
         noForm() {

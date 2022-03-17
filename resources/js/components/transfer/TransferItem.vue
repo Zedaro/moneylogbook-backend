@@ -1,15 +1,18 @@
 <template>
 
-  <v-card class="list-item" :to="moneyAccountsExist ? item : ''">
-    <div class="colorFrom" :style="{ backgroundColor: colorFrom }"></div>
-    <div class="colorTo" :style="{ backgroundColor: colorTo }"></div>
-    <v-card-title class="card-title">{{ this.name }}</v-card-title>
-    <v-card-text class="text-center grey--text">{{ this.description }}</v-card-text>
-    <v-card-text class="text-center subtitle-1 money">{{ $t('moneyFormat.format').format(this.money) }}</v-card-text>
-    <v-card-text class="text-center grey--text">Von: {{ this.moneyAccountName(this.fromId) }}</v-card-text>
-    <v-card-text class="text-center grey--text">Zu: {{ this.moneyAccountName(this.toId) }}</v-card-text>
-    <v-card-text class="text-center grey--text">{{ formattedDate }}</v-card-text>
-  </v-card>
+    <v-card class="list-item" :to="moneyAccountsExist ? item : ''">
+        <div class="colorFrom" :style="{ backgroundColor: colorFrom }"></div>
+        <div class="colorTo" :style="{ backgroundColor: colorTo }"></div>
+        <v-card-text class="grey--text flex date">{{ formattedDate }}</v-card-text>
+        <!--    <v-card-text class="text-center grey&#45;&#45;text">{{ this.description }}</v-card-text>-->
+        <v-card-text class="text-center money">{{ $t('moneyFormat.format').format(this.money) }}</v-card-text>
+        <div class="from-to-div">
+            <v-card-text class="text-center money-account from">{{ this.moneyAccountName(this.fromId) }}</v-card-text>
+            <v-icon class="arrow-down">mdi-arrow-down</v-icon>
+            <v-card-text class="text-center money-account to">{{ this.moneyAccountName(this.toId) }}</v-card-text>
+        </div>
+        <v-card-text class="text-center grey--text name">{{ this.name }}</v-card-text>
+    </v-card>
 
 </template>
 
@@ -17,36 +20,36 @@
 
 <script>
 export default {
-  name: "TransferItem",
-  props: ['name', 'description', 'money', 'fromId', 'toId', 'date', 'index'],
-  computed: {
-    moneyAccountsExist() {
+    name: "TransferItem",
+    props: ['name', 'description', 'money', 'fromId', 'toId', 'date', 'index'],
+    computed: {
+        moneyAccountsExist() {
 
-        const accountFrom = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.fromId).name);
-        const accountTo = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.toId).name);
+            const accountFrom = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.fromId).name);
+            const accountTo = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.toId).name);
 
-        return (typeof accountFrom != 'undefined'  &&  typeof accountTo != 'undefined');
-    },
-    item() {
-      return {
-        name: 'transferForm',
-        params: { item: this.index }
-      };
-    },
-    formattedDate() {
-      const [year, month, day] = this.date.split('-');
-      return `${day}.${month}.${year}`;
-    },
-    colorFrom() {
-        return this.$store.getters.getColor(this.fromId);
-    },
-    colorTo() {
-        return this.$store.getters.getColor(this.toId);
-    },
-    moneyAccountName() {
-        return (id) => this.$store.getters.getMoneyAccountById(id).name;
+            return (typeof accountFrom != 'undefined'  &&  typeof accountTo != 'undefined');
+        },
+        item() {
+            return {
+                name: 'transferForm',
+                params: { item: this.index }
+            };
+        },
+        formattedDate() {
+            const [year, month, day] = this.date.split('-');
+            return `${day}.${month}.${year}`;
+        },
+        colorFrom() {
+            return this.$store.getters.getColor(this.fromId);
+        },
+        colorTo() {
+            return this.$store.getters.getColor(this.toId);
+        },
+        moneyAccountName() {
+            return (id) => this.$store.getters.getMoneyAccountById(id).name;
+        }
     }
-  }
 }
 </script>
 
@@ -54,31 +57,79 @@ export default {
 
 <style scoped>
 
-.v-card {
-  margin: auto;
-}
+    .v-card {
+        margin: auto;
+    }
 
-.colorFrom {
-  position: absolute;
-  width: 2.5%;
-  height: 100%;
-  /*background-color: pink;*/
-}
+    .list-item {
 
-.colorTo {
-  position: absolute;
-  left: 97.5%;
-  width: 2.5%;
-  height: 100%;
-  /*background-color: pink;*/
-}
+    }
 
-.v-card__title {
-  justify-content: center;
-}
+    .flex {
+        display: flex;
+        justify-content: flex-end;
+    }
 
-.money {
-  padding-bottom: 0;
-}
+    .date {
+
+    }
+
+    .money {
+        font-size: 25px;
+        padding-top: 0;
+    }
+
+    .name {
+        font-size: 18px;
+        min-width: 0;
+        word-wrap: break-word;
+        padding: 0 0 15px;
+    }
+
+    .colorFrom {
+        position: absolute;
+        left: 0;
+        width: 2.5%;
+        height: 100%;
+        /*background-color: pink;*/
+    }
+
+    .colorTo {
+        position: absolute;
+        /*left: 97.5%;*/
+        right: 0;
+        width: 2.5%;
+        height: 100%;
+        /*background-color: pink;*/
+    }
+
+    .v-card__title {
+        justify-content: center;
+    }
+
+    .from-to-div {
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    .money-account {
+        font-size: 18px;
+    }
+
+    .from {
+        padding-bottom: 0;
+    }
+
+    .to {
+        padding-top: 0;
+    }
+
+    .arrow-down {
+
+    }
+
+    .money {
+        padding-bottom: 0;
+    }
 
 </style>

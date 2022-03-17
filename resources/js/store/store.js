@@ -2,6 +2,7 @@ import Vuex from "vuex"
 import Vue from "vue";
 import { i18n } from "../languages/lang";
 import axios from "axios";
+import { createFlashStore } from 'vuex-flash';
 Vue.use(Vuex)
 
 // function editTransferBalance(moneyAccount, balance) {
@@ -14,8 +15,12 @@ export const store = new Vuex.Store({
     state: {
         loading: true,
         drawer: false,
+        snackbar: {
+            error: false,
+            success: false
+        },
 
-        initialLocalStorage: ( () => {
+        initialLocalStorage: (() => {
             let obj = {
                 languages: {
                     de: 'Deutsch',
@@ -81,11 +86,11 @@ export const store = new Vuex.Store({
 
             return obj;
         }),
-        initialUserData: ( (data) => {
+        initialUserData: ((data) => {
             let obj = {
                 languages: {
-                    de: 'Deutsch',
-                    "en-US": 'English (US)'
+                    de: 'DE',
+                    "en-US": 'EN'
                 },
                 toolbarTitle: 'Übersicht',
                 moneyAccounts: [
@@ -177,7 +182,7 @@ export const store = new Vuex.Store({
             });
 
             return obj;
-        } ),
+        }),
         userData: null,
         // {
         //     languages: {},
@@ -232,13 +237,13 @@ export const store = new Vuex.Store({
         },
         getMoneyAccountNames(state) {
             let names = [];
-            state.userData.moneyAccounts.forEach( (account) => names.push(account.name) );
+            state.userData.moneyAccounts.forEach((account) => names.push(account.name));
             return names;
         },
         getMoneyAccountSelectionItems(state) {
             let selectionItems = [];
 
-            state.userData.moneyAccounts.forEach( moneyAccount => {
+            state.userData.moneyAccounts.forEach(moneyAccount => {
                 selectionItems.push({
                     text: moneyAccount.name,
                     value: moneyAccount.id,
@@ -276,12 +281,15 @@ export const store = new Vuex.Store({
             return state.userData.transfers;
         },
         getTransferByIndex(state) {
-          return (index) => state.userData.transfers[index];
+            return (index) => state.userData.transfers[index];
         },
 
         getMoney(state) {
             const unformattedMoney = state.userData.moneyAccounts[this.$route.params.item].money;
-            const formattedMoney = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(unformattedMoney).replace('€');
+            const formattedMoney = new Intl.NumberFormat('de-DE', {
+                style: 'currency',
+                currency: 'EUR'
+            }).format(unformattedMoney).replace('€');
             return formattedMoney;
         },
         getTotalMoney(state) {
@@ -308,12 +316,16 @@ export const store = new Vuex.Store({
     },
     actions: {
 
+        changeSnackbarVisibility(context, type) {
+            context.commit('changeSnackbarVisibility', type);
+        },
+
         async getUserData(context) {
 
             let data = null;
 
             await axios.get('/getData')
-                .then(function(response) {
+                .then(function (response) {
                     console.log('getData response:', response);
 
                     data = response.data
@@ -344,23 +356,23 @@ export const store = new Vuex.Store({
             let totalMoney = 0;
             const moneyAccounts = context.state.userData.moneyAccounts;
             moneyAccounts.forEach(account => totalMoney += account.money);
-            context.commit('updateTotalMoney', parseFloat( totalMoney.toFixed(2) ));
+            context.commit('updateTotalMoney', parseFloat(totalMoney.toFixed(2)));
         },
 
         async saveMoneyAccount(context, data) {
 
             //New MoneyAccount
-            if(data.item === 'new') {
+            if (data.item === 'new') {
 
                 await axios.post('/saveNewMoneyAccount', data)
-                    .then( (response) => {
+                    .then((response) => {
                         console.log('response saveNewMoneyAccount:');
                         console.log(response.data);
                         return response.data;
-                    } )
-                    .then( function(response) {
+                    })
+                    .then(function (response) {
                         context.commit('saveNewMoneyAccount', response);
-                    } );
+                    });
 
                 //context.commit('saveNewMoneyAccount', data);
 
@@ -377,7 +389,10 @@ export const store = new Vuex.Store({
                     .then((response) => {
                         console.log('updateMoneyAccount response:');
                         console.log(response);
-                        context.commit('saveEditedMoneyAccount', { moneyAccountIndex: data.item , updatedData: response.data } );
+                        context.commit('saveEditedMoneyAccount', {
+                            moneyAccountIndex: data.item,
+                            updatedData: response.data
+                        });
                     });
 
             }
@@ -385,10 +400,10 @@ export const store = new Vuex.Store({
         },
         async deleteMoneyAccount(context, data) {
 
-            await axios.delete('/deleteMoneyAccount', { data: { id: data.id } })
+            await axios.delete('/deleteMoneyAccount', {data: {id: data.id}})
                 .then(() => {
 
-                    context.commit('deleteMoneyAccount', { index: data.index });
+                    context.commit('deleteMoneyAccount', {index: data.index});
 
                 });
 
@@ -397,19 +412,24 @@ export const store = new Vuex.Store({
         async saveTransaction(context, data) {
 
             //New Transaction
-            if(data.item === 'new') {
+            if (data.item === 'new') {
                 const balance = data.moneyAccount.money;
-                const newBalance = parseFloat( ( balance + data.money ).toFixed(2) )
+                const newBalance = parseFloat((balance + data.money).toFixed(2))
 
-                if(newBalance < 0) {
+                if (newBalance < 0) {
                     return i18n.t('form.errorMessages.new.transaction');
-                }
-                else {
+                } else {
                     data.newBalance = newBalance;
 
                     await axios.post('/saveNewTransaction', data)
-                        .then((response) => context.commit('saveNewTransaction', { transaction: response.data, moneyAccount: data.moneyAccount, newBalance: data.newBalance }));
-
+                        .then((response) => {
+                            console.log(response.status);
+                            context.commit('saveNewTransaction', {
+                                transaction: response.data,
+                                moneyAccount: data.moneyAccount,
+                                newBalance: data.newBalance
+                            });
+                        })
                 }
             }
             //Edit Transaction
@@ -418,23 +438,27 @@ export const store = new Vuex.Store({
                 data.oldTransaction = context.getters.getTransaction(data.item);
 
                 //Edit Transaction without new moneyAccount, i.e. with the same moneyAccount as before
-                if(data.oldTransaction.moneyAccountId === data.moneyAccountId) {
+                if (data.oldTransaction.moneyAccountId === data.moneyAccountId) {
 
                     const balance = data.moneyAccount.money;
-                    const newBalance = parseFloat( ( balance + (data.money - data.oldTransaction.money) ).toFixed(2) )
+                    const newBalance = parseFloat((balance + (data.money - data.oldTransaction.money)).toFixed(2))
 
-                    if(newBalance < 0) {
+                    if (newBalance < 0) {
                         return i18n.t('form.errorMessages.edit.transaction.sameMoneyAccount');
-                    }
-                    else {
+                    } else {
                         data.newBalance = newBalance;
                         data.id = context.state.userData.transactions[data.item].id;
 
-                        await axios.post('/updateTransaction', data /*{ transaction: data, moneyAccount: { moneyAccountId: data.moneyAccountId, newBalance: newBalance }}*/ )
+                        await axios.post('/updateTransaction', data /*{ transaction: data, moneyAccount: { moneyAccountId: data.moneyAccountId, newBalance: newBalance }}*/)
                             .then((response) => {
                                 console.log('response saveTransaction:', response);
 
-                                context.commit('saveEditedTransaction', { transaction: response.data, transactionIndex: data.item, moneyAccountIndex: context.state.userData.moneyAccounts.findIndex(account => account.id == data.moneyAccountId), newBalance: newBalance });
+                                context.commit('saveEditedTransaction', {
+                                    transaction: response.data,
+                                    transactionIndex: data.item,
+                                    moneyAccountIndex: context.state.userData.moneyAccounts.findIndex(account => account.id == data.moneyAccountId),
+                                    newBalance: newBalance
+                                });
                             });
 
                     }
@@ -448,21 +472,19 @@ export const store = new Vuex.Store({
 
 
                     //Alten Betrag der vorherigen Transaktion von deren Konto abziehen / wieder drauf rechnen.
-                    const oldAccount_newBalance = parseFloat( ( data.oldAccount.money - data.oldTransaction.money ).toFixed(2) );
+                    const oldAccount_newBalance = parseFloat((data.oldAccount.money - data.oldTransaction.money).toFixed(2));
 
                     //Neuen Betrag auf neues Konto anrechnen
                     const newAccount = data.moneyAccount //context.state.userData.moneyAccounts[data.moneyAccount];
-                    const newAccount_newBalance =  parseFloat( ( newAccount.money + newTransaction ).toFixed(2) );
+                    const newAccount_newBalance = parseFloat((newAccount.money + newTransaction).toFixed(2));
 
                     console.log("newAccount:", newAccount);
 
-                    if(oldAccount_newBalance < 0) {
+                    if (oldAccount_newBalance < 0) {
                         return i18n.t('form.errorMessages.edit.transaction.differentMoneyAccount.oldMoneyAccountNegative');
-                    }
-                    else if(newAccount_newBalance < 0) {
+                    } else if (newAccount_newBalance < 0) {
                         return i18n.t('form.errorMessages.edit.transaction.differentMoneyAccount.newMoneyAccountNegative');
-                    }
-                    else {
+                    } else {
                         data.oldAccount_newBalance = oldAccount_newBalance;
                         data.newAccount_newBalance = newAccount_newBalance;
 
@@ -470,9 +492,12 @@ export const store = new Vuex.Store({
 
                         await axios.post("/updateTransaction", data)
                             .then((response) => {
-                               console.log("saveTransaction - with new money account - response:", response);
+                                console.log("saveTransaction - with new money account - response:", response);
 
-                                context.commit('saveEditedTransactionWithNewMoneyAccount', { data: data, transaction: response.data });
+                                context.commit('saveEditedTransactionWithNewMoneyAccount', {
+                                    data: data,
+                                    transaction: response.data
+                                });
                             });
 
                     }
@@ -486,15 +511,20 @@ export const store = new Vuex.Store({
             data.account = context.getters.getMoneyAccountById(data.transactionToDelete.moneyAccountId);  //context.getters.getMoneyAccount(data.transactionToDelete.moneyAccount); //context.state.userData.moneyAccounts.find(account => account.name === data.transactionToDelete.moneyAccount);
 
             const balance = data.account.money;
-            const newBalance = parseFloat( ( balance - data.transactionToDelete.money ).toFixed(2) )
+            const newBalance = parseFloat((balance - data.transactionToDelete.money).toFixed(2))
 
-            if(newBalance < 0) {
+            if (newBalance < 0) {
                 return i18n.t('form.errorMessages.delete.transaction');
-            }
-            else {
+            } else {
                 data.newBalance = newBalance;
 
-                await axios.delete("/deleteTransaction", { data: { transactionId: data.transactionToDelete.id, moneyAccountId: data.account.id, newBalance: newBalance } })
+                await axios.delete("/deleteTransaction", {
+                    data: {
+                        transactionId: data.transactionToDelete.id,
+                        moneyAccountId: data.account.id,
+                        newBalance: newBalance
+                    }
+                })
                     .then(() => {
                         //console.log("deleteTransaction response:", response);
 
@@ -515,7 +545,7 @@ export const store = new Vuex.Store({
                     const today = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10);
 
                     //If the starting date is today, create the first transaction of this repeating transaction
-                    if(repTransaction.startingDate == today) {
+                    if (repTransaction.startingDate == today) {
 
                         //Create transaction object
                         let transaction = {
@@ -553,7 +583,7 @@ export const store = new Vuex.Store({
                 });
 
         },
-        async deleteRepeatingTransaction(context, { id, index }) {
+        async deleteRepeatingTransaction(context, {id, index}) {
 
             //Send delete request to server; send with id used for deletion of the repTransaction entry in the DB
             await axios.delete("/deleteRepeatingTransaction/" + id);
@@ -576,28 +606,35 @@ export const store = new Vuex.Store({
             let to = context.getters.getMoneyAccountById(transfer.toId);
 
             //Calculate new balances
-            let fromAccountNewBalance = parseFloat( (from.money - transfer.money).toFixed(2) );
-            let toAccountNewBalance = parseFloat( ( to.money + transfer.money ).toFixed(2) );
+            let fromAccountNewBalance = parseFloat((from.money - transfer.money).toFixed(2));
+            let toAccountNewBalance = parseFloat((to.money + transfer.money).toFixed(2));
 
             //Check if from would get negative; Return error string if true
-            if(fromAccountNewBalance < 0) {
+            if (fromAccountNewBalance < 0) {
                 return i18n.t('form.errorMessages.new.transfer');
             }
 
             //Send Post Request to create a new transfer entry in the DB with the provided transfer data
-            await axios.post("/saveNewTransfer", { transfer: transfer, newBalance: { from: fromAccountNewBalance, to: toAccountNewBalance } })
+            await axios.post("/saveNewTransfer", {
+                transfer: transfer,
+                newBalance: {from: fromAccountNewBalance, to: toAccountNewBalance}
+            })
 
                 .then((response) => {
 
                     //Id is null. Attach the ID to the transfer object. Needed for saving it in state.userData when calling the mutation
                     transfer.id = response.data.id;
                     //Calling the mutation for saving the transfer and its effects on the from and to money accounts
-                    context.commit('saveNewTransfer', { transfer: transfer, from: { moneyAccount: from, newBalance: fromAccountNewBalance }, to: { moneyAccount: to, newBalance: toAccountNewBalance } });
+                    context.commit('saveNewTransfer', {
+                        transfer: transfer,
+                        from: {moneyAccount: from, newBalance: fromAccountNewBalance},
+                        to: {moneyAccount: to, newBalance: toAccountNewBalance}
+                    });
 
                 });
 
         },
-        async editTransfer(context, { transfer, transferIndex }) {
+        async editTransfer(context, {transfer, transferIndex}) {
 
             //get from and to
             let fromAccount = context.state.userData.moneyAccounts.find(account => account.id === transfer.fromId);
@@ -612,7 +649,7 @@ export const store = new Vuex.Store({
             if (oldTransfer.fromId === transfer.fromId && oldTransfer.toId === transfer.toId) {
 
                 //Calculate from and to balances
-                let newFromBalance = parseFloat( (fromAccount.money - (transfer.money - oldTransfer.money) ).toFixed(2));
+                let newFromBalance = parseFloat((fromAccount.money - (transfer.money - oldTransfer.money)).toFixed(2));
                 let newToBalance = parseFloat((toAccount.money + (transfer.money - oldTransfer.money)).toFixed(2));
 
                 //If newBalance would be negative, return error text
@@ -621,7 +658,10 @@ export const store = new Vuex.Store({
                 }
 
                 //Post request to update transfer entry in DB, then commit
-                await axios.post("/updateTransfer", { transfer: transfer, newBalance: { from: newFromBalance, to: newToBalance } })
+                await axios.post("/updateTransfer", {
+                    transfer: transfer,
+                    newBalance: {from: newFromBalance, to: newToBalance}
+                })
                     .then((response) => {
                         context.commit('saveEditedTransfer', {
                             changedMoneyAccounts: 'none',
@@ -874,7 +914,7 @@ export const store = new Vuex.Store({
          * @param transferIndex {Number}
          * @returns {Promise<*>}
          */
-        async deleteTransfer(context, { transferId, transferIndex }) {
+        async deleteTransfer(context, {transferId, transferIndex}) {
 
             //Get transfer object from state
             let transfer = context.state.userData.transfers[transferIndex];
@@ -884,8 +924,8 @@ export const store = new Vuex.Store({
             let toAccount = context.getters.getMoneyAccountById(transfer.toId);
 
             //Error checking: if balance of the to account would get negative, return dialog text
-            const toBalance = parseFloat( ( toAccount.money - transfer.money ).toFixed(2) );
-            if(toBalance < 0) {
+            const toBalance = parseFloat((toAccount.money - transfer.money).toFixed(2));
+            if (toBalance < 0) {
                 return i18n.t('form.errorMessages.delete.transfer');
             }
 
@@ -916,6 +956,10 @@ export const store = new Vuex.Store({
         },
     },
     mutations: {
+
+        changeSnackbarVisibility(state, {type}) {
+            state.snackbar[type] = !state.snackbar[type];
+        },
 
         setUserData(state, data) {
 
@@ -950,14 +994,14 @@ export const store = new Vuex.Store({
             state.userData.moneyAccounts.push(moneyAccount);
 
         },
-        saveEditedMoneyAccount(state, { moneyAccountIndex, updatedData }) {
+        saveEditedMoneyAccount(state, {moneyAccountIndex, updatedData}) {
 
             //update moneyAccount entry in state
             //state.userData.moneyAccounts[data.item] = { name: data.name, money: data.money, color: data.color };
             state.userData.moneyAccounts[moneyAccountIndex] = updatedData;
 
         },
-        deleteMoneyAccount(state, { index }) {
+        deleteMoneyAccount(state, {index}) {
 
             //delete moneyAccount in state
             state.userData.moneyAccounts.splice(index, 1);
@@ -967,13 +1011,13 @@ export const store = new Vuex.Store({
         saveNewTransaction(state, {transaction, moneyAccount, newBalance}) {
 
             //save transaction entry in state
-            state.userData.transactions.push( transaction /*{ name: data.name, description: data.description, money: data.money, moneyAccount: data.moneyAccountId, date: data.date }*/);
+            state.userData.transactions.push(transaction /*{ name: data.name, description: data.description, money: data.money, moneyAccount: data.moneyAccountId, date: data.date }*/);
 
             //update account balance
             moneyAccount.money = newBalance;
 
         },
-        saveEditedTransaction(state, { transaction, transactionIndex, moneyAccountIndex, newBalance }) {
+        saveEditedTransaction(state, {transaction, transactionIndex, moneyAccountIndex, newBalance}) {
             //const newTransaction = data.money;
             //const oldTransaction = data.oldTransaction.money;
             //const account = state.userData.moneyAccounts[data.accountIndex];
@@ -990,7 +1034,7 @@ export const store = new Vuex.Store({
             console.log("saveEditedTransaction - transactions[transactionIndex after store entry is edited:]", state.userData.transactions[transactionIndex]);
 
         },
-        saveEditedTransactionWithNewMoneyAccount(state, { data, transaction }) {
+        saveEditedTransactionWithNewMoneyAccount(state, {data, transaction}) {
             //const newTransaction = data.money;
             //const oldTransaction = data.oldTransaction.money;
 
@@ -1000,7 +1044,7 @@ export const store = new Vuex.Store({
 
             //Neuen Betrag auf neues Konto anrechnen
             //const newAccount = state.userData.moneyAccounts[data.accountIndex]
-            data.moneyAccount.money =  data.newAccount_newBalance;
+            data.moneyAccount.money = data.newAccount_newBalance;
 
             //update transaction entry in state
             state.userData.transactions[data.item] = transaction; /*name: data.name, description: data.description, money: data.money, moneyAccount: data.moneyAccountId, date: data.date*/
@@ -1009,7 +1053,7 @@ export const store = new Vuex.Store({
         deleteTransaction(state, data) {
 
             //undo transaction
-            data.account.money =  data.newBalance;
+            data.account.money = data.newBalance;
             //delete transaction entry in state
             state.userData.transactions.splice(data.item, 1);
 
@@ -1034,7 +1078,7 @@ export const store = new Vuex.Store({
 
         },
 
-        saveNewTransfer(state, { transfer, from, to }) {
+        saveNewTransfer(state, {transfer, from, to}) {
 
             //save transfer in state.userData
             state.userData.transfers.push(transfer);
@@ -1126,7 +1170,7 @@ export const store = new Vuex.Store({
          * @property transfer {Object} Only has property money
          * @property money {Float} Money of oldTransfer
          */
-        saveEditedTransfer(state, { changedMoneyAccounts, transfer, transferIndex, current, old }) {
+        saveEditedTransfer(state, {changedMoneyAccounts, transfer, transferIndex, current, old}) {
 
             /*data:
                 date: "2022-01-12"
@@ -1149,7 +1193,7 @@ export const store = new Vuex.Store({
              */
 
             //Which moneyAccounts changed? Options: none, from&to, only from, only to
-            switch(changedMoneyAccounts) {
+            switch (changedMoneyAccounts) {
 
                 case 'none':
                     //update balances of from and to
@@ -1161,42 +1205,42 @@ export const store = new Vuex.Store({
                 case 'both':
 
                     //Geld beim alten from wiederherstellen
-                    old.fromAccount.money = parseFloat( ( old.fromAccount.money + old.transfer.money ).toFixed(2) );
+                    old.fromAccount.money = parseFloat((old.fromAccount.money + old.transfer.money).toFixed(2));
 
                     //Umbuchung vom neuen from abrechnen
-                    current.fromAccount.money = parseFloat( ( current.fromAccount.money - transfer.money ).toFixed(2) );
+                    current.fromAccount.money = parseFloat((current.fromAccount.money - transfer.money).toFixed(2));
 
                     //Geld vom alten to wieder abziehen
-                    old.toAccount.money = parseFloat( ( old.toAccount.money - old.transfer.money ).toFixed(2) );
+                    old.toAccount.money = parseFloat((old.toAccount.money - old.transfer.money).toFixed(2));
 
                     //Umbuchung auf das neue to rechnen
-                    current.toAccount.money = parseFloat( ( current.toAccount.money + transfer.money ).toFixed(2) );
+                    current.toAccount.money = parseFloat((current.toAccount.money + transfer.money).toFixed(2));
 
                     break;
 
                 case 'from':
 
                     //Geld beim alten from wiederherstellen
-                    old.fromAccount.money = parseFloat( ( old.fromAccount.money + old.transfer.money ).toFixed(2) );
+                    old.fromAccount.money = parseFloat((old.fromAccount.money + old.transfer.money).toFixed(2));
 
                     //Umbuchung vom neuen from abrechnen
-                    current.fromAccount.money = parseFloat( ( current.fromAccount.money - transfer.money ).toFixed(2) );
+                    current.fromAccount.money = parseFloat((current.fromAccount.money - transfer.money).toFixed(2));
 
                     //update current to
-                    current.toAccount.money = parseFloat( ( current.toAccount.money + (transfer.money - old.transfer.money) ).toFixed(2) );
+                    current.toAccount.money = parseFloat((current.toAccount.money + (transfer.money - old.transfer.money)).toFixed(2));
 
                     break;
 
                 case 'to':
 
                     //Geld vom alten to wieder abziehen
-                    old.toAccount.money = parseFloat( ( old.toAccount.money - old.transfer.money ).toFixed(2) );
+                    old.toAccount.money = parseFloat((old.toAccount.money - old.transfer.money).toFixed(2));
 
                     //Umbuchung auf das neue to rechnen
-                    current.toAccount.money = parseFloat( ( current.toAccount.money + transfer.money ).toFixed(2) );
+                    current.toAccount.money = parseFloat((current.toAccount.money + transfer.money).toFixed(2));
 
                     //from updaten
-                    current.fromAccount.money = parseFloat( ( current.fromAccount.money - (transfer.money - old.transfer.money) ).toFixed(2) );
+                    current.fromAccount.money = parseFloat((current.fromAccount.money - (transfer.money - old.transfer.money)).toFixed(2));
 
                     break;
 
@@ -1204,7 +1248,6 @@ export const store = new Vuex.Store({
 
             //Update transfer object in state.userData
             state.userData.transfers[transferIndex] = transfer;
-
 
 
             //state.userData.transfers[data.item] = transfer;
@@ -1218,7 +1261,7 @@ export const store = new Vuex.Store({
          * @param fromAccount {Object}  state object
          * @param toAccount {Object}    state object
          */
-        deleteTransfer(state, { transferMoney, transferIndex, fromAccount, toAccount }) {
+        deleteTransfer(state, {transferMoney, transferIndex, fromAccount, toAccount}) {
 
             //Undo transfer effects on the from and to account
             fromAccount.money += transferMoney;
@@ -1229,7 +1272,10 @@ export const store = new Vuex.Store({
 
         }
 
-    }
+    },
+    plugins: [
+        createFlashStore()
+    ]
 });
 
 //parseFloat( (  ).toFixed(2) )

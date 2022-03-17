@@ -57,7 +57,23 @@ export default {
 
             axios.get('/sanctum/csrf-cookie').then(response => {
 
-                axios.post('/login', this.$data);
+                axios.post('/login', this.$data)
+                    .then( (response) => {
+
+                        console.log("Response:", response);
+
+                        this.$router.go('/overview');
+                        /*window.location.href = '/overview';*/
+
+                    })
+                    .catch(error => {
+
+                        //errors User ausgeben
+                        //403 oder 422 -> falsche Daten
+                        //Sonst: irgendwas anderes hat nicht geklappt
+                        console.log("Error:", error);
+
+                    });
 
             });
 

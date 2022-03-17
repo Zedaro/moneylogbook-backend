@@ -2,12 +2,11 @@
 
     <v-card class="list-item" :to="(moneyAccountsExist && this.expired == false) ? item : ''">
         <div class="color" :style="{ backgroundColor: this.color }"></div>
-        <v-card-title class="card-title">{{ this.name }}</v-card-title>
-        <v-card-text class="text-center grey--text">{{ this.description }}</v-card-text>
-        <v-card-text class="text-center subtitle-1 money" :class="moneyColor">{{ $t('moneyFormat.format').format(this.money) }}</v-card-text>
-        <v-card-text class="text-center grey--text">{{ this.moneyAccountName }}</v-card-text>
-        <v-card-text class="text-center grey--text">{{ rhythmText }}</v-card-text>
-        <v-card-text class="text-center grey--text">{{ formattedDate(startingDate) }} - {{ formattedDate(endingDate) }}</v-card-text>
+        <v-card-text class="text-center grey--text flex date">{{ formattedDate(startingDate) }} - {{ formattedDate(endingDate) }}</v-card-text>
+        <v-card-text class="text-center grey--text flex interval">{{ rhythmText }}</v-card-text>
+        <v-card-text class="text-center money" :class="moneyColor">{{ $t('moneyFormat.format').format(this.money) }}</v-card-text>
+        <v-card-text class="text-center money-account">{{ this.moneyAccountName }}</v-card-text>
+        <v-card-title class="grey--text name">{{ this.name }}</v-card-title>
     </v-card>
 
 </template>
@@ -71,23 +70,46 @@ export default {
 
 <style scoped>
 
-.v-card {
-    margin: auto;
-}
+    .v-card {
+        margin: auto;
+    }
 
-.color {
-    position: absolute;
-    width: 5%;
-    height: 100%;
-    background-color: pink;
-}
+    .color {
+        position: absolute;
+        width: 5%;
+        height: 100%;
+        background-color: pink;
+    }
 
-.v-card__title {
-    justify-content: center;
-}
+    .v-card__title {
+        justify-content: center;
+    }
 
-.money {
-    padding-bottom: 0;
-}
+    .flex {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .date {
+        padding-bottom: 5px;
+    }
+
+    .interval {
+        padding-top: 0;
+    }
+
+    .money {
+        font-size: 25px;
+        padding-bottom: 10px;
+    }
+
+    .money-account{
+        font-size: 18px;
+    }
+
+    .name {
+        font-size: 18px;
+        padding-top: 4px;
+    }
 
 </style>

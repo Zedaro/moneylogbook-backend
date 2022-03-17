@@ -6,17 +6,26 @@
         <v-app-bar-nav-icon v-else @click="$router.back()">
             <v-icon>mdi-arrow-left</v-icon>
         </v-app-bar-nav-icon>
-        <v-toolbar-title>{{ toolbarTitle }}</v-toolbar-title>
+        <v-toolbar-title class="header-title">{{ toolbarTitle }}</v-toolbar-title>
 
         <div class="buttons-div">
 
-            <v-btn @click="test" class="test-btn my-auto" fab depressed>
-                <v-icon>mdi-head-question-outline</v-icon>
-            </v-btn>
+            <v-btn @click="flash">Flash</v-btn>
 
-            <v-btn class="newLocalStorageButton my-auto" @click="refreshDB" fab depressed>
+<!--            <v-btn @click="test" class="test-btn my-auto" fab depressed>
+                <v-icon>mdi-head-question-outline</v-icon>
+            </v-btn>-->
+
+<!--            <v-btn class="newLocalStorageButton my-auto" @click="refreshDB" fab depressed>
                 <v-icon>mdi-reload</v-icon>
-            </v-btn>
+            </v-btn>-->
+
+            <v-text-field
+                v-model="selectedLangText"
+                readonly
+                outlined
+                class="lang"
+            ></v-text-field>
 
             <v-menu
                 v-model="menu"
@@ -33,7 +42,7 @@
                         v-bind="attrs"
                         v-on="on"
                         outlined
-                        class="my-auto"
+                        class="my-auto lang"
                     ></v-text-field>
                 </template>
                 <v-list>
@@ -51,7 +60,7 @@
                 </v-list>
             </v-menu>
 
-            <v-btn @click="logout">{{ this.$t('logout') }}</v-btn>
+            <v-btn @click="logout" class="logout">{{ this.$t('logout') }}</v-btn>
 
         </div>
 
@@ -202,6 +211,11 @@ export default {
             // console.log(startingDate < endingDate);
 
         },
+        flash() {
+            /*console.log('Hi');*/
+            this.flash({message: 'Hello there!', variant: 'success'});
+            /*this.$router.push('/overview');*/
+        },
         refreshDB() {
             this.$store.dispatch('refreshDB');
         },
@@ -320,38 +334,55 @@ export default {
 
 <style scoped>
 
-.newLocalStorageButton {
-    /*border: solid black 1px;*/
-}
+    .newLocalStorageButton {
+        /*border: solid black 1px;*/
+    }
 
-.test-btn {
+    .test-btn {
 
-}
+    }
 
-.buttons-div {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    justify-content: flex-end;
-}
 
-.v-input {
+    .buttons-div {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: flex-end;
+    }
 
-}
+    @media screen and (max-width: 525px) {
+        .header-title {
+            padding-left: 0 !important;
+        }
+    }
 
-.v-text-field {
-    max-width: fit-content;
-    height: 100%;
-}
+    .v-input {
 
-.v-input__slot {
+    }
 
-}
+    .v-text-field {
+        max-width: 50px;
+        height: 100%;
+    }
 
-.v-toolbar__title {
-    width: fit-content;
-    margin: 1px;
-    overflow: visible;
-}
+    .lang {
+
+    }
+
+    .v-input .v-input__control .v-input__input {
+        min-height: 40px !important;
+        height: 40px;
+    }
+
+    .v-toolbar__title {
+        width: fit-content;
+        margin: 1px;
+        overflow: visible;
+    }
+
+    .logout {
+        align-self: center;
+        margin-left: 15px;
+    }
 
 </style>

@@ -17,5 +17,6 @@ mix.js('resources/js/app.js', 'public/js')
     .vue({ version: 2 })
     .sass('resources/sass/app.scss', 'public/css');
 
+//mix.css('resources/css', 'public/css');
 
 mix.browserSync('http://localhost:8000/');
