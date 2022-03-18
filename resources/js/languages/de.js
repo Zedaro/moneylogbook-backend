@@ -115,6 +115,12 @@ export default {
     moneyFormat: {
         monetaryUnit: '€',
         format: () => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
-    }
+    },
+    errors: {
+        login: {
+            wrongUserData: 'Ihr Benutzername oder Ihr Passwort ist falsch.',
+            serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.'
+        }
+    },
 
 };

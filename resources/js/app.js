@@ -12,7 +12,7 @@ import App from "./components/App";
 import {store} from "./store/store";
 import {router} from "./router";
 import vuetify from './plugins/vuetify'
-import { i18n } from './languages/lang';
+import { i18n } from './languages/setup';
 import axios from "axios";
 import VuexFlash from 'vuex-flash';
 

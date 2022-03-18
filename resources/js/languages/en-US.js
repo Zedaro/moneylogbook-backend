@@ -104,6 +104,12 @@ export default {
     moneyFormat: {
         monetaryUnit: '$',
         format: () => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
-    }
+    },
+    errors: {
+        login: {
+            wrongUserData: 'Incorrect username or password.',
+            serverUnavailable: 'The server is currently unavailable. Please try again later.'
+        }
+    },
 
 };
