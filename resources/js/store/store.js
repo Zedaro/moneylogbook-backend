@@ -193,7 +193,10 @@ export const store = new Vuex.Store({
         //     transfers: []
         // },
 
-        languages: null,
+        languages: {
+            de: 'DE',
+            "en-US": 'EN'
+        },
         toolbarTitle: null,
 
         moneyAccounts: null,

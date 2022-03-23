@@ -338,11 +338,6 @@ export default {
         /*border: solid black 1px;*/
     }
 
-    .test-btn {
-
-    }
-
-
     .buttons-div {
         display: flex;
         width: 100%;
@@ -354,10 +349,6 @@ export default {
         .header-title {
             padding-left: 0 !important;
         }
-    }
-
-    .v-input {
-
     }
 
     .v-text-field {

@@ -2,9 +2,41 @@
 
     <div>
 
+        <v-menu
+            v-model="menu"
+            :close-on-content-click="true"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+        >
+            <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="selectedLangText"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    outlined
+                    class="my-auto lang-menu"
+                ></v-text-field>
+            </template>
+            <v-list>
+                <v-list-item-group
+                    v-model="selectedLangIndex"
+                    mandatory
+                >
+                    <v-list-item
+                        v-for="(language, index) in languages"
+                        :key="index"
+                    >
+                        <v-list-item-title>{{ language }}</v-list-item-title>
+                    </v-list-item>
+                </v-list-item-group>
+            </v-list>
+        </v-menu>
+
         <div class="form-and-error-div">
 
-            <error-login-signup :class="{ invisible: error }" :errorMessage="errorMessage"></error-login-signup>
+            <error-login-signup :class="{ visible: error }" :errorMessage="errorMessage"></error-login-signup>
 
             <v-card class="login-card">
 
@@ -58,14 +90,35 @@ export default {
         return {
 
             //username: null,
+            menu: false,
+            selectedLangIndex: Object.keys(this.$store.state.languages).findIndex(language => language === 'de'),
+
             email: 'Bobsen24@Bob.com',
             password: 'testtesttest',
-            error: true,
+
+            error: false,
             errorMessage: null,
 
         }
     },
+    computed: {
+        languages() {
+            return Object.values(this.$store.state.languages);
+        },
+        selectedLangText() {
+            return this.languages[this.selectedLangIndex];
+        },
+        languageAbbreviations() {
+            return Object.keys(this.$store.state.languages);
+        },
+        selectedLangAbbreviation() {
+            return this.languageAbbreviations[this.selectedLangIndex];
+        }
+    },
     methods: {
+        changeLanguage() {
+            this.$root.$i18n.locale = this.selectedLangAbbreviation;
+        },
         login() {
 
             axios.get('/sanctum/csrf-cookie').then(response => {
@@ -86,8 +139,7 @@ export default {
                         //Sonst: irgendwas anderes hat nicht geklappt
 
                         this.showError(error.response.status);
-
-                        console.log("Error:", error);
+                        //this.showError(402);
 
                     });
 
@@ -108,15 +160,28 @@ export default {
 
             }
 
-            this.error = !this.error;
+            this.error = true;
 
         },
     },
+    watch: {
+        selectedLangIndex() {
+            this.changeLanguage();
+        }
+    },
+    created() {
+        console.log("State:", this.$store.state);
+    }
 
 }
 </script>
 
 <style scoped>
+
+    div div.lang-menu {
+        margin: 5px 5px 0 auto !important;
+        width: 50px;
+    }
 
     .form-and-error-div {
 
@@ -134,8 +199,8 @@ export default {
 
     }
 
-    .invisible {
-        visibility: hidden;
+    .visible {
+        visibility: visible !important;
     }
 
     @media screen and (min-width: 300px) {

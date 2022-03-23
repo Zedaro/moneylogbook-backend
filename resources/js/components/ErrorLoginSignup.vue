@@ -1,6 +1,6 @@
 <template>
 
-    <v-card class="error-card">
+    <v-card class="error-card" v-if="errorMessage !== null">
         {{ $t(`errors.login.${errorMessage}`)}}
 <!--        {{ $t(`errors.login.wrongUserData`)}}-->
     </v-card>
@@ -20,6 +20,7 @@ export default {
         background-color: rgba(255, 0, 0, 0.5);
         width: 50%;
         margin: 0 auto;
+        visibility: hidden;
     }
 
 </style>

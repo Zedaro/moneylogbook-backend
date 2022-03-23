@@ -36,7 +36,7 @@ new Vue({
     router,
     vuetify,
     i18n,
-    axios
+    axios,
     /*
   created: function() {
     this.$store.dispatch('setState')
