@@ -320,7 +320,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
 });
 
-Route::get('/login', function() {
+Route::get('/auth/login', function() {
 
     return view('index')
         ->with('authenticated', 'no');
@@ -328,7 +328,7 @@ Route::get('/login', function() {
 })->middleware('guest:web')->name('login');
 
 
-Route::get('/signup', function() {
+Route::get('/auth/signup', function() {
 
     return view('index')
         ->with('authenticated', 'no');

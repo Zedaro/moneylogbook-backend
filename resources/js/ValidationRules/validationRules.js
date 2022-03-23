@@ -1,5 +1,6 @@
 import { extend } from "vee-validate";
-import { required, double} from "vee-validate/dist/rules";
+import { required, double, confirmed} from "vee-validate/dist/rules";
+
 
 
 extend('required', {
@@ -19,6 +20,11 @@ extend('regex', {
     },
     message: "Legale Zeichen: Buchstaben, Zahlen und Folgende: . , : ! ? € $ / ( ) % ! - "
 });
+
+extend('confirmed', {
+    ...confirmed,
+    message: 'Die Passwörter stimmen nicht überein'
+})
 
 extend('not_zero', {
     validate(v) {

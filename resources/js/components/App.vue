@@ -3,19 +3,22 @@
         <div class="user-app-div" v-if="this.authenticated == 'yes'">
             <user-app></user-app>
         </div>
-        <login-page v-else-if="this.$route.path == '/login'"></login-page>
-        <sign-up v-else-if="this.$route.path == '/signup'"></sign-up>
+        <authentication-page v-else-if="this.$route.path == '/auth/login' || this.$route.path == '/auth/signup'"></authentication-page>
+<!--        <login-page v-else-if="this.$route.path == '/login'"></login-page>
+        <sign-up v-else-if="this.$route.path == '/signup'"></sign-up>-->
     </v-app>
 </template>
 
 <script>
-import LoginPage from "./login/LoginPage";
-import SignUp from "./signup/SignUp";
+import LoginPage from "../auth/LoginComponent";
+import SignUp from "../auth/SignupComponent";
 import UserApp from "./UserApp";
+import AuthenticationPage from "../auth/AuthenticationPage";
 
 export default {
     name: 'App',
     components: {
+        AuthenticationPage,
         UserApp,
         SignUp,
         LoginPage,

@@ -13,8 +13,9 @@ import TransfersPage from "./components/transfer/TransfersPage";
 import TransferForm from "./components/transfer/TransferForm";
 import TestCSS from "./components/TestCSS";
 import BackendTests from "./components/BackendTests";
-import SignUp from "./components/signup/SignUp";
-import LoginPage from "./components/login/LoginPage";
+import AuthenticationPage from "./auth/AuthenticationPage";
+import SignUp from "./auth/SignupComponent";
+import LoginPage from "./auth/LoginComponent";
 
 
 
@@ -23,17 +24,32 @@ const routes = [
         path: '/',
         redirect: 'overview'
     },
+    /*{
+        path: '/auth',
+        name: 'auth',
+        component: AuthenticationPage,
+        children: [
+            {
+                path: 'login',
+                component: LoginPage,
+            },
+            {
+                path: 'signup',
+                component: SignUp,
+            }
+        ],
+    },*/
     {
-        path: '/signup',
+        path: '/auth/signup',
         name: 'signup',
         component: SignUp,
-        meta: { title: 'Sign Up' }
+        meta: { title: 'Sign Up' },
     },
     {
-        path: '/login',
+        path: '/auth/login',
         name: 'login',
         component: LoginPage,
-        meta: { title: 'Login' }
+        meta: { title: 'Login' },
     },
     {
         path: '/testcss',
