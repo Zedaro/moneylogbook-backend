@@ -4,7 +4,7 @@
 
         <v-card class="sign-up-card">
 
-            <validation-observer v-slot="{ handleSubmit }">
+            <validation-observer ref="form" v-slot="{ validate, handleSubmit }">
                 <v-form class="form" @submit.prevent="handleSubmit(signUp)">
 
                     <h1 class="form-title">{{ $t('authenticationForms.signupLabel') }}</h1>
@@ -65,7 +65,7 @@
 
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import '../ValidationRules/validationRules';
+import '../validation/rules';
 
 export default {
 

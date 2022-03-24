@@ -47,7 +47,7 @@
 import SaveDelete from "../../buttons/SaveDelete";
 import InputColorPicker from 'vue-native-color-picker';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import '../../../ValidationRules/validationRules';
+import '../../../validation/rules';
 
 export default {
   name: "MoneyAccountForm",

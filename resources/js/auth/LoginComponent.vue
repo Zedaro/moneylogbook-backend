@@ -53,7 +53,7 @@
 
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import '../ValidationRules/validationRules';
+import '../validation/rules';
 import ErrorLoginSignup from '../components/ErrorLoginSignup';
 
 export default {

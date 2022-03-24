@@ -13,8 +13,7 @@ import {store} from "./store/store";
 import {router} from "./router";
 import vuetify from './plugins/vuetify'
 import { i18n } from './languages/setup';
-import VeeValidate from 'vee-validate';
-
+import ValidationDictionary from './validation/localization';
 import axios from "axios";
 import VuexFlash from 'vuex-flash';
 
@@ -30,7 +29,6 @@ import VuexFlash from 'vuex-flash';
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 Vue.component('app-component', require('./components/App.vue').default);
 Vue.use(VuexFlash, { mixin: true });
-Vue.use()
 
 //Vue App erstellen und rendern
 new Vue({

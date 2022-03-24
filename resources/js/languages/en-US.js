@@ -1,3 +1,5 @@
+import validationEN from '../validation/en-US.json';
+
 export default {
 
     headerTitle: {
@@ -105,6 +107,7 @@ export default {
         monetaryUnit: '$',
         format: () => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
     },
+    validation: validationEN,
     errors: {
         login: {
             wrongUserData: 'Incorrect username or password.',

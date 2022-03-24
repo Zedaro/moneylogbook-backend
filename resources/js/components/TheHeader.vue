@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import { localize } from 'vee-validate';
+
 export default {
     name: "TheHeader",
     data() {
@@ -224,6 +226,7 @@ export default {
         },
         changeLanguage() {
             this.$root.$i18n.locale = this.selectedLangAbbreviation;
+            localize(this.selectedLangAbbreviation);
         },
         nextOrThisWeekday(startingDate, selectedWeekdaysIndexes) {
 

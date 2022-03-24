@@ -67,6 +67,7 @@ export default {
     methods: {
         changeLanguage() {
             this.$root.$i18n.locale = this.selectedLangAbbreviation;
+            //this.$refs.form.validate();
         },
     },
     watch: {

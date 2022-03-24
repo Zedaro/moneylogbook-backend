@@ -237,7 +237,7 @@
 <script>
 import SaveDelete from "../../buttons/SaveDelete";
 import {ValidationObserver, ValidationProvider} from 'vee-validate';
-import '../../../ValidationRules/validationRules';
+import '../../../validation/rules';
 
 export default {
     name: "RepeatingTransactionForm",
