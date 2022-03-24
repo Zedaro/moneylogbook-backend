@@ -11,27 +11,33 @@
                 <validation-observer v-slot="{ handleSubmit }">
                     <v-form class="form" @submit.prevent="handleSubmit(login)">
 
-                        <h1>{{ $t('authenticationForms.loginLabel') }}</h1>
+                        <h1 class="form-title">{{ $t('authenticationForms.loginLabel') }}</h1>
 
-                        <validation-provider rules="required">
+                        <validation-provider rules="required|email" v-slot="{ errors }">
                             <v-text-field
                                 :label="$t('authenticationForms.email')"
                                 type="email"
                                 v-model="email"
+                                :error-messages="errors"
                             ></v-text-field>
                         </validation-provider>
 
-                        <validation-provider rules="required">
+                        <validation-provider rules="required" v-slot="{ errors }">
                             <v-text-field
                                 :label="$t('authenticationForms.password')"
                                 type="password"
                                 v-model="password"
+                                :error-messages="errors"
                             ></v-text-field>
                         </validation-provider>
 
-                        <v-btn type="submit">{{ $t('authenticationForms.loginLabel') }}</v-btn>
+                        <div class="bottom-row-div">
 
-                        <a href="/auth/signup" class="signup-link">{{ $t('authenticationForms.signupLabel') }}</a>
+                            <v-btn type="submit">{{ $t('authenticationForms.loginLabel') }}</v-btn>
+
+                            <a href="/auth/signup" class="signup-link">{{ $t('authenticationForms.signupLabel') }}</a>
+
+                        </div>
 
                     </v-form>
 
@@ -145,6 +151,18 @@ export default {
         top: 10%;
         left: 50%;
         transform: translateX(-50%);
+
+    }
+
+    .form-title {
+
+        margin-bottom: 20px;
+
+    }
+
+    .bottom-row-div {
+
+        margin-top: 20px;
 
     }
 

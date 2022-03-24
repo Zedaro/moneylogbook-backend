@@ -1,11 +1,12 @@
+import { i18n } from '../languages/setup';
 import { extend } from "vee-validate";
-import { required, double, confirmed} from "vee-validate/dist/rules";
+import { required, double, confirmed, email } from "vee-validate/dist/rules";
 
 
 
 extend('required', {
     ...required,
-    message: 'Füllen Sie bitte das Feld aus'
+    message: this.$t('validation.required')
 });
 
 extend('double', {
@@ -24,6 +25,11 @@ extend('regex', {
 extend('confirmed', {
     ...confirmed,
     message: 'Die Passwörter stimmen nicht überein'
+})
+
+extend('email', {
+    ...email,
+    message: 'Geben Sie bitte eine gültige E-Mail an'
 })
 
 extend('not_zero', {

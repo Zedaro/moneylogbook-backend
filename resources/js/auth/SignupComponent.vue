@@ -1,54 +1,65 @@
 <template>
 
-    <v-card class="sign-up-card">
+    <div class="form-and-error-div">
 
-        <validation-observer v-slot="{ handleSubmit }">
-            <v-form class="form" @submit.prevent="handleSubmit(signUp)">
+        <v-card class="sign-up-card">
 
-                <h1>{{ $t('authenticationForms.signupLabel') }}</h1>
+            <validation-observer v-slot="{ handleSubmit }">
+                <v-form class="form" @submit.prevent="handleSubmit(signUp)">
 
-                <validation-provider rules="required">
-                    <v-text-field
-                        :label="$t('authenticationForms.name')"
-                        type="text"
-                        v-model="name"
-                    ></v-text-field>
-                </validation-provider>
+                    <h1 class="form-title">{{ $t('authenticationForms.signupLabel') }}</h1>
 
-                <validation-provider rules="required">
-                    <v-text-field
-                        :label="$t('authenticationForms.email')"
-                        type="email"
-                        v-model="email"
-                    ></v-text-field>
-                </validation-provider>
+                    <validation-provider rules="required" v-slot="{ errors }">
+                        <v-text-field
+                            :label="$t('authenticationForms.name')"
+                            type="text"
+                            v-model="name"
+                            :error-messages="errors"
+                        ></v-text-field>
+                    </validation-provider>
 
-                <validation-provider rules="required" ref="password">
-                    <v-text-field
-                        :label="$t('authenticationForms.password')"
-                        type="password"
-                        v-model="password"
-                    ></v-text-field>
-                </validation-provider>
+                    <validation-provider rules="required" v-slot="{ errors }">
+                        <v-text-field
+                            :label="$t('authenticationForms.email')"
+                            type="email"
+                            v-model="email"
+                            :error-messages="errors"
+                        ></v-text-field>
+                    </validation-provider>
 
-                <validation-provider rules="required|confirmed:password" v-slot="{ errors }">
-                    <v-text-field
-                        :label="$t('authenticationForms.confirmPassword')"
-                        type="password"
-                        v-model="password_confirmation"
-                        :error-messages="errors"
-                    ></v-text-field>
-                </validation-provider>
+                    <validation-provider rules="required" vid="password" v-slot="{ errors }">
+                        <v-text-field
+                            :label="$t('authenticationForms.password')"
+                            type="password"
+                            v-model="password"
+                            :error-messages="errors"
+                        ></v-text-field>
+                    </validation-provider>
 
-                <v-btn type="submit">{{ $t('authenticationForms.signupLabel') }}</v-btn>
+                    <validation-provider rules="required|confirmed:password" v-slot="{ errors }">
+                        <v-text-field
+                            :label="$t('authenticationForms.confirmPassword')"
+                            type="password"
+                            v-model="password_confirmation"
+                            :error-messages="errors"
+                        ></v-text-field>
+                    </validation-provider>
 
-                <a href="/auth/login" class="login-link">{{ $t('authenticationForms.loginLabel') }}</a>
+                    <div class="bottom-row-div">
 
-            </v-form>
+                        <v-btn type="submit">{{ $t('authenticationForms.signupLabel') }}</v-btn>
 
-        </validation-observer>
+                        <a href="/auth/login" class="login-link">{{ $t('authenticationForms.loginLabel') }}</a>
 
-    </v-card>
+                    </div>
+
+                </v-form>
+
+            </validation-observer>
+
+        </v-card>
+
+    </div>
 
 </template>
 
@@ -115,7 +126,106 @@ export default {
 
 <style scoped>
 
-    .sign-up-card{
+    .form-and-error-div {
+
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+
+    }
+
+    .form-title {
+
+        margin-bottom: 20px;
+
+    }
+
+    .bottom-row-div {
+
+        margin-top: 20px;
+
+    }
+
+    div .error-card {
+
+        width: 100%;
+        padding: 20px;
+
+    }
+
+    .visible {
+        visibility: visible !important;
+    }
+
+    @media screen and (min-width: 300px) {
+
+        div .sign-up-card{
+
+            padding: 20px;
+            margin-top: 20px;
+
+        }
+
+        .form-and-error-div {
+
+            width: 95%;
+
+        }
+
+        .login-link {
+
+            margin-left: 16px;
+
+        }
+
+    }
+    @media screen and (min-width: 600px) {
+
+        .form-and-error-div {
+
+            width: 70%;
+
+        }
+
+        div .sign-up-card{
+
+            padding: 20px;
+            margin-top: 20px;
+
+        }
+
+        .login-link {
+
+            margin-left: 16px;
+
+        }
+
+    }
+    @media screen and (min-width: 900px) {
+
+        .form-and-error-div {
+
+            width: 50%;
+
+        }
+
+        div .sign-up-card{
+
+            padding: 20px;
+            margin-top: 20px;
+
+        }
+
+        .login-link {
+
+            margin-left: 16px;
+
+        }
+
+    }
+
+    /*.sign-up-card{
 
         width: 50%;
         margin: auto;
@@ -128,6 +238,6 @@ export default {
 
         margin-left: 16px;
 
-    }
+    }*/
 
 </style>

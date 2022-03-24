@@ -316,7 +316,12 @@ export default {
 
         },
         logout() {
-            axios.post('/logout');
+            axios.post('/logout')
+                .then( response => {
+
+                    this.$router.go('/auth/login');
+
+                });
         },
     },
     watch: {

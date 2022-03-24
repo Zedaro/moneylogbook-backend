@@ -116,6 +116,9 @@ export default {
         monetaryUnit: '€',
         format: () => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
     },
+    validation: {
+        required: 'Füllen Sie bitte das Feld aus',
+    },
     errors: {
         login: {
             wrongUserData: 'Ihr Benutzername oder Ihr Passwort ist falsch.',
