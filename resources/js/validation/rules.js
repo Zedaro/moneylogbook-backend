@@ -1,11 +1,20 @@
-import './localization';
-
-import { extend } from "vee-validate";
+import { extend, configure } from "vee-validate";
 import { required, double, confirmed, email } from "vee-validate/dist/rules";
+import { i18n } from '../languages/setup';
 
 
+/*configure({
+    defaultMessage: (field, values) => {
+        return i18n.t(`validation.${values._rule_}`, values);
+        //return i18n.t('validation.required');
+    }
+})*/
 
-extend('required', required);
+
+extend('required', {
+    ...required,
+    message: i18n.t('validation.required')
+});
 
 extend('double', {
     ...double,

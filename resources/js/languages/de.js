@@ -118,12 +118,37 @@ export default {
         monetaryUnit: '€',
         format: () => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
     },
+    fields:{
+        email: 'E-Mail',
+        password: 'Passwort'
+    },
     validation: validationDE,
     errors: {
         login: {
             wrongUserData: 'Ihr Benutzername oder Ihr Passwort ist falsch.',
-            serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.'
-        }
+            serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.',
+        },
+        signup: {
+            userAlreadyExists: 'Der Nutzer mit dieser E-Mail Adresse existiert bereits.',
+            serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.',
+        },
+    },
+    flashMessage: {
+        success: {
+            saved: {
+                moneyAccount: 'Konto wurde erfolgreich gespeichert',
+                transaction: 'Transaktion wurde erfolgreich gespeichert',
+                repeatingTransaction: 'Dauerauftrag wurde erfolgreich gespeichert',
+                transfer: 'Umbuchung wurde erfolgreich gespeichert',
+            },
+            deleted: {
+                moneyAccount: 'Konto wurde erfolgreich gelöscht',
+                transaction: 'Transaktion wurde erfolgreich gelöscht',
+                repeatingTransaction: 'Dauerauftrag wurde erfolgreich gelöscht',
+                transfer: 'Umbuchung wurde erfolgreich gelöscht',
+            }
+        },
+        error: 'Irgendetwas ist schiefgelaufen. Versuchen sie es später noch einmal.'
     },
 
 };

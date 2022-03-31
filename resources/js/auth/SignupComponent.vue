@@ -4,6 +4,8 @@
 
         <v-card class="sign-up-card">
 
+            <error-login-signup :class="{ visible: error }" :errorMessage="errorMessage"></error-login-signup>
+
             <validation-observer ref="form" v-slot="{ validate, handleSubmit }">
                 <v-form class="form" @submit.prevent="handleSubmit(signUp)">
 
@@ -57,6 +59,8 @@
 
             </validation-observer>
 
+            <v-btn @click="test">Change Validation Language</v-btn>
+
         </v-card>
 
     </div>
@@ -66,11 +70,13 @@
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import '../validation/rules';
+import ErrorLoginSignup from "../components/ErrorLoginSignup";
+import { localeChanged } from "vee-validate";
 
 export default {
 
     name: "SignupComponent",
-    components: { ValidationObserver, ValidationProvider },
+    components: { ValidationObserver, ValidationProvider, ErrorLoginSignup },
     data() {
         return {
 
@@ -107,17 +113,21 @@ export default {
 
             if( status === 422 ) {
 
-                this.errorMessage = '';
+                this.errorMessage = 'userAlreadyExists';
 
             } else {
 
-                this.errorMessage = '';
+                this.errorMessage = 'serverUnavailable';
 
             }
 
             this.error = true;
 
         },
+        test() {
+            this.$i18n.locale = 'en-US';
+            localeChanged();
+        }
 
     }
 

@@ -107,12 +107,37 @@ export default {
         monetaryUnit: '$',
         format: () => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
     },
+    fields:{
+        email: 'E-mail',
+        password: 'Password'
+    },
     validation: validationEN,
     errors: {
         login: {
             wrongUserData: 'Incorrect username or password.',
             serverUnavailable: 'The server is currently unavailable. Please try again later.'
-        }
+        },
+        signup: {
+            userAlreadyExists: 'A user with this email address already exists.',
+            serverUnavailable: 'The server is currently unavailable. Please try again later.',
+        },
+    },
+    flashMessage: {
+        success: {
+            saved: {
+                moneyAccount: 'Money account was saved successfully ',
+                transaction: 'Transaction was saved successfully',
+                repeatingTransaction: 'Repeating transaction was saved successfully',
+                transfer: 'Transfer was saved successfully',
+            },
+            deleted: {
+                moneyAccount: 'Money account was deleted successfully ',
+                transaction: 'Transaction was deleted successfully ',
+                repeatingTransaction: 'Repeating transaction was deleted successfully ',
+                transfer: 'Transfer was deleted successfully ',
+            }
+        },
+        error: 'Something went wrong. Please try again later.'
     },
 
 };

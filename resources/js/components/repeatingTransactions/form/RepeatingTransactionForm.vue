@@ -521,7 +521,24 @@ export default {
             if(this.$route.params.item === "new") {
                 this.$store.dispatch('createRepeatingTransaction', repTransaction)
                     .then(() => {
+                        this.flashMessage.setStrategy('multiple');
+                        this.flashMessage.show({
+                            status: 'success',
+                            message: this.$t('flashMessage.success.saved.repeatingTransaction'),
+                            time: 3000,
+                            clickable: true
+                        });
+
                         this.$router.push({name: 'repeatingTransactions'});
+                    })
+                    .catch(error => {
+                        this.flashMessage.setStrategy('multiple');
+                        this.flashMessage.show({
+                            status: 'error',
+                            message: this.$t('flashMessage.error'),
+                            time: 3000,
+                            clickable: true
+                        });
                     });
             }
             //edit repTransaction
@@ -532,7 +549,24 @@ export default {
 
                 this.$store.dispatch('editRepeatingTransaction', repTransaction)
                     .then(() => {
+                        this.flashMessage.setStrategy('multiple');
+                        this.flashMessage.show({
+                            status: 'success',
+                            message: this.$t('flashMessage.success.saved.repeatingTransaction'),
+                            time: 3000,
+                            clickable: true
+                        });
+
                         this.$router.push({name: 'repeatingTransactions'});
+                    })
+                    .catch(error => {
+                        this.flashMessage.setStrategy('multiple');
+                        this.flashMessage.show({
+                            status: 'error',
+                            message: this.$t('flashMessage.error'),
+                            time: 3000,
+                            clickable: true
+                        });
                     });
             }
 
@@ -544,7 +578,24 @@ export default {
 
             this.$store.dispatch('deleteRepeatingTransaction', {id: id, index:index })
                 .then(() => {
+                    this.flashMessage.setStrategy('multiple');
+                    this.flashMessage.show({
+                        status: 'success',
+                        message: this.$t('flashMessage.success.deleted.repeatingTransaction'),
+                        time: 3000,
+                        clickable: true
+                    });
+
                     this.$router.push({name: 'repeatingTransactions'});
+                })
+                .catch(error => {
+                    this.flashMessage.setStrategy('multiple');
+                    this.flashMessage.show({
+                        status: 'error',
+                        message: this.$t('flashMessage.error'),
+                        time: 3000,
+                        clickable: true
+                    });
                 });
         }
     }

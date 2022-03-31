@@ -10,8 +10,6 @@
 
         <div class="buttons-div">
 
-            <v-btn @click="flash">Flash</v-btn>
-
 <!--            <v-btn @click="test" class="test-btn my-auto" fab depressed>
                 <v-icon>mdi-head-question-outline</v-icon>
             </v-btn>-->
@@ -212,11 +210,6 @@ export default {
             // const endingDate = '2021-08-16';
             // console.log(startingDate < endingDate);
 
-        },
-        flash() {
-            /*console.log('Hi');*/
-            this.flash({message: 'Hello there!', variant: 'success'});
-            /*this.$router.push('/overview');*/
         },
         refreshDB() {
             this.$store.dispatch('refreshDB');

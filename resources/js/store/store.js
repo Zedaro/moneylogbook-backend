@@ -2,7 +2,6 @@ import Vuex from "vuex"
 import Vue from "vue";
 import { i18n } from "../languages/lang";
 import axios from "axios";
-import { createFlashStore } from 'vuex-flash';
 Vue.use(Vuex)
 
 // function editTransferBalance(moneyAccount, balance) {
@@ -1276,9 +1275,6 @@ export const store = new Vuex.Store({
         }
 
     },
-    plugins: [
-        createFlashStore()
-    ]
 });
 
 //parseFloat( (  ).toFixed(2) )

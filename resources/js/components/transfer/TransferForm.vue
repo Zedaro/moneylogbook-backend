@@ -129,8 +129,6 @@ import ValidationTest from "../ValidationTest";
 import SaveDelete from "../buttons/SaveDelete";
 import {ValidationObserver, ValidationProvider} from 'vee-validate';
 import '../../validation/rules';
-
-
 export default {
     name: "TransferForm",
     components: {SaveDelete, ValidationObserver, ValidationProvider, ValidationTest},
@@ -349,8 +347,25 @@ export default {
                         }
                         //If everything worked, the user is directed to the transfers page
                         else {
+                            this.flashMessage.setStrategy('multiple');
+                            this.flashMessage.show({
+                                status: 'success',
+                                message: this.$t('flashMessage.success.saved.transfer'),
+                                time: 3000,
+                                clickable: true
+                            });
+
                             this.$router.push({name: 'transfers'});
                         }
+                    })
+                    .catch(error => {
+                        this.flashMessage.setStrategy('multiple');
+                        this.flashMessage.show({
+                            status: 'error',
+                            message: this.$t('flashMessage.error'),
+                            time: 3000,
+                            clickable: true
+                        });
                     })
 
             }
@@ -367,8 +382,25 @@ export default {
                         }
                         //If everything worked, the user is directed to the transfers page
                         else {
+                            this.flashMessage.setStrategy('multiple');
+                            this.flashMessage.show({
+                                status: 'success',
+                                message: this.$t('flashMessage.success.saved.transaction'),
+                                time: 3000,
+                                clickable: true
+                            });
+
                             this.$router.push({name: 'transfers'});
                         }
+                    })
+                    .catch(error => {
+                        this.flashMessage.setStrategy('multiple');
+                        this.flashMessage.show({
+                            status: 'error',
+                            message: this.$t('flashMessage.error'),
+                            time: 3000,
+                            clickable: true
+                        });
                     })
 
             }
@@ -380,7 +412,24 @@ export default {
 
             this.$store.dispatch('deleteTransfer', { transferId: transferId, transferIndex: transferIndex })
                 .then(() => {
+                    this.flashMessage.setStrategy('multiple');
+                    this.flashMessage.show({
+                        status: 'success',
+                        message: this.$t('flashMessage.success.deleted.transaction'),
+                        time: 3000,
+                        clickable: true
+                    });
+
                     this.$router.push({name: 'transfers'});
+                })
+                .catch(error => {
+                    this.flashMessage.setStrategy('multiple');
+                    this.flashMessage.show({
+                        status: 'error',
+                        message: this.$t('flashMessage.error'),
+                        time: 3000,
+                        clickable: true
+                    });
                 });
         }
     }

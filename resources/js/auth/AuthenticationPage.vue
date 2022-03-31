@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { localeChanged } from 'vee-validate';
 export default {
     name: "AuthenticationPage",
     components: {},
@@ -66,7 +67,8 @@ export default {
     },
     methods: {
         changeLanguage() {
-            this.$root.$i18n.locale = this.selectedLangAbbreviation;
+            this.$i18n.locale = this.selectedLangAbbreviation;
+            localeChanged();
             //this.$refs.form.validate();
         },
     },

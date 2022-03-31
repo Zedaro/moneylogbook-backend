@@ -5,7 +5,7 @@
         <v-main>
             <router-view/>
             <plus v-if="noForm"></plus>
-            <flash-message variant="success"></flash-message>
+            <flash-message :position="'right bottom'"></flash-message>
         </v-main>
     </div>
 </template>
