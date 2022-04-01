@@ -2,9 +2,13 @@
 
     <div class="form-and-error-div">
 
-        <v-card class="sign-up-card">
+        <error-login-signup :error="error">
+            {{ errorMessage }}
+        </error-login-signup>
 
-            <error-login-signup :class="{ visible: error }" :errorMessage="errorMessage"></error-login-signup>
+        <v-btn @click="test">Test</v-btn>
+
+        <v-card class="sign-up-card">
 
             <validation-observer ref="form" v-slot="{ validate, handleSubmit }">
                 <v-form class="form" @submit.prevent="handleSubmit(signUp)">
@@ -51,7 +55,7 @@
 
                         <v-btn type="submit">{{ $t('authenticationForms.signupLabel') }}</v-btn>
 
-                        <a href="/auth/login" class="login-link">{{ $t('authenticationForms.loginLabel') }}</a>
+                        <a class="login-link" @click="goToLogin">{{ $t('authenticationForms.loginLabel') }}</a>
 
                     </div>
 
@@ -86,12 +90,29 @@ export default {
             password_confirmation: 'testtesttest',
 
             error: false,
-            errorMessage: null,
+            errorKey: null,
 
         }
     },
+    computed: {
+
+        errorMessage() {
+
+            if(this.errorKey === null)
+                return '';
+            else
+                return this.$t(`errors.signup.${this.errorKey}`);
+
+        },
+
+    },
     methods: {
 
+        goToLogin() {
+
+            this.$router.push('/auth/login');
+
+        },
         async signUp() {
 
             console.log('hi');
@@ -113,11 +134,11 @@ export default {
 
             if( status === 422 ) {
 
-                this.errorMessage = 'userAlreadyExists';
+                this.errorKey = 'userAlreadyExists';
 
             } else {
 
-                this.errorMessage = 'serverUnavailable';
+                this.errorKey = 'serverUnavailable';
 
             }
 
@@ -125,8 +146,12 @@ export default {
 
         },
         test() {
-            this.$i18n.locale = 'en-US';
-            localeChanged();
+            /*this.$i18n.locale = 'en-US';
+            localeChanged();*/
+            if(this.errorKey === 'serverUnavailable')
+                this.errorKey = 'userAlreadyExisting';
+            else
+                this.errorKey = 'serverUnavailable';
         }
 
     }

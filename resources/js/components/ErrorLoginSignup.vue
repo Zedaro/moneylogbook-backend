@@ -1,7 +1,7 @@
 <template>
 
-    <v-card class="error-card" v-if="errorMessage !== null">
-        {{ $t(`errors.login.${errorMessage}`)}}
+    <v-card class="error-card" :class="{ visible: error }">
+        <slot></slot>
 <!--        {{ $t(`errors.login.wrongUserData`)}}-->
     </v-card>
 
@@ -10,7 +10,7 @@
 <script>
 export default {
     name: "ErrorLoginSignup",
-    props: ['error', 'errorMessage', ],
+    props: ['error', ],
 }
 </script>
 
@@ -18,9 +18,14 @@ export default {
 
     div .error-card {
         background-color: rgba(255, 0, 0, 0.5);
-        width: 50%;
+        width: 100%;
+        padding: 20px;
         margin: 0 auto;
         visibility: hidden;
+    }
+
+    .visible {
+        visibility: visible !important;
     }
 
 </style>

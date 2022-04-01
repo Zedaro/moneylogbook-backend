@@ -4,7 +4,9 @@
 
         <div class="form-and-error-div">
 
-            <error-login-signup :class="{ visible: error }" :errorMessage="errorMessage"></error-login-signup>
+            <error-login-signup :error="error">
+                {{ errorMessage }}
+            </error-login-signup>
 
             <v-card class="login-card">
 
@@ -35,7 +37,7 @@
 
                             <v-btn type="submit">{{ $t('authenticationForms.loginLabel') }}</v-btn>
 
-                            <a href="/auth/signup" class="signup-link">{{ $t('authenticationForms.signupLabel') }}</a>
+                            <a class="signup-link" @click="goToSignup">{{ $t('authenticationForms.signupLabel') }}</a>
 
                         </div>
 
@@ -68,11 +70,17 @@ export default {
             password: 'testtesttest',
 
             error: false,
-            errorMessage: null,
+            errorKey: null,
 
         }
     },
     computed: {
+        errorMessage() {
+            if(this.errorKey === null)
+                return '';
+            else
+                return this.$t(`errors.login.${this.errorKey}`);
+        },
         languages() {
             return Object.values(this.$store.state.languages);
         },
@@ -89,6 +97,11 @@ export default {
     methods: {
         changeLanguage() {
             this.$root.$i18n.locale = this.selectedLangAbbreviation;
+        },
+        goToSignup() {
+
+            this.$router.push('/auth/signup');
+
         },
         login() {
 
@@ -123,17 +136,18 @@ export default {
                 ||  status === 403
                 ||  status === 401) {
 
-                this.errorMessage = 'wrongUserData';
+                this.errorKey = 'wrongUserData';
 
             } else {
 
-                this.errorMessage = 'serverUnavailable';
+                this.errorKey = 'serverUnavailable';
 
             }
 
             this.error = true;
 
         },
+
     },
     watch: {
         selectedLangIndex() {
@@ -164,17 +178,6 @@ export default {
 
         margin-top: 20px;
 
-    }
-
-    div .error-card {
-
-        width: 100%;
-        padding: 20px;
-
-    }
-
-    .visible {
-        visibility: visible !important;
     }
 
     @media screen and (min-width: 300px) {

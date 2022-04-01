@@ -320,20 +320,20 @@ Route::middleware('auth:sanctum')->group(function() {
 
 });
 
-Route::get('/auth/login', function() {
+Route::get('/auth/{any}', function() {
 
     return view('index')
         ->with('authenticated', 'no');
 
-})->middleware('guest:web')->name('login');
+})->where('any', '.*')->middleware('guest:web')->name('login');
 
 
-Route::get('/auth/signup', function() {
+/*Route::get('/auth/signup', function() {
 
     return view('index')
         ->with('authenticated', 'no');
 
-})->middleware('guest:web')->name('signup');
+})->middleware('guest:web')->name('signup');*/
 
 Route::get('/home', function() {
 

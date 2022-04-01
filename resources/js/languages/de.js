@@ -129,7 +129,7 @@ export default {
             serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.',
         },
         signup: {
-            userAlreadyExists: 'Der Nutzer mit dieser E-Mail Adresse existiert bereits.',
+            userAlreadyExists: 'Ein Nutzer mit dieser E-Mail Adresse existiert bereits',
             serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.',
         },
     },
