@@ -229,8 +229,6 @@
 
         </v-card>
 
-        <button @click="test">Test</button>
-
     </div>
 </template>
 

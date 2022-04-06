@@ -3,47 +3,40 @@ import { required, double, confirmed, email } from "vee-validate/dist/rules";
 import { i18n } from '../languages/setup';
 
 
-/*configure({
+configure({
     defaultMessage: (field, values) => {
-        return i18n.t(`validation.${values._rule_}`, values);
-        //return i18n.t('validation.required');
+        return i18n.t(`validation.${values._rule_}`);
     }
-})*/
+})
 
 
 extend('required', {
     ...required,
-    message: i18n.t('validation.required')
 });
 
 extend('double', {
-    ...double,
-    message: "Geben Sie bitte einen positiven Betrag an"
+    ...double
 });
 
 extend('regex', {
     validate(v) {
         const regex = /^[ A-Za-z0-9ÄÖÜßäöü.,:!?€$/()%!-]*$/;
         return v.match(regex);
-    },
-    message: "Legale Zeichen: Buchstaben, Zahlen und Folgende: . , : ! ? € $ / ( ) % ! - "
+    }
 });
 
 extend('confirmed', {
-    ...confirmed,
-    message: 'Die Passwörter stimmen nicht überein'
+    ...confirmed
 })
 
 extend('email', {
-    ...email,
-    message: 'Geben Sie bitte eine gültige E-Mail an'
+    ...email
 })
 
 extend('not_zero', {
     validate(v) {
         return !!v;
-    },
-    message: "Geben Sie bitte einen Betrag an"
+    }
 });
 
 extend('twoDifferentMoneyAccounts', {
@@ -61,22 +54,19 @@ extend('twoDifferentMoneyAccounts', {
 
         return valid;
 
-    },
-    message: "Bitte geben Sie zwei verschiedene Konten an"
+    }
 });
 
 extend('positiveFigure', {
     validate(v) {
         return v > 0;
-    },
-    message: "Geben Sie bitte einen positiven Betrag an"
+    }
 });
 
 extend('zero_or_positive', {
     validate(v) {
         return v >= 0;
-    },
-    message: "Geben Sie bitte einen positiven Betrag an"
+    }
 })
 
 extend('endingDateBiggerOrEqualToStartingDate', {
@@ -86,6 +76,5 @@ extend('endingDateBiggerOrEqualToStartingDate', {
         if( endingDateParts[0] < startingDateParts[0]  ||  (endingDateParts[0] == startingDateParts[0] && endingDateParts[1] < startingDateParts[1])  ||  (endingDateParts[0] == startingDateParts[0] && endingDateParts[1] == startingDateParts[1] && endingDateParts[2] < startingDateParts[2]) ) {
             return false;
         }
-    },
-    message: "Das Enddatum darf nicht kleiner sein als das Startdatum"
+    }
 })

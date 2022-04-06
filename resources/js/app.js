@@ -13,6 +13,7 @@ import {store} from "./store/store";
 import {router} from "./router";
 import vuetify from './plugins/vuetify'
 import { i18n } from './languages/setup';
+import './validation/rules';
 import axios from "axios";
 import Vue from 'vue';
 import FlashMessage from '@smartweb/vue-flash-message';

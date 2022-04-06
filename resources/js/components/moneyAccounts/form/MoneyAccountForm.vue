@@ -38,8 +38,6 @@
 
         </v-card>
 
-        <button @click="test">Test</button>
-
     </div>
 </template>
 
@@ -47,22 +45,12 @@
 import SaveDelete from "../../buttons/SaveDelete";
 import InputColorPicker from 'vue-native-color-picker';
 import {ValidationObserver, ValidationProvider} from 'vee-validate';
-import '../../../validation/rules';
+import '../../../validation/rules.js';
 
 export default {
     name: "MoneyAccountForm",
     components: {SaveDelete, "v-input-colorpicker": InputColorPicker, ValidationObserver, ValidationProvider},
     data() {
-
-        // eslint-disable-next-line no-unused-vars
-        const nameRules = [
-            v => !!v || "Geben Sie bitte einen Namen an"
-        ];
-        // eslint-disable-next-line no-unused-vars
-        const moneyRules = [
-            v => !!v || "Geben Sie bitte einen Betrag an"
-        ];
-
 
         if (this.$route.params.item === 'new') {
             return {
@@ -70,8 +58,6 @@ export default {
                 name: '',
                 money: null,
                 color: '#000000',
-                nameRules: nameRules,
-                moneyRules: moneyRules
             };
         } else {
             return {
@@ -79,8 +65,6 @@ export default {
                 name: (this.$store.getters.getMoneyAccounts[this.$route.params.item].name),
                 money: (this.$store.getters.getMoneyAccounts[this.$route.params.item].money),
                 color: (this.$store.getters.getMoneyAccounts[this.$route.params.item].color),
-                nameRules: nameRules,
-                moneyRules: moneyRules
             };
         }
 

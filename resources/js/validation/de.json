@@ -1,3 +1,12 @@
 {
-    "required": "Füllen Sie bitte das Feld aus"
+    "required": "Füllen Sie bitte das Feld aus",
+    "double": "Geben Sie bitte einen positiven Betrag an",
+    "regex": "Legale Zeichen: Buchstaben, Zahlen und Folgende: . , : ! ? € $ / ( ) % ! - ",
+    "confirmed": "Die Passwörter stimmen nicht überein",
+    "email": "Geben Sie bitte eine gültige E-Mail an",
+    "not_zero": "Geben Sie bitte einen Betrag an",
+    "twoDifferentMoneyAccounts": "Bitte geben Sie zwei verschiedene Konten an",
+    "positiveFigure": "Geben Sie bitte einen positiven Betrag an",
+    "zero_or_positive": "Geben Sie bitte einen positiven Betrag an",
+    "endingDateBiggerOrEqualToStartingDate": "Das Enddatum darf nicht kleiner sein als das Startdatum"
 }

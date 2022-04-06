@@ -6,8 +6,6 @@
             {{ errorMessage }}
         </error-login-signup>
 
-        <v-btn @click="test">Test</v-btn>
-
         <v-card class="sign-up-card">
 
             <validation-observer ref="form" v-slot="{ validate, handleSubmit }">
@@ -24,7 +22,7 @@
                         ></v-text-field>
                     </validation-provider>
 
-                    <validation-provider rules="required" v-slot="{ errors }">
+                    <validation-provider rules="required|email" v-slot="{ errors }">
                         <v-text-field
                             :label="$t('authenticationForms.email')"
                             type="email"
@@ -63,8 +61,6 @@
 
             </validation-observer>
 
-            <v-btn @click="test">Change Validation Language</v-btn>
-
         </v-card>
 
     </div>
@@ -75,7 +71,6 @@
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import '../validation/rules';
 import ErrorLoginSignup from "../components/ErrorLoginSignup";
-import { localeChanged } from "vee-validate";
 
 export default {
 
@@ -145,14 +140,6 @@ export default {
             this.error = true;
 
         },
-        test() {
-            /*this.$i18n.locale = 'en-US';
-            localeChanged();*/
-            if(this.errorKey === 'serverUnavailable')
-                this.errorKey = 'userAlreadyExisting';
-            else
-                this.errorKey = 'serverUnavailable';
-        }
 
     }
 

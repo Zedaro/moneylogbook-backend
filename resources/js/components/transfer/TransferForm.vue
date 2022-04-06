@@ -12,8 +12,6 @@
             </v-card>
         </v-dialog>
 
-        <validation-test></validation-test>
-
         <v-card class="form-card">
 
             <validation-observer v-slot="{ handleSubmit }">
@@ -119,19 +117,16 @@
 
         </v-card>
 
-        <button @click="test">Test</button>
-
     </div>
 </template>
 
 <script>
-import ValidationTest from "../ValidationTest";
 import SaveDelete from "../buttons/SaveDelete";
 import {ValidationObserver, ValidationProvider} from 'vee-validate';
 import '../../validation/rules';
 export default {
     name: "TransferForm",
-    components: {SaveDelete, ValidationObserver, ValidationProvider, ValidationTest},
+    components: {SaveDelete, ValidationObserver, ValidationProvider, },
     data() {
         /*
         const nameRules = [
