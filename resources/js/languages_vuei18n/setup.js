@@ -5,7 +5,7 @@ import en_US from "./en-US";
 
 let messages = {
     de: de,
-    'en-US': en_US
+    en: en_US
 }
 
 Vue.use(VueI18n);

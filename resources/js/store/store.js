@@ -14,12 +14,8 @@ export const store = new Vuex.Store({
     state: {
         loading: true,
         drawer: false,
-        snackbar: {
-            error: false,
-            success: false
-        },
 
-        initialLocalStorage: (() => {
+        /*initialLocalStorage: (() => {
             let obj = {
                 languages: {
                     de: 'Deutsch',
@@ -84,7 +80,7 @@ export const store = new Vuex.Store({
             obj.totalMoney = obj.moneyAccounts[0].money + obj.moneyAccounts[1].money;
 
             return obj;
-        }),
+        }),*/
         initialUserData: ((data) => {
             let obj = {
                 languages: {
@@ -192,10 +188,9 @@ export const store = new Vuex.Store({
         //     transfers: []
         // },
 
-        languages: {
-            de: 'DE',
-            "en-US": 'EN'
-        },
+        languages: null,
+        preferredLanguage: null,
+        languageSelected: false,
         toolbarTitle: null,
 
         moneyAccounts: null,
@@ -345,9 +340,6 @@ export const store = new Vuex.Store({
 
         },
 
-        setState(context) {
-            context.commit('setState');
-        },
         setDrawer(context) {
             context.commit("setDrawer");
         },
@@ -963,6 +955,13 @@ export const store = new Vuex.Store({
             state.snackbar[type] = !state.snackbar[type];
         },
 
+        setState(state) {
+            state.languages = {
+                de: 'DE',
+                en: 'EN'
+            };
+            state.preferredLanguage = navigator.language.substring(0, 2);
+        },
         setUserData(state, data) {
 
             state.userData = state.initialUserData(data);

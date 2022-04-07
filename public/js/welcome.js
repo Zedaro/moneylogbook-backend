@@ -3806,6 +3806,13 @@ document.addEventListener('DOMContentLoaded', function () {
     width: '300px',
     rewind: true
   }).mount();
+
+  if (sessionStorage.getItem('locale') === null) {
+    console.log('sessionStorage null');
+    sessionStorage.setItem('locale', navigator.language.substring(0, 2));
+  } else {
+    console.log('sessionStorage not null');
+  }
 });
 /*let de = document.getElementById('de');
 let en = document.getElementById('en');*/
@@ -3818,7 +3825,10 @@ en.onclick = function() {
 }*/
 
 function changeLanguage(locale) {
-  window.location.href = "http://localhost:3000/welcome/".concat(locale); //console.log('changeLanguage/' + locale);
+  sessionStorage.setItem('locale', locale);
+  location.href = "http://localhost:3000/welcome/".concat(locale); //session storage
+  //onload
+  //js events
 }
 
 window.changeLanguage = changeLanguage;

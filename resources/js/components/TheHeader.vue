@@ -49,10 +49,10 @@
                         mandatory
                     >
                         <v-list-item
-                            v-for="(language, index) in languages"
+                            v-for="(languageValue, languageKey, index) in this.$store.state.languages"
                             :key="index"
                         >
-                            <v-list-item-title>{{ language }}</v-list-item-title>
+                            <v-list-item-title>{{ languageValue }}</v-list-item-title>
                         </v-list-item>
                     </v-list-item-group>
                 </v-list>
@@ -74,7 +74,8 @@ export default {
     data() {
         return {
             menu: false,
-            selectedLangIndex: Object.keys(this.$store.state.userData.languages).findIndex(language => language === 'de'),
+            languages: this.$store.state.languages,
+            selectedLangIndex: null,
         }
     },
     computed: {
@@ -121,7 +122,16 @@ export default {
                 */
             }
         },
-        languages() {
+
+        selectedLangKey() {
+            return Object.keys(this.languages)[this.selectedLangIndex];
+        },
+
+        selectedLangText() {
+            return this.languages[this.selectedLangKey];
+        },
+
+        /*languages() {
             return Object.values(this.$store.state.userData.languages);
         },
         languageAbbreviations() {
@@ -132,7 +142,7 @@ export default {
         },
         selectedLangAbbreviation() {
             return this.languageAbbreviations[this.selectedLangIndex];
-        }
+        }*/
     },
     methods: {
         clickDrawer() {
@@ -218,8 +228,9 @@ export default {
             localStorage.removeItem('state');
         },
         changeLanguage() {
-            this.$root.$i18n.locale = this.selectedLangAbbreviation;
+            this.$root.$i18n.locale = this.selectedLangKey;
             localeChanged();
+            sessionStorage.setItem('locale', this.selectedLangKey);
         },
         nextOrThisWeekday(startingDate, selectedWeekdaysIndexes) {
 
@@ -329,7 +340,12 @@ export default {
             //console.log(this.$route.meta.title);
             //this.changeLanguage();
         }
-    }
+    },
+    beforeMount() {
+        this.$root.$i18n.locale = sessionStorage.getItem('locale') ? sessionStorage.getItem('locale') : navigator.language.substring(0, 2);
+        localeChanged();
+        this.selectedLangIndex = Object.keys(this.$store.state.languages).findIndex(language => language === this.$i18n.locale);
+    },
 }
 </script>
 

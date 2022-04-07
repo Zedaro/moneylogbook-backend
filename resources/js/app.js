@@ -40,6 +40,10 @@ new Vue({
     vuetify,
     i18n,
     axios,
+    created() {
+      this.$store.commit('setState');
+      this.$root.$i18n.locale = navigator.language.substring(0, 2);
+    },
     /*
   created: function() {
     this.$store.dispatch('setState')

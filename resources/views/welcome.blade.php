@@ -5,6 +5,8 @@
             <option value="English">🇺🇸 English</option>
         </select>-->
 
+    <button onclick="sessionStorage.removeItem('locale')">Reset sessionStorage locale</button>
+
     <div class="language-switcher">
         <button onclick="changeLanguage('de')" id="de" class="lang de">🇩🇪 DE</button>
         <button onclick="changeLanguage('en')" id="en" class="lang en">🇺🇸 EN</button>

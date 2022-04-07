@@ -47,36 +47,43 @@ export default {
         return {
 
             menu: false,
-            selectedLangIndex: Object.keys(this.$store.state.languages).findIndex(language => language === 'de'),
+            languages: Object.values(this.$store.state.languages),
+            selectedLangIndex: null,
 
         }
     },
     computed: {
-        languages() {
-            return Object.values(this.$store.state.languages);
-        },
         selectedLangText() {
             return this.languages[this.selectedLangIndex];
         },
-        languageAbbreviations() {
+        languageKeys() {
             return Object.keys(this.$store.state.languages);
         },
-        selectedLangAbbreviation() {
-            return this.languageAbbreviations[this.selectedLangIndex];
+        selectedLangKey() {
+            return this.languageKeys[this.selectedLangIndex];
         }
     },
     methods: {
         changeLanguage() {
-            this.$i18n.locale = this.selectedLangAbbreviation;
+            this.$i18n.locale = this.selectedLangKey;
             localeChanged();
-            //this.$refs.form.validate();
+            sessionStorage.setItem('locale', this.selectedLangKey);
         },
     },
     watch: {
         selectedLangIndex() {
             this.changeLanguage();
         }
-    }
+    },
+    beforeMount() {
+        console.log('sessionStorage:', sessionStorage.getItem('locale'));
+        console.log('selectedLangIndex', this.selectedLangIndex);
+        console.log(this.languages);
+
+        this.$root.$i18n.locale = sessionStorage.getItem('locale') ? sessionStorage.getItem('locale') : navigator.language.substring(0, 2);
+        localeChanged();
+        this.selectedLangIndex = Object.keys(this.$store.state.languages).findIndex(language => language === this.$i18n.locale);
+    },
 }
 </script>
 

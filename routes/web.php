@@ -321,15 +321,23 @@ Route::middleware('auth:sanctum')->group(function() {
 });
 
 
-Route::get('/welcome/{locale}', function($locale) {
+Route::get('/welcome/{locale}', function($locale, Request $request) {
 
     App::setLocale($locale);
     return view('welcome');
 
-})->where('locale', 'de|en')->name('welcome');
+})->where('locale', 'de|en');
 
 
-Route::redirect('/welcome/{any?}', '/welcome/de');
+Route::get('/welcome/{any?}', function(Request $request) {
+
+    $preferredLanguage = substr($request->getPreferredLanguage(), 0, 2);
+    App::setLocale($preferredLanguage);
+    Debugbar::debug($request->getSession());
+    return view('welcome');
+    //return redirect('/welcome/'.$preferredLanguage);
+
+})->name('welcome');
 
 
 Route::get('/auth/{any}', function() {
@@ -337,7 +345,7 @@ Route::get('/auth/{any}', function() {
     return view('index')
         ->with('authenticated', 'no');
 
-})->where('any', 'login|signup')->middleware('guest:web')->name('login');
+})->where('any', 'login|signup')->middleware('guest:web')->name('authPage');
 
 
 Route::redirect('/auth/{any?}', '/auth/login');

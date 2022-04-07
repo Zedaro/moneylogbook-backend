@@ -81,23 +81,8 @@ export default {
             else
                 return this.$t(`errors.login.${this.errorKey}`);
         },
-        languages() {
-            return Object.values(this.$store.state.languages);
-        },
-        selectedLangText() {
-            return this.languages[this.selectedLangIndex];
-        },
-        languageAbbreviations() {
-            return Object.keys(this.$store.state.languages);
-        },
-        selectedLangAbbreviation() {
-            return this.languageAbbreviations[this.selectedLangIndex];
-        }
     },
     methods: {
-        changeLanguage() {
-            this.$root.$i18n.locale = this.selectedLangAbbreviation;
-        },
         goToSignup() {
 
             this.$router.push('/auth/signup');
@@ -112,7 +97,7 @@ export default {
 
                         console.log("Response:", response);
 
-                        this.$router.go('/overview');
+                        location.reload();
                         /*window.location.href = '/overview';*/
 
                     })
@@ -148,11 +133,6 @@ export default {
 
         },
 
-    },
-    watch: {
-        selectedLangIndex() {
-            this.changeLanguage();
-        }
     },
 }
 </script>

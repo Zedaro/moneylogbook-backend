@@ -115,7 +115,7 @@ export default {
             await axios.post('/register', this.$data)
                 .then((response) => {
 
-                    this.$router.go('/overview');
+                    location.reload();
 
                 })
                 .catch((error) => {
