@@ -320,12 +320,27 @@ Route::middleware('auth:sanctum')->group(function() {
 
 });
 
+
+Route::get('/welcome/{locale}', function($locale) {
+
+    App::setLocale($locale);
+    return view('welcome');
+
+})->where('locale', 'de|en')->name('welcome');
+
+
+Route::redirect('/welcome/{any?}', '/welcome/de');
+
+
 Route::get('/auth/{any}', function() {
 
     return view('index')
         ->with('authenticated', 'no');
 
-})->where('any', '.*')->middleware('guest:web')->name('login');
+})->where('any', 'login|signup')->middleware('guest:web')->name('login');
+
+
+Route::redirect('/auth/{any?}', '/auth/login');
 
 
 /*Route::get('/auth/signup', function() {
@@ -335,17 +350,32 @@ Route::get('/auth/{any}', function() {
 
 })->middleware('guest:web')->name('signup');*/
 
+
 Route::get('/home', function() {
 
     return view('home');
 
 });
 
+
 Route::get('/{any}', function () {
 
     return view('index')->with('authenticated', 'yes');
 
 })->where('any', '.*')->middleware('auth:sanctum');
+
+
+
+/*Route::get('/overview', function() {
+
+    return view('index')->with('authenticated', 'yes');
+
+})->middleware('auth:sanctum');
+
+Route::redirect('/{any}', '/welcome/de')->where('any', '.*')->middleware('guest:web');*/
+
+
+
 
 
 //Route::get('/{path}', function ($path) {

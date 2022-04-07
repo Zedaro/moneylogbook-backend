@@ -13,10 +13,10 @@ require('vuetifyjs-mix-extension');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    .js('resources/js/welcome.js', 'public/js')
     .vuetify()
     .vue({ version: 2 })
+    .css('resources/css/welcome.css', 'public/css')
     .sass('resources/sass/app.scss', 'public/css');
-
-//mix.css('resources/css', 'public/css');
 
 mix.browserSync('http://localhost:8000/');

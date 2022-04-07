@@ -1,6 +1,6 @@
 import Vuex from "vuex"
 import Vue from "vue";
-import { i18n } from "../languages/lang";
+import { i18n } from "../languages_vuei18n/lang";
 import axios from "axios";
 Vue.use(Vuex)
 
@@ -184,7 +184,7 @@ export const store = new Vuex.Store({
         }),
         userData: null,
         // {
-        //     languages: {},
+        //     languages_vuei18n: {},
         //     toolbarTitle: '',
         //     moneyAccounts: [],
         //     transactions: [],
@@ -1276,5 +1276,3 @@ export const store = new Vuex.Store({
 
     },
 });
-
-//parseFloat( (  ).toFixed(2) )

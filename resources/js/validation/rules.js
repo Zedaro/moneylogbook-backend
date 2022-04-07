@@ -1,6 +1,6 @@
 import { extend, configure } from "vee-validate";
 import { required, double, confirmed, email } from "vee-validate/dist/rules";
-import { i18n } from '../languages/setup';
+import { i18n } from '../languages_vuei18n/setup';
 
 
 configure({

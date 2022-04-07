@@ -12,7 +12,7 @@ import App from "./components/App";
 import {store} from "./store/store";
 import {router} from "./router";
 import vuetify from './plugins/vuetify'
-import { i18n } from './languages/setup';
+import { i18n } from './languages_vuei18n/setup';
 import './validation/rules';
 import axios from "axios";
 import Vue from 'vue';
