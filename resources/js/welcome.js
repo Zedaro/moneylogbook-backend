@@ -1,4 +1,4 @@
-//import axios from "axios";
+import axios from "axios";
 import Splide from '@splidejs/splide';
 
 /*let langButtons = document.getElementsByClassName('lang');
@@ -51,8 +51,12 @@ en.onclick = function() {
 
 function changeLanguage(locale) {
 
-    sessionStorage.setItem('locale', locale);
-    location.href = `http://localhost:3000/welcome/${locale}`;
+    axios.post('/changeLanguage', {lang: locale})
+        .then(() => {
+            sessionStorage.setItem('locale', locale);
+            location.href = `http://localhost:3000/welcome/${locale}`;
+        });
+
     //session storage
     //onload
     //js events

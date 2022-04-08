@@ -40,6 +40,7 @@
 
 <script>
 import { localeChanged } from 'vee-validate';
+import axios from "axios";
 export default {
     name: "AuthenticationPage",
     components: {},
@@ -65,9 +66,11 @@ export default {
     },
     methods: {
         changeLanguage() {
-            this.$i18n.locale = this.selectedLangKey;
-            localeChanged();
-            sessionStorage.setItem('locale', this.selectedLangKey);
+            axios.post('/changeLanguage', {lang: this.selectedLangKey}).then(() => {
+                this.$i18n.locale = this.selectedLangKey;
+                localeChanged();
+                sessionStorage.setItem('locale', this.selectedLangKey);
+            });
         },
     },
     watch: {

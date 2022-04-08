@@ -68,6 +68,7 @@
 
 <script>
 import { localeChanged } from 'vee-validate';
+import axios from "axios";
 
 export default {
     name: "TheHeader",
@@ -228,9 +229,11 @@ export default {
             localStorage.removeItem('state');
         },
         changeLanguage() {
-            this.$root.$i18n.locale = this.selectedLangKey;
-            localeChanged();
-            sessionStorage.setItem('locale', this.selectedLangKey);
+            axios.post('/changeLanguage', {lang: this.selectedLangKey}).then(() => {
+                this.$i18n.locale = this.selectedLangKey;
+                localeChanged();
+                sessionStorage.setItem('locale', this.selectedLangKey);
+            });
         },
         nextOrThisWeekday(startingDate, selectedWeekdaysIndexes) {
 

@@ -320,6 +320,12 @@ Route::middleware('auth:sanctum')->group(function() {
 
 });
 
+Route::post('/changeLanguage', function(Request $request) {
+
+    $request->session()->put(['lang' => $request->lang]);
+    logger($request->session()->get('lang'));
+
+});
 
 Route::get('/welcome/{locale}', function($locale, Request $request) {
 
@@ -331,10 +337,21 @@ Route::get('/welcome/{locale}', function($locale, Request $request) {
 
 Route::get('/welcome/{any?}', function(Request $request) {
 
-    $preferredLanguage = substr($request->getPreferredLanguage(), 0, 2);
-    App::setLocale($preferredLanguage);
-    Debugbar::debug($request->getSession());
-    return view('welcome');
+    logger('welcome any');
+    logger('session lang: '.$request->session()->has('lang'));
+
+    //Neue Session: preferred Browser language als Anfangs-locale nehmen und in Laravel-Session speichern
+    if($request->session()->has('lang') === false) {
+
+        $preferredLanguage = substr($request->getPreferredLanguage(), 0, 2);
+        App::setLocale($preferredLanguage);
+        $request->session()->put(['lang' => $preferredLanguage]);
+        return redirect('/welcome/'.$preferredLanguage);
+
+    }
+
+    logger('session lang: '.$request->session()->get('lang'));
+    return redirect('/welcome/'.$request->session()->get('lang'));
     //return redirect('/welcome/'.$preferredLanguage);
 
 })->name('welcome');
