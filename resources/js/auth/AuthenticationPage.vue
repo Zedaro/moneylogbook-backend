@@ -79,10 +79,6 @@ export default {
         }
     },
     beforeMount() {
-        console.log('sessionStorage:', sessionStorage.getItem('locale'));
-        console.log('selectedLangIndex', this.selectedLangIndex);
-        console.log(this.languages);
-
         this.$root.$i18n.locale = sessionStorage.getItem('locale') ? sessionStorage.getItem('locale') : navigator.language.substring(0, 2);
         localeChanged();
         this.selectedLangIndex = Object.keys(this.$store.state.languages).findIndex(language => language === this.$i18n.locale);

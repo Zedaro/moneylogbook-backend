@@ -16,6 +16,7 @@ import BackendTests from "./components/BackendTests";
 import AuthenticationPage from "./auth/AuthenticationPage";
 import SignUp from "./auth/SignupComponent";
 import LoginPage from "./auth/LoginComponent";
+import ForgotPasswort from "./auth/ForgotPasswort";
 
 
 
@@ -50,6 +51,12 @@ const routes = [
         name: 'login',
         component: LoginPage,
         meta: { title: 'Login' },
+    },
+    {
+        path: '/auth/forgotPassword',
+        name: 'forgotPassword',
+        component: ForgotPasswort,
+        meta: { title: 'Forgot Password' },
     },
     {
         path: '/testcss',

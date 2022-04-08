@@ -97,10 +97,13 @@ export default {
     authenticationForms: {
         loginLabel: 'Login',
         signupLabel: 'Sign up',
+        forgotPasswordLabel: 'Forgot password',
+        sendEmail: 'Send password reset email',
         name: 'Name',
         email: 'Email',
         password: 'Password',
-        confirmPassword: 'Repeat Password'
+        confirmPassword: 'Repeat Password',
+        forgotPassword: 'Forgot password?',
     },
     logout: 'Logout',
     moneyFormat: {

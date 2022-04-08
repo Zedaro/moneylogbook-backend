@@ -6081,21 +6081,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }).mount();
 
   if (sessionStorage.getItem('locale') === null) {
-    console.log('sessionStorage null');
     sessionStorage.setItem('locale', navigator.language.substring(0, 2));
-  } else {
-    console.log('sessionStorage not null');
   }
 });
-/*let de = document.getElementById('de');
-let en = document.getElementById('en');*/
-
-/*de.onclick = function() {
-    window.location.href = "http://localhost:3000/welcome/de";
-}
-en.onclick = function() {
-    window.location.href = "http://localhost:3000/welcome/en";
-}*/
 
 function changeLanguage(locale) {
   axios__WEBPACK_IMPORTED_MODULE_0___default().post('/changeLanguage', {
@@ -6103,9 +6091,7 @@ function changeLanguage(locale) {
   }).then(function () {
     sessionStorage.setItem('locale', locale);
     location.href = "http://localhost:3000/welcome/".concat(locale);
-  }); //session storage
-  //onload
-  //js events
+  });
 }
 
 window.changeLanguage = changeLanguage;

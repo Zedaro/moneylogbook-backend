@@ -108,10 +108,13 @@ export default {
     authenticationForms: {
         loginLabel: 'Einloggen',
         signupLabel: 'Registrieren',
+        forgotPasswordLabel: 'Passwort vergessen',
+        sendEmail: 'E-Mail zum Zurücksetzen senden',
         name: 'Name',
         email: 'E-Mail',
         password: 'Passwort',
-        confirmPassword: 'Passwort wiederholen'
+        confirmPassword: 'Passwort wiederholen',
+        forgotPassword: 'Passwort vergessen?',
     },
     logout: 'Ausloggen',
     moneyFormat: {

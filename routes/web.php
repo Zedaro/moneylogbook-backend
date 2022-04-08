@@ -323,7 +323,6 @@ Route::middleware('auth:sanctum')->group(function() {
 Route::post('/changeLanguage', function(Request $request) {
 
     $request->session()->put(['lang' => $request->lang]);
-    logger($request->session()->get('lang'));
 
 });
 
@@ -350,9 +349,7 @@ Route::get('/welcome/{any?}', function(Request $request) {
 
     }
 
-    logger('session lang: '.$request->session()->get('lang'));
     return redirect('/welcome/'.$request->session()->get('lang'));
-    //return redirect('/welcome/'.$preferredLanguage);
 
 })->name('welcome');
 
@@ -362,7 +359,7 @@ Route::get('/auth/{any}', function() {
     return view('index')
         ->with('authenticated', 'no');
 
-})->where('any', 'login|signup')->middleware('guest:web')->name('authPage');
+})->where('any', 'login|signup|forgotPassword')->middleware('guest:web')->name('authPage');
 
 
 Route::redirect('/auth/{any?}', '/auth/login');

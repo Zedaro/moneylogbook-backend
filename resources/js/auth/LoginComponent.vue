@@ -33,11 +33,13 @@
                             ></v-text-field>
                         </validation-provider>
 
+                        <a @click="goTo('forgotPassword')">{{ $t('authenticationForms.forgotPassword') }}</a>
+
                         <div class="bottom-row-div">
 
                             <v-btn type="submit">{{ $t('authenticationForms.loginLabel') }}</v-btn>
 
-                            <a class="signup-link" @click="goToSignup">{{ $t('authenticationForms.signupLabel') }}</a>
+                            <a class="signup-link" @click="goTo('signup')">{{ $t('authenticationForms.signupLabel') }}</a>
 
                         </div>
 
@@ -83,9 +85,9 @@ export default {
         },
     },
     methods: {
-        goToSignup() {
+        goTo(destination) {
 
-            this.$router.push('/auth/signup');
+            this.$router.push(`/auth/${destination}`);
 
         },
         login() {
