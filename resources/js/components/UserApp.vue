@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!this.$store.state.loading">
+    <div v-if="!$store.state.loading">
         <navigation-drawer></navigation-drawer>
         <the-header></the-header>
         <v-main>

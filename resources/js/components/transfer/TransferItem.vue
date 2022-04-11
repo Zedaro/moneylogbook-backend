@@ -4,14 +4,13 @@
         <div class="colorFrom" :style="{ backgroundColor: colorFrom }"></div>
         <div class="colorTo" :style="{ backgroundColor: colorTo }"></div>
         <v-card-text class="grey--text flex date">{{ formattedDate }}</v-card-text>
-        <!--    <v-card-text class="text-center grey&#45;&#45;text">{{ this.description }}</v-card-text>-->
-        <v-card-text class="text-center money">{{ $t('moneyFormat.format').format(this.money) }}</v-card-text>
+        <v-card-text class="text-center money">{{ $t('moneyFormat.format').format(money) }}</v-card-text>
         <div class="from-to-div">
-            <v-card-text class="text-center money-account from">{{ this.moneyAccountName(this.fromId) }}</v-card-text>
+            <v-card-text class="text-center money-account from">{{ moneyAccountName(fromId) }}</v-card-text>
             <v-icon class="arrow-down">mdi-arrow-down</v-icon>
-            <v-card-text class="text-center money-account to">{{ this.moneyAccountName(this.toId) }}</v-card-text>
+            <v-card-text class="text-center money-account to">{{ moneyAccountName(toId) }}</v-card-text>
         </div>
-        <v-card-text class="text-center grey--text name">{{ this.name }}</v-card-text>
+        <v-card-text class="text-center grey--text name">{{ name }}</v-card-text>
     </v-card>
 
 </template>
@@ -41,10 +40,10 @@ export default {
             return `${day}.${month}.${year}`;
         },
         colorFrom() {
-            return this.$store.getters.getColor(this.fromId);
+            return this.$store.getters.color(this.fromId);
         },
         colorTo() {
-            return this.$store.getters.getColor(this.toId);
+            return this.$store.getters.color(this.toId);
         },
         moneyAccountName() {
             return (id) => this.$store.getters.getMoneyAccountById(id).name;

@@ -2,23 +2,25 @@
 
     <v-card class="list-item" :to="moneyAccountsExist ? item : ''">
 
-        <div class="color" :style="{ backgroundColor: this.$store.getters.getColor(this.moneyAccountId) }"></div>
+<!--        color(moneyAccountId)-->
+
+        <div class="color" :style="{ backgroundColor: $store.getters.color(moneyAccountId) }"></div>
 
         <v-card-text class="text-center grey--text date">{{ formattedDate }}</v-card-text>
         <!-- <v-card-text class="text-center grey--text description">{{ this.description }}</v-card-text> -->
 
         <div class="money-div">
-            <v-card-text class="text-center money" :class="moneyColor">{{ $t('moneyFormat.format').format(this.money) }}</v-card-text>
+            <v-card-text class="text-center money" :class="moneyColor">{{ $t('moneyFormat.format').format(money) }}</v-card-text>
         </div>
 
         <div class="money-account-div">
             <v-card-text class="text-center money-account">
-                {{this.$store.getters.getMoneyAccountById(this.moneyAccountId).name }}
+                {{getMoneyAccountById(moneyAccountId).name }}
             </v-card-text>
         </div>
 
         <div class="name-div">
-            <v-card-text class="text-center grey--text name">{{ this.name }}</v-card-text>
+            <v-card-text class="text-center grey--text name">{{ name }}</v-card-text>
         </div>
 
     </v-card>
@@ -28,10 +30,15 @@
 
 
 <script>
+import {mapGetters} from 'vuex';
 export default {
     name: "TransactionItem",
     props: ['name', 'description', 'money', 'moneyAccountId', 'date', 'index'],
     computed: {
+        ...mapGetters([
+            'color',
+            'getMoneyAccountById'
+        ]),
         moneyAccountsExist() {
             const account = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.moneyAccountId).name);//this.moneyAccount);
 

@@ -1,6 +1,6 @@
 <template>
     <v-app-bar app>
-        <v-app-bar-nav-icon v-if="Object.keys($route.params).length === 0 && this.$route.params.item !== 'new'"
+        <v-app-bar-nav-icon v-if="Object.keys($route.params).length === 0 && $route.params.item !== 'new'"
                             @click="clickDrawer"></v-app-bar-nav-icon>
         <!-- Object.keys($route.params).length === 0 -->
         <v-app-bar-nav-icon v-else @click="$router.back()">
@@ -49,7 +49,7 @@
                         mandatory
                     >
                         <v-list-item
-                            v-for="(languageValue, languageKey, index) in this.$store.state.languages"
+                            v-for="(languageValue, languageKey, index) in $store.state.languages"
                             :key="index"
                         >
                             <v-list-item-title>{{ languageValue }}</v-list-item-title>
@@ -58,7 +58,7 @@
                 </v-list>
             </v-menu>
 
-            <v-btn @click="logout" class="logout">{{ this.$t('logout') }}</v-btn>
+            <v-btn @click="logout" class="logout">{{ $t('logout') }}</v-btn>
 
         </div>
 

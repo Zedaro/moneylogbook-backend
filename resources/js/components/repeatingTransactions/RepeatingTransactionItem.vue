@@ -1,12 +1,12 @@
 <template>
 
-    <v-card class="list-item" :to="(moneyAccountsExist && this.expired == false) ? item : ''">
-        <div class="color" :style="{ backgroundColor: this.color }"></div>
+    <v-card class="list-item" :to="(moneyAccountsExist && expired == false) ? item : ''">
+        <div class="color" :style="{ backgroundColor: color }"></div>
         <v-card-text class="text-center grey--text flex date">{{ formattedDate(startingDate) }} - {{ formattedDate(endingDate) }}</v-card-text>
         <v-card-text class="text-center grey--text flex interval">{{ rhythmText }}</v-card-text>
-        <v-card-text class="text-center money" :class="moneyColor">{{ $t('moneyFormat.format').format(this.money) }}</v-card-text>
-        <v-card-text class="text-center money-account">{{ this.moneyAccountName }}</v-card-text>
-        <v-card-title class="grey--text name">{{ this.name }}</v-card-title>
+        <v-card-text class="text-center money" :class="moneyColor">{{ $t('moneyFormat.format').format(money) }}</v-card-text>
+        <v-card-text class="text-center money-account">{{ moneyAccountName }}</v-card-text>
+        <v-card-title class="grey--text name">{{ name }}</v-card-title>
     </v-card>
 
 </template>
@@ -30,7 +30,7 @@ export default {
             };
         },
         color() {
-            return this.$store.getters.getColor(this.moneyAccountId);
+            return this.$store.getters.color(this.moneyAccountId);
         },
         moneyColor() {
             return ((this.money > 0) ? 'green--text' : 'red--text');

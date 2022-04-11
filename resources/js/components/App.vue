@@ -1,9 +1,9 @@
 <template>
     <v-app id="inspire">
-        <div class="user-app-div" v-if="this.authenticated == 'yes'">
+        <div class="user-app-div" v-if="authenticated == 'yes'">
             <user-app></user-app>
         </div>
-        <authentication-page v-else-if="this.authPaths.includes(this.$route.path)"></authentication-page>
+        <authentication-page v-else-if="authPaths.includes($route.path)"></authentication-page>
 <!--        <login-page v-else-if="this.$route.path == '/login'"></login-page>
         <sign-up v-else-if="this.$route.path == '/signup'"></sign-up>-->
     </v-app>

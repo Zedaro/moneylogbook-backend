@@ -296,8 +296,8 @@ export const store = new Vuex.Store({
         getState(state) {
             return state;
         },
-        getColor(state, getters) {
-            return (id) => getters.getMoneyAccountById(id).color;
+        color(state, {getMoneyAccountById}) {
+            return (id) => getMoneyAccountById(id).color;
         },
         getToolbarTitle(state) {
             return state.userData.toolbarTitle;
@@ -340,11 +340,11 @@ export const store = new Vuex.Store({
 
         },
 
-        setDrawer(context) {
-            context.commit("setDrawer");
+        setDrawer({commit}) {
+            commit("setDrawer");
         },
-        setTitle(context, title) {
-            context.commit('setTitle', title);
+        setTitle({commit}, title) {
+            commit('setTitle', title);
         },
         updateTotalMoney(context) {
             let totalMoney = 0;
@@ -353,7 +353,7 @@ export const store = new Vuex.Store({
             context.commit('updateTotalMoney', parseFloat(totalMoney.toFixed(2)));
         },
 
-        async saveMoneyAccount(context, data) {
+        async saveMoneyAccount({commit, getters}, data) {
 
             //New MoneyAccount
             if (data.item === 'new') {
@@ -365,7 +365,7 @@ export const store = new Vuex.Store({
                         return response.data;
                     })
                     .then(function (response) {
-                        context.commit('saveNewMoneyAccount', response);
+                        commit('saveNewMoneyAccount', response);
                     });
 
                 //context.commit('saveNewMoneyAccount', data);
@@ -374,7 +374,7 @@ export const store = new Vuex.Store({
             //Edit MoneyAccount
             else {
 
-                data.id = context.getters.getMoneyAccountByIndex(data.item).id;
+                data.id = getters.getMoneyAccountByIndex(data.item).id;
 
                 console.log('updateMoneyAccount: posted data:');
                 console.log(data);
@@ -383,7 +383,7 @@ export const store = new Vuex.Store({
                     .then((response) => {
                         console.log('updateMoneyAccount response:');
                         console.log(response);
-                        context.commit('saveEditedMoneyAccount', {
+                        commit('saveEditedMoneyAccount', {
                             moneyAccountIndex: data.item,
                             updatedData: response.data
                         });

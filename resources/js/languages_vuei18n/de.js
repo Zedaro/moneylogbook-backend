@@ -108,7 +108,7 @@ export default {
     authenticationForms: {
         loginLabel: 'Einloggen',
         signupLabel: 'Registrieren',
-        forgotPasswordLabel: 'Passwort vergessen',
+        forgotPasswordLabel: 'Passwort zurücksetzen',
         sendEmail: 'E-Mail zum Zurücksetzen senden',
         name: 'Name',
         email: 'E-Mail',

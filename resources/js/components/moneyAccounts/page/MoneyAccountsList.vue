@@ -1,6 +1,6 @@
 <template>
   <div>
-    <money-account-item v-for="(account, index) in this.$store.getters.getMoneyAccounts" :key="index"
+    <money-account-item v-for="(account, index) in $store.getters.getMoneyAccounts" :key="index"
                         :name="account.name" :money="account.money" :color="account.color" :index="index">
     </money-account-item>
   </div>

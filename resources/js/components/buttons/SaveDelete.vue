@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <v-btn v-if="this.$route.params.item !== 'new'" class="delete-button mx-2" fab dark medium color="red" @click="deleteData">
+    <v-btn v-if="$route.params.item !== 'new'" class="delete-button mx-2" fab dark medium color="red" @click="deleteData">
       <v-icon dark>mdi-delete</v-icon>
     </v-btn>
     <v-btn type="submit" class="save-button mx-2" fab dark medium color="green">

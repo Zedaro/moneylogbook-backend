@@ -1,9 +1,9 @@
 <template>
 
     <v-card class="list-item" :to="item">
-        <div class="color" :style="{ backgroundColor: this.color }"></div>
-        <v-card-title id="card-title">{{ this.name }}</v-card-title>
-        <v-card-text class="text-center subtitle-1 money">{{ $t('moneyFormat.format').format(this.money) }}</v-card-text>
+        <div class="color" :style="{ backgroundColor: color }"></div>
+        <v-card-title id="card-title">{{ name }}</v-card-title>
+        <v-card-text class="text-center subtitle-1 money">{{ $t('moneyFormat.format').format(money) }}</v-card-text>
         <v-card-text class="text-center grey--text">{{ percentage }}%</v-card-text>
     </v-card>
 

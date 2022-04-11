@@ -9,6 +9,7 @@ require('./bootstrap');
 
 window.Vue = require('vue').default;
 import App from "./components/App";
+import '../css/extended-vuetify.css';
 import {store} from "./store/store";
 import {router} from "./router";
 import vuetify from './plugins/vuetify'

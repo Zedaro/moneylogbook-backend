@@ -7,7 +7,7 @@
                 {{ errorMessage }}
             </error-login-signup>
 
-            <v-card class="login-card">
+            <v-card class="form-card">
 
                 <validation-observer v-slot="{ handleSubmit }">
                     <v-form class="form" @submit.prevent="handleSubmit(login)">
@@ -27,9 +27,9 @@
 
                             <button type="submit" class="send-btn">{{ $t('authenticationForms.sendEmail') }}</button>
 
-                            <div class="center-box flex flex-center-items space-evenly mr">
-                                <a class="link" @click="goTo('login')">{{ $t('authenticationForms.loginLabel') }}</a>
-                                <a class="link" @click="goTo('signup')">{{ $t('authenticationForms.signupLabel') }}</a>
+                            <div class="ma-auto d-flex justify-space-evenly mt-5">
+                                <a @click="goTo('login')">{{ $t('authenticationForms.loginLabel') }}</a>
+                                <a @click="goTo('signup')">{{ $t('authenticationForms.signupLabel') }}</a>
                             </div>
 
                         </div>
@@ -128,34 +128,21 @@ export default {
 
 <style scoped>
 
-    .test-background {
-        background-color: #F5F5F5FF;
-    }
-
-    .center-box {
-        margin: auto;
-    }
-
-    .flex {
-        display: flex;
-    }
-
-    .space-evenly {
-        justify-content: space-evenly;
-    }
-
-    .mrg-top-20 {
+    div .form-card{
+        padding: 20px;
         margin-top: 20px;
     }
 
-
-
+    .test-background {
+        background-color: #F5F5F5FF;
+    }
 
     .form-and-error-div {
         position: absolute;
         top: 10%;
         left: 50%;
         transform: translateX(-50%);
+        width: 95%;
     }
 
     .form-title {
@@ -167,6 +154,8 @@ export default {
     }
 
     .send-btn {
+        display: block;
+
         min-width: 110px;
         min-height: 36px;
         height: fit-content;
@@ -190,69 +179,37 @@ export default {
         cursor: pointer;
     }
 
-    @media screen and (min-width: 300px) {
+    .v-btn .v-btn__content {
+        flex: 1 1 auto !important;
+        white-space: normal !important;
+        color: red !important;
+    }
 
-        div .login-card{
+    @media screen and (min-width: 425px) {
 
-            padding: 20px;
-            margin-top: 20px;
 
-        }
-
-        .form-and-error-div {
-
-            width: 95%;
-
-        }
-
-        .v-btn .v-btn__content {
-            flex: 1 1 auto !important;
-            white-space: normal !important;
-            color: red !important;
-        }
 
     }
+
     @media screen and (min-width: 600px) {
 
         .form-and-error-div {
-
             width: 70%;
-
-        }
-
-        div .login-card{
-
-            padding: 20px;
-            margin-top: 20px;
-
         }
 
         .signup-link {
-
             margin-left: 16px;
-
         }
 
     }
     @media screen and (min-width: 900px) {
 
         .form-and-error-div {
-
             width: 50%;
-
-        }
-
-        div .login-card{
-
-            padding: 20px;
-            margin-top: 20px;
-
         }
 
         .signup-link {
-
             margin-left: 16px;
-
         }
 
     }
