@@ -17,6 +17,7 @@ import AuthenticationPage from "./auth/AuthenticationPage";
 import SignUp from "./auth/SignupComponent";
 import LoginPage from "./auth/LoginComponent";
 import ForgotPasswort from "./auth/ForgotPasswort";
+import Playground from "./components/Playground";
 
 
 
@@ -127,6 +128,12 @@ const routes = [
         name: 'transferForm',
         component: TransferForm,
         meta: { formType: 'transfer' }
+    },
+    {
+        path: '/playground',
+        name: 'playground',
+        component: Playground,
+        meta: {title: 'playground'}
     },
     {
         path: '/:pathMatch(.*)*',

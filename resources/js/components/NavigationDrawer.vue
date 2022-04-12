@@ -56,7 +56,7 @@ export default {
       return 50;
     },
     drawerListItems() {
-        let pathNames = [ 'overview', 'transactions', 'repeatingTransactions', 'transfers', 'backend-tests' ];
+        let pathNames = [ 'overview', 'transactions', 'repeatingTransactions', 'transfers', 'backend-tests', 'playground' ];
         let drawerListItems = [];
 
         for (let i = 0; i < pathNames.length; i++) {

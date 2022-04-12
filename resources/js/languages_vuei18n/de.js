@@ -7,6 +7,7 @@ export default {
         transactions: 'Transaktionen',
         repeatingTransactions: 'Daueraufträge',
         transfers: 'Umbuchungen',
+        playground: 'Spielplatz',
         new: {
             moneyAccount: 'Neues Konto',
             transaction: 'Neue Transaktion',
@@ -20,7 +21,7 @@ export default {
             transfer: 'Umbuchung bearbeiten'
         }
     },
-    navigationTitles: [ 'Übersicht', 'Transaktionen', 'Daueraufträge', 'Umbuchungen', 'Backend-Tests' ],
+    navigationTitles: [ 'Übersicht', 'Transaktionen', 'Daueraufträge', 'Umbuchungen', 'Backend-Tests', 'Spielplatz' ],
     /*
     formType: {
         moneyAccount: 'Konto-Formular',

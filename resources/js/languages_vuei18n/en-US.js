@@ -7,6 +7,7 @@ export default {
         transactions: 'Transactions',
         repeatingTransactions: 'Repeating Transactions',
         transfers: 'Transfers',
+        playground: 'Playground',
         new: {
             moneyAccount: 'New Account',
             transaction: 'New Transaction',
@@ -20,7 +21,7 @@ export default {
             transfer: 'Edit Transfer'
         }
     },
-    navigationTitles: [ 'Overview', 'Transactions', 'Repeating Transactions', 'Transfers', 'Backend-Tests' ],
+    navigationTitles: [ 'Overview', 'Transactions', 'Repeating Transactions', 'Transfers', 'Backend-Tests', 'Playground' ],
     formType: {
         moneyAccount: 'Konto-Formular',
         transaction: 'Transaktions-Formular',

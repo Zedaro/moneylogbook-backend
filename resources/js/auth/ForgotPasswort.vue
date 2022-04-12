@@ -27,9 +27,9 @@
 
                             <button type="submit" class="send-btn">{{ $t('authenticationForms.sendEmail') }}</button>
 
-                            <div class="ma-auto d-flex justify-space-evenly mt-5">
-                                <a @click="goTo('login')">{{ $t('authenticationForms.loginLabel') }}</a>
-                                <a @click="goTo('signup')">{{ $t('authenticationForms.signupLabel') }}</a>
+                            <div class="links-div">
+                                <a class="login-link" @click="goTo('login')">{{ $t('authenticationForms.loginLabel') }}</a>
+                                <a class="signup-link" @click="goTo('signup')">{{ $t('authenticationForms.signupLabel') }}</a>
                             </div>
 
                         </div>
@@ -83,7 +83,7 @@ export default {
             axios.get('/sanctum/csrf-cookie').then(response => {
 
                 axios.post('/login', this.$data)
-                    .then( (response) => {
+                    .then( () => {
 
                         location.reload();
                         /*window.location.href = '/overview';*/
@@ -132,27 +132,19 @@ export default {
         padding: 20px;
         margin-top: 20px;
     }
-
-    .test-background {
-        background-color: #F5F5F5FF;
-    }
-
     .form-and-error-div {
         position: absolute;
         top: 10%;
         left: 50%;
         transform: translateX(-50%);
-        width: 95%;
+        width: 90%;
     }
-
     .form-title {
         margin-bottom: 20px;
     }
-
     .bottom-row-div {
         margin-top: 20px;
     }
-
     .send-btn {
         display: block;
 
@@ -174,31 +166,37 @@ export default {
         text-transform: uppercase;
         letter-spacing: 0.08em;
 
+        margin: 0 auto;
         padding: 8px 16px;
 
         cursor: pointer;
     }
-
-    .v-btn .v-btn__content {
-        flex: 1 1 auto !important;
-        white-space: normal !important;
-        color: red !important;
+    .links-div {
+        display: flex;
+        justify-content: space-evenly;
+        margin: 20px auto 0;
     }
 
-    @media screen and (min-width: 425px) {
+    @media screen and (min-width: 450px) {
 
+        .send-btn {
+            display: inline-block;
+            margin: 0;
+        }
 
+        .links-div {
+            justify-content: start;
+        }
+
+        .login-link {
+            margin-right: 12px;
+        }
 
     }
-
     @media screen and (min-width: 600px) {
 
         .form-and-error-div {
             width: 70%;
-        }
-
-        .signup-link {
-            margin-left: 16px;
         }
 
     }
@@ -206,10 +204,6 @@ export default {
 
         .form-and-error-div {
             width: 50%;
-        }
-
-        .signup-link {
-            margin-left: 16px;
         }
 
     }
