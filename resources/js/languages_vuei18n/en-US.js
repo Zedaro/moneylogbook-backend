@@ -98,7 +98,8 @@ export default {
     authenticationForms: {
         loginLabel: 'Login',
         signupLabel: 'Sign up',
-        forgotPasswordLabel: 'Reset password',
+        forgotPasswordLabel: 'Forgot password',
+        resetPasswordLabel: 'Reset password',
         sendEmail: 'Send password reset email',
         name: 'Name',
         email: 'Email',
@@ -123,6 +124,10 @@ export default {
         },
         signup: {
             userAlreadyExists: 'A user with this email address already exists.',
+            serverUnavailable: 'The server is currently unavailable. Please try again later.',
+        },
+        forgotPassword: {
+            invalidEmail: 'Please enter a valid email address',
             serverUnavailable: 'The server is currently unavailable. Please try again later.',
         },
     },

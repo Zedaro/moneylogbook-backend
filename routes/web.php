@@ -354,12 +354,12 @@ Route::get('/welcome/{any?}', function(Request $request) {
 })->name('welcome');
 
 
-Route::get('/auth/{any}', function() {
+Route::get('/auth/{any}/{token?}', function($token = null) {
 
     return view('index')
-        ->with('authenticated', 'no');
+        ->with(['authenticated' => 'no', 'token' => $token]);
 
-})->where('any', 'login|signup|forgotPassword')->middleware('guest:web')->name('authPage');
+})->where('any', 'login|signup|forgotPassword|resetPassword')->middleware('guest:web')->name('authPage');
 
 
 Route::redirect('/auth/{any?}', '/auth/login');

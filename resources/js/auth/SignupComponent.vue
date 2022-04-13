@@ -80,7 +80,7 @@ export default {
         return {
 
             name: 'Bob Bobsen',
-            email: 'Bobsen24@Bob.de',
+            email: 'Bobsen24@Bob.com',
             password: 'testtesttest',
             password_confirmation: 'testtesttest',
 

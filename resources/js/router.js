@@ -18,6 +18,7 @@ import SignUp from "./auth/SignupComponent";
 import LoginPage from "./auth/LoginComponent";
 import ForgotPasswort from "./auth/ForgotPasswort";
 import Playground from "./components/Playground";
+import ResetPassword from "./auth/ResetPassword";
 
 
 
@@ -58,6 +59,12 @@ const routes = [
         name: 'forgotPassword',
         component: ForgotPasswort,
         meta: { title: 'Forgot Password' },
+    },
+    {
+        path: '/auth/resetPassword',
+        name: 'resetPassword',
+        component: ResetPassword,
+        meta: { title: 'Reset Password' },
     },
     {
         path: '/testcss',

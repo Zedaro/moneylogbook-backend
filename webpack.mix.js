@@ -19,4 +19,4 @@ mix.js('resources/js/app.js', 'public/js')
     .css('resources/css/welcome.css', 'public/css')
     .sass('resources/sass/app.scss', 'public/css');
 
-mix.browserSync('http://localhost:8000/');
+mix.browserSync('http://localhost/');

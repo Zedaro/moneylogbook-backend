@@ -109,7 +109,8 @@ export default {
     authenticationForms: {
         loginLabel: 'Einloggen',
         signupLabel: 'Registrieren',
-        forgotPasswordLabel: 'Passwort zurücksetzen',
+        forgotPasswordLabel: 'Passwort vergessen',
+        resetPasswordLabel: 'Passwort zurücksetzen',
         sendEmail: 'E-Mail zum Zurücksetzen senden',
         name: 'Name',
         email: 'E-Mail',
@@ -134,6 +135,10 @@ export default {
         },
         signup: {
             userAlreadyExists: 'Ein Nutzer mit dieser E-Mail Adresse existiert bereits',
+            serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.',
+        },
+        forgotPassword: {
+            invalidEmail: 'Bitte geben Sie eine gültige E-Mail Adresse an',
             serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.',
         },
     },

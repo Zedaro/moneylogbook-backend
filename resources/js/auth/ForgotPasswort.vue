@@ -10,7 +10,7 @@
             <v-card class="form-card">
 
                 <validation-observer v-slot="{ handleSubmit }">
-                    <v-form class="form" @submit.prevent="handleSubmit(login)">
+                    <v-form class="form" @submit.prevent="handleSubmit(sendEmail)">
 
                         <h1 class="form-title">{{ $t('authenticationForms.forgotPasswordLabel') }}</h1>
 
@@ -57,7 +57,6 @@ export default {
         return {
 
             email: 'Bobsen24@Bob.com',
-            password: 'testtesttest',
 
             error: false,
             errorKey: null,
@@ -69,7 +68,7 @@ export default {
             if(this.errorKey === null)
                 return '';
             else
-                return this.$t(`errors.login.${this.errorKey}`);
+                return this.$t(`errors.forgotPassword.${this.errorKey}`);
         },
     },
     methods: {
@@ -78,11 +77,11 @@ export default {
             this.$router.push(`/auth/${destination}`);
 
         },
-        login() {
+        sendEmail() {
 
             axios.get('/sanctum/csrf-cookie').then(response => {
 
-                axios.post('/login', this.$data)
+                axios.post('/forgot-password', { email: this.$data.email })
                     .then( () => {
 
                         location.reload();
@@ -91,12 +90,7 @@ export default {
                     })
                     .catch(error => {
 
-                        //errors User ausgeben
-                        //403 oder 422 -> falsche Daten
-                        //Sonst: irgendwas anderes hat nicht geklappt
-
                         this.showError(error.response.status);
-                        //this.showError(402);
 
                     });
 
@@ -109,7 +103,7 @@ export default {
                 ||  status === 403
                 ||  status === 401) {
 
-                this.errorKey = 'wrongUserData';
+                this.errorKey = 'invalidEmail';
 
             } else {
 
@@ -120,7 +114,6 @@ export default {
             this.error = true;
 
         },
-
     },
 
 }
