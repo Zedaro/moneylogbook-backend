@@ -95,8 +95,10 @@ export default {
 
             if(this.errorKey === null)
                 return '';
-            else
+            else if(this.errorKey === 'userAlreadyExists')
                 return this.$t(`errors.signup.${this.errorKey}`);
+            else
+                return this.$t('errors.serverUnavailable');
 
         },
 

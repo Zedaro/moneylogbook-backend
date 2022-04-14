@@ -118,18 +118,23 @@ export default {
     },
     validation: validationEN,
     errors: {
+        serverUnavailable: 'The server is currently unavailable. Please try again later.',
         login: {
             wrongUserData: 'Incorrect username or password.',
-            serverUnavailable: 'The server is currently unavailable. Please try again later.'
         },
         signup: {
             userAlreadyExists: 'A user with this email address already exists.',
-            serverUnavailable: 'The server is currently unavailable. Please try again later.',
         },
         forgotPassword: {
-            invalidEmail: 'Please enter a valid email address',
-            serverUnavailable: 'The server is currently unavailable. Please try again later.',
+            unregisteredEmail: 'Please enter a registered email address',
         },
+        resetPassword: {
+            linkExpired: 'The reset link has expired or you have entered an incorrect email address',
+        },
+    },
+    success: {
+        passwordResetEmailSent: 'The email has been sent! Click the link in the email to reset your password.',
+        passwordReset: 'Your password has been successfully reset! You can now log in with your new password.'
     },
     flashMessage: {
         success: {

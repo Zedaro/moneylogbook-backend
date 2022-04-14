@@ -328,6 +328,7 @@ Route::post('/changeLanguage', function(Request $request) {
 
 Route::get('/welcome/{locale}', function($locale, Request $request) {
 
+    logger('/welcome/de|en');
     App::setLocale($locale);
     return view('welcome');
 
@@ -354,12 +355,12 @@ Route::get('/welcome/{any?}', function(Request $request) {
 })->name('welcome');
 
 
-Route::get('/auth/{any}/{token?}', function($token = null) {
+Route::get('/auth/{any}/{token?}', function(Request $request) {
 
     return view('index')
-        ->with(['authenticated' => 'no', 'token' => $token]);
+        ->with('authenticated', 'no');
 
-})->where('any', 'login|signup|forgotPassword|resetPassword')->middleware('guest:web')->name('authPage');
+})->where('any', 'login|signup|forgotPassword|resetPassword')->middleware('guest:sanctum')->name('authPage');
 
 
 Route::redirect('/auth/{any?}', '/auth/login');
@@ -381,7 +382,7 @@ Route::get('/home', function() {
 
 
 Route::get('/{any}', function () {
-
+    logger('/{any}');
     return view('index')->with('authenticated', 'yes');
 
 })->where('any', '.*')->middleware('auth:sanctum');

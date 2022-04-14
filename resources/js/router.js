@@ -16,7 +16,7 @@ import BackendTests from "./components/BackendTests";
 import AuthenticationPage from "./auth/AuthenticationPage";
 import SignUp from "./auth/SignupComponent";
 import LoginPage from "./auth/LoginComponent";
-import ForgotPasswort from "./auth/ForgotPasswort";
+import ForgotPasswort from "./auth/ForgotPassword";
 import Playground from "./components/Playground";
 import ResetPassword from "./auth/ResetPassword";
 
@@ -63,6 +63,12 @@ const routes = [
     {
         path: '/auth/resetPassword',
         name: 'resetPassword',
+        component: ResetPassword,
+        meta: { title: 'Reset Password' },
+    },
+    {
+        path: '/auth/resetPassword/:token',
+        name: 'resetPasswordWithToken',
         component: ResetPassword,
         meta: { title: 'Reset Password' },
     },

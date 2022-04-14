@@ -129,18 +129,23 @@ export default {
     },
     validation: validationDE,
     errors: {
+        serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.',
         login: {
             wrongUserData: 'Ihr Benutzername oder Ihr Passwort ist falsch.',
-            serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.',
         },
         signup: {
             userAlreadyExists: 'Ein Nutzer mit dieser E-Mail Adresse existiert bereits',
-            serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.',
         },
         forgotPassword: {
-            invalidEmail: 'Bitte geben Sie eine gültige E-Mail Adresse an',
-            serverUnavailable: 'Der Server ist momentan nicht erreichbar. Bitte versuchen Sie es später noch einmal.',
+            unregisteredEmail: 'Bitte geben Sie eine registrierte E-Mail Adresse an',
         },
+        resetPassword: {
+            linkExpired: 'Der Link zum zurücksetzen ist abgelaufen oder Sie haben eine falsche E-Mail Adresse angegeben',
+        },
+    },
+    success: {
+        passwordResetEmailSent: 'Die E-Mail wurde versendet! Klicken Sie den Link in der E-Mail, um Ihr Passwort zurückzusetzen.',
+        passwordReset: 'Ihr Passwort wurde erfolgreich zurückgesetzt! Sie können sich jetzt mit Ihrem neuen Passwort einloggen.'
     },
     flashMessage: {
         success: {

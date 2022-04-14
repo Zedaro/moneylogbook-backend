@@ -73,9 +73,10 @@ export default {
     data() {
         return {
 
-            email: 'Bobsen24@Bob.com',
-            password: 'testtesttest',
-            password_confirmation: 'testtesttest',
+            email: this.$route.query['email'] || '',
+            password: '',
+            password_confirmation: '',
+            token: this.$route.params['token'] || null,
 
             error: false,
             errorKey: null,
@@ -88,8 +89,10 @@ export default {
 
             if(this.errorKey === null)
                 return '';
+            else if(this.errorKey === 'linkExpired')
+                return this.$t(`errors.resetPassword.${this.errorKey}`);
             else
-                return this.$t(`errors.signup.${this.errorKey}`);
+                return this.$t('errors.serverUnavailable');
 
         },
 
@@ -105,9 +108,10 @@ export default {
 
             await axios.get('/sanctum/csrf-cookie');
             await axios.post('/reset-password', this.$data)
-                .then(() => {
+                .then((response) => {
 
-                    location.reload();
+
+                    this.$router.push({ path: '/auth/login', query: { passwordReset: true } });
 
                 })
                 .catch((error) => {
@@ -121,7 +125,7 @@ export default {
 
             if( status === 422 ) {
 
-                this.errorKey = 'userAlreadyExists';
+                this.errorKey = 'linkExpired';
 
             } else {
 
@@ -133,7 +137,7 @@ export default {
 
         },
 
-    }
+    },
 
 }
 </script>

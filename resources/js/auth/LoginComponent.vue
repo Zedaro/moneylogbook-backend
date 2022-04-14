@@ -4,9 +4,9 @@
 
         <div class="form-and-error-div">
 
-            <error-login-signup :error="error">
-                {{ errorMessage }}
-            </error-login-signup>
+            <message-card :messageType="messageType">
+                {{ message }}
+            </message-card>
 
             <v-card class="login-card">
 
@@ -59,30 +59,40 @@
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import '../validation/rules';
 import ErrorLoginSignup from '../components/ErrorLoginSignup';
+import SuccessCard from "../components/SuccessCard";
+import MessageCard from "../components/MessageCard";
 
 export default {
 
     name: "LoginComponent",
-    components: { ValidationObserver, ValidationProvider, ErrorLoginSignup },
+    components: { MessageCard, ValidationObserver, ValidationProvider, },
     data() {
         return {
 
-            //username: null,
             email: 'Bobsen24@Bob.com',
             password: 'testtesttest',
 
             error: false,
             errorKey: null,
+            messageType: null,
 
         }
     },
     computed: {
-        errorMessage() {
-            if(this.errorKey === null)
-                return '';
-            else
-                return this.$t(`errors.login.${this.errorKey}`);
-        },
+        message() {
+
+            if(this.messageType === 'success')
+                return this.$t('success.passwordReset');
+            else {
+                if(this.errorKey === null)
+                    return '';
+                else if(this.errorKey === 'wrongUserData')
+                    return this.$t(`errors.login.${this.errorKey}`);
+                else
+                    return this.$t('errors.serverUnavailable');
+            }
+
+        }
     },
     methods: {
         goTo(destination) {
@@ -132,9 +142,15 @@ export default {
             }
 
             this.error = true;
+            this.messageType = 'error';
 
         },
 
+    },
+    beforeMount() {
+        if(this.$route.query['passwordReset'] === 'true') {
+            this.messageType = 'success'
+        }
     },
 }
 </script>

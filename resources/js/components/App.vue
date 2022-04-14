@@ -3,7 +3,7 @@
         <div class="user-app-div" v-if="authenticated == 'yes'">
             <user-app></user-app>
         </div>
-        <authentication-page v-else-if="authPaths.includes($route.path)" :token="token"></authentication-page>
+        <authentication-page v-else-if="authPaths.includes($route.path)"></authentication-page>
 <!--        <login-page v-else-if="this.$route.path == '/login'"></login-page>
         <sign-up v-else-if="this.$route.path == '/signup'"></sign-up>-->
     </v-app>
@@ -23,14 +23,14 @@ export default {
         SignUp,
         LoginPage,
     },
-    props: ['authenticated', 'token'],
+    props: ['authenticated'],
     data() {
         return {
 
-            authPaths: ['/auth/login', '/auth/signup', '/auth/forgotPassword', '/auth/resetPassword', `/auth/resetPassword/${this.token}`]
+            authPaths: ['/auth/login', '/auth/signup', '/auth/forgotPassword', '/auth/resetPassword', `/auth/resetPassword/${this.$route.params['token']}`]
 
         }
-    }
+    },
 }
 </script>
 

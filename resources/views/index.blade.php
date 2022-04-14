@@ -15,10 +15,7 @@
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
 </noscript>
 <div id="app">
-    <app-component
-        authenticated="{{ $authenticated ?? '' }}"
-        token="{{ $token ?? '' }}"
-    ></app-component>
+    <app-component authenticated="{{ $authenticated ?? '' }}"></app-component>
 </div>
 
 <script src="{{ mix('/js/app.js') }}"></script>
