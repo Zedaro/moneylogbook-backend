@@ -37,7 +37,7 @@ export default {
 <style>
 
 body {
-    padding-bottom: 200px;
+    /*padding-bottom: 200px;*/
 }
 
 .form-card {

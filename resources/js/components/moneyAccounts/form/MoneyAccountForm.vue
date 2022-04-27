@@ -120,7 +120,7 @@ export default {
 
                     this.$router.push({name: 'overview'});
                 })
-                .catch(error => {
+                .catch(() => {
                     //error flash message
                     this.flashMessage.setStrategy('multiple');
                     this.flashMessage.show({
@@ -149,7 +149,7 @@ export default {
                     });
                     this.$router.push({name: 'overview'});
                 })
-                .catch(error => {
+                .catch(() => {
                     this.flashMessage.setStrategy('multiple');
                     this.flashMessage.show({
                         status: 'error',
@@ -159,6 +159,9 @@ export default {
                     });
                 });
         }
+    },
+    mounted() {
+        /*window.scrollTo(0, 0);*/
     },
     /*
     beforeMounted() {

@@ -14,8 +14,6 @@
 import NavigationDrawer from "./NavigationDrawer";
 import TheHeader from "./TheHeader";
 import Plus from "./buttons/Plus";
-import SignUp from "../auth/SignupComponent";
-import LoginPage from "../auth/LoginComponent";
 
 export default {
     name: "UserApp",
@@ -39,5 +37,9 @@ export default {
 </script>
 
 <style scoped>
+
+</style>
+
+<style>
 
 </style>
