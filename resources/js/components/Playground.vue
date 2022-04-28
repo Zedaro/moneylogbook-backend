@@ -1,9 +1,15 @@
 <template>
-    <div class="f-container">
-        <div class="f-item f-item1"></div>
-        <div class="f-item f-item2"></div>
-        <div class="f-item f-item3"></div>
+
+    <div>
+
+        <div class="f-container">
+            <div class="f-item f-item1"></div>
+            <div class="f-item f-item2"></div>
+            <div class="f-item f-item3"></div>
+        </div>
+
     </div>
+
 </template>
 
 <script>

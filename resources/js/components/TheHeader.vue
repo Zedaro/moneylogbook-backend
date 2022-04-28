@@ -18,14 +18,39 @@
                 <v-icon>mdi-reload</v-icon>
             </v-btn>-->
 
-            <v-text-field
-                v-model="selectedLangText"
-                readonly
-                outlined
-                class="lang"
-            ></v-text-field>
-
             <v-menu
+                v-model="menu"
+                :close-on-content-click="true"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+            >
+                <template v-slot:activator="{ on, attrs }">
+                    <input
+                        type="text"
+                        v-model="selectedLangText"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        class="lang"
+                    ></input>
+                </template>
+                <v-list>
+                    <v-list-item-group
+                        v-model="selectedLangIndex"
+                        mandatory
+                    >
+                        <v-list-item
+                            v-for="(languageValue, languageKey, index) in $store.state.languages"
+                            :key="index"
+                        >
+                            <v-list-item-title>{{ languageValue }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list-item-group>
+                </v-list>
+            </v-menu>
+
+<!--            <v-menu
                 v-model="menu"
                 :close-on-content-click="true"
                 :nudge-right="40"
@@ -56,7 +81,7 @@
                         </v-list-item>
                     </v-list-item-group>
                 </v-list>
-            </v-menu>
+            </v-menu>-->
 
             <v-btn @click="logout" class="logout">{{ $t('logout') }}</v-btn>
 
@@ -354,6 +379,33 @@ export default {
 
 <style scoped>
 
+
+
+    .header-title {
+        padding-left: 0 !important;
+    }
+
+    button.logout {
+        width: 90px;
+        font-size: 12px;
+        margin-left: 5px;
+    }
+
+    .lang {
+        margin: auto 0;
+        width: 38px;
+        height: 36px;
+        text-align: center;
+        font-size: 14px;
+
+        border: solid rgb(152 152 152) 1px;
+        border-radius: 4px;
+    }
+
+    .lang:hover {
+        border-color: rgba(0, 0, 0, 0.66);
+    }
+
     .newLocalStorageButton {
         /*border: solid black 1px;*/
     }
@@ -363,12 +415,6 @@ export default {
         width: 100%;
         height: 100%;
         justify-content: flex-end;
-    }
-
-    @media screen and (max-width: 525px) {
-        .header-title {
-            padding-left: 0 !important;
-        }
     }
 
     .v-text-field {
@@ -395,5 +441,80 @@ export default {
         align-self: center;
         margin-left: 15px;
     }
+
+    @media screen and (min-width: 425px) {
+
+        input.lang {
+            width: 50px;
+            font-size: 16px;
+        }
+
+        button.logout {
+            width: 119px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .header-title {
+            padding-left: 20px !important;
+        }
+
+    }
+
+    /*.lang {
+        margin: auto 0;
+        width: 50px;
+        height: 36px;
+        text-align: center;
+
+        border: solid rgb(152 152 152) 1px;
+        border-radius: 4px;
+    }
+
+    .lang:hover {
+        border-color: rgba(0, 0, 0, 0.66);
+    }
+
+    .newLocalStorageButton {
+        !*border: solid black 1px;*!
+    }
+
+    .buttons-div {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: flex-end;
+    }
+
+    .v-text-field {
+        max-width: 50px;
+        height: 100%;
+    }
+
+    .lang {
+
+    }
+
+    .v-input .v-input__control .v-input__input {
+        min-height: 40px !important;
+        height: 40px;
+    }
+
+    .v-toolbar__title {
+        width: fit-content;
+        margin: 1px;
+        overflow: visible;
+    }
+
+    .logout {
+        align-self: center;
+        margin-left: 15px;
+    }
+
+    @media screen and (max-width: 525px) {
+        .header-title {
+            padding-left: 0 !important;
+        }
+    }*/
 
 </style>
