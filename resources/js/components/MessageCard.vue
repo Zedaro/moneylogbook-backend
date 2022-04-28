@@ -25,6 +25,14 @@ div .message-card {
     visibility: hidden;
 }
 
+div .error {
+    background-color: rgba(255, 0, 0, 0.5) !important;
+}
+
+div .success {
+    background-color: #B1FF92CA !important;
+}
+
 .visible {
     visibility: visible !important;
 }

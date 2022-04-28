@@ -3,7 +3,7 @@
     <v-card class="list-item" :to="moneyAccountsExist ? item : ''">
         <div class="colorFrom" :style="{ backgroundColor: colorFrom }"></div>
         <div class="colorTo" :style="{ backgroundColor: colorTo }"></div>
-        <v-card-text class="grey--text flex date">{{ formattedDate }}</v-card-text>
+        <v-card-text class="grey--text date">{{ formattedDate }}</v-card-text>
         <v-card-text class="text-center money">{{ $t('moneyFormat.format').format(money) }}</v-card-text>
         <div class="from-to-div">
             <v-card-text class="text-center money-account from">{{ moneyAccountName(fromId) }}</v-card-text>
@@ -64,13 +64,10 @@ export default {
 
     }
 
-    .flex {
+    .date {
         display: flex;
         justify-content: flex-end;
-    }
-
-    .date {
-
+        padding-right: 5%;
     }
 
     .money {
@@ -82,7 +79,7 @@ export default {
         font-size: 18px;
         min-width: 0;
         word-wrap: break-word;
-        padding: 0 0 15px;
+        padding: 0 5% 15px;
     }
 
     .colorFrom {

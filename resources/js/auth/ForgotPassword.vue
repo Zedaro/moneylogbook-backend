@@ -11,7 +11,7 @@
                 {{ errorMessage }}
             </error-login-signup>-->
 
-            <v-card class="form-card">
+            <v-card class="forgot-password-form-card">
 
                 <validation-observer v-slot="{ handleSubmit }">
                     <v-form class="form" @submit.prevent="handleSubmit(sendEmail)">
@@ -144,7 +144,7 @@ export default {
 
 <style scoped>
 
-    div .form-card{
+    div .forgot-password-form-card{
         padding: 20px;
         margin-top: 20px;
     }
@@ -154,6 +154,7 @@ export default {
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
+        margin-top: 10px;
     }
     .form-title {
         margin-bottom: 20px;

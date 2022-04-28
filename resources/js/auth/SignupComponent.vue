@@ -2,9 +2,9 @@
 
     <div class="form-and-error-div">
 
-        <error-login-signup :error="error">
-            {{ errorMessage }}
-        </error-login-signup>
+        <message-card :messageType="messageType">
+            {{ message }}
+        </message-card>
 
         <v-card class="sign-up-card">
 
@@ -70,12 +70,12 @@
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import '../validation/rules';
-import ErrorLoginSignup from "../components/ErrorLoginSignup";
+import MessageCard from "../components/MessageCard";
 
 export default {
 
     name: "SignupComponent",
-    components: { ValidationObserver, ValidationProvider, ErrorLoginSignup },
+    components: { ValidationObserver, ValidationProvider, MessageCard },
     data() {
         return {
 
@@ -86,12 +86,13 @@ export default {
 
             error: false,
             errorKey: null,
+            messageType: null,
 
         }
     },
     computed: {
 
-        errorMessage() {
+        message() {
 
             if(this.errorKey === null)
                 return '';
@@ -140,6 +141,7 @@ export default {
             }
 
             this.error = true;
+            this.messageType = 'error';
 
         },
 
@@ -151,100 +153,72 @@ export default {
 <style scoped>
 
     .form-and-error-div {
-
         position: absolute;
         top: 10%;
         left: 50%;
         transform: translateX(-50%);
-
+        margin-top: 10px;
     }
 
     .form-title {
-
         margin-bottom: 20px;
-
     }
 
     .bottom-row-div {
-
         margin-top: 20px;
-
     }
 
     div .error-card {
-
         width: 100%;
         padding: 20px;
-
     }
 
     .visible {
         visibility: visible !important;
     }
 
-    @media screen and (min-width: 300px) {
-
-        div .sign-up-card{
-
-            padding: 20px;
-            margin-top: 20px;
-
-        }
-
-        .form-and-error-div {
-
-            width: 95%;
-
-        }
-
-        .login-link {
-
-            margin-left: 16px;
-
-        }
-
+    div .sign-up-card{
+        padding: 20px;
+        margin-top: 20px;
     }
+
+    .form-and-error-div {
+        width: 95%;
+    }
+
+    .login-link {
+        margin-left: 16px;
+    }
+
     @media screen and (min-width: 600px) {
 
         .form-and-error-div {
-
             width: 70%;
-
         }
 
         div .sign-up-card{
-
             padding: 20px;
             margin-top: 20px;
-
         }
 
         .login-link {
-
             margin-left: 16px;
-
         }
 
     }
     @media screen and (min-width: 900px) {
 
         .form-and-error-div {
-
             width: 50%;
-
         }
 
         div .sign-up-card{
-
             padding: 20px;
             margin-top: 20px;
-
         }
 
         .login-link {
-
             margin-left: 16px;
-
         }
 
     }

@@ -115,6 +115,7 @@ export default {
         name: 'Name',
         email: 'E-Mail',
         password: 'Passwort',
+        newPassword: 'Neues Passwort',
         confirmPassword: 'Passwort wiederholen',
         forgotPassword: 'Passwort vergessen?',
     },

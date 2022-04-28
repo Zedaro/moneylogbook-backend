@@ -2,11 +2,15 @@
 
     <div class="form-and-error-div">
 
+        <message-card :messageType="messageType">
+            {{ message }}
+        </message-card>
+
         <error-login-signup :error="error">
             {{ errorMessage }}
         </error-login-signup>
 
-        <v-card class="form-card">
+        <v-card class="reset-password-form-card">
 
             <validation-observer ref="form" v-slot="{ validate, handleSubmit }">
                 <v-form class="form" @submit.prevent="handleSubmit(resetPassword)">
@@ -24,7 +28,7 @@
 
                     <validation-provider rules="required" vid="password" v-slot="{ errors }">
                         <v-text-field
-                            :label="$t('authenticationForms.password')"
+                            :label="$t('authenticationForms.newPassword')"
                             type="password"
                             v-model="password"
                             :error-messages="errors"
@@ -64,12 +68,12 @@
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import '../validation/rules';
-import ErrorLoginSignup from "../components/ErrorLoginSignup";
+import MessageCard from "../components/MessageCard";
 
 export default {
 
     name: "ResetPassword",
-    components: { ValidationObserver, ValidationProvider, ErrorLoginSignup },
+    components: { ValidationObserver, ValidationProvider, MessageCard },
     data() {
         return {
 
@@ -80,12 +84,13 @@ export default {
 
             error: false,
             errorKey: null,
+            messageType: null,
 
         }
     },
     computed: {
 
-        errorMessage() {
+        message() {
 
             if(this.errorKey === null)
                 return '';
@@ -93,7 +98,6 @@ export default {
                 return this.$t(`errors.resetPassword.${this.errorKey}`);
             else
                 return this.$t('errors.serverUnavailable');
-
         },
 
     },
@@ -134,6 +138,7 @@ export default {
             }
 
             this.error = true;
+            this.messageType = 'error';
 
         },
 
@@ -144,7 +149,7 @@ export default {
 
 <style scoped>
 
-    div .form-card{
+    div .reset-password-form-card{
         padding: 20px;
         margin-top: 20px;
     }
@@ -154,6 +159,7 @@ export default {
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
+        margin-top: 10px;
     }
     .form-title {
         margin-bottom: 20px;

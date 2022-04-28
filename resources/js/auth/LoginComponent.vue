@@ -58,14 +58,12 @@
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import '../validation/rules';
-import ErrorLoginSignup from '../components/ErrorLoginSignup';
-import SuccessCard from "../components/SuccessCard";
 import MessageCard from "../components/MessageCard";
 
 export default {
 
     name: "LoginComponent",
-    components: { MessageCard, ValidationObserver, ValidationProvider, },
+    components: { ValidationObserver, ValidationProvider, MessageCard },
     data() {
         return {
 
@@ -81,8 +79,10 @@ export default {
     computed: {
         message() {
 
+            //success: Passwort wurde zurückgesetzt, user wurde umgeleitet zur Login Seite
             if(this.messageType === 'success')
                 return this.$t('success.passwordReset');
+            //Mögliche errors
             else {
                 if(this.errorKey === null)
                     return '';
@@ -158,89 +158,63 @@ export default {
 <style scoped>
 
     .form-and-error-div {
-
         position: absolute;
         top: 10%;
         left: 50%;
         transform: translateX(-50%);
-
+        margin-top: 10px;
     }
 
     .form-title {
-
         margin-bottom: 20px;
-
     }
 
     .bottom-row-div {
-
         margin-top: 20px;
-
     }
 
-    @media screen and (min-width: 300px) {
-
-        div .login-card{
-
-            padding: 20px;
-            margin-top: 20px;
-
-        }
-
-        .form-and-error-div {
-
-            width: 95%;
-
-        }
-
-        .signup-link {
-
-            margin-left: 16px;
-
-        }
-
+    div .login-card{
+        padding: 20px;
+        margin-top: 20px;
     }
+
+    .form-and-error-div {
+        width: 95%;
+    }
+
+    .signup-link {
+        margin-left: 16px;
+    }
+
     @media screen and (min-width: 600px) {
 
         .form-and-error-div {
-
             width: 70%;
-
         }
 
         div .login-card{
-
             padding: 20px;
             margin-top: 20px;
-
         }
 
         .signup-link {
-
             margin-left: 16px;
-
         }
 
     }
     @media screen and (min-width: 900px) {
 
         .form-and-error-div {
-
             width: 50%;
-
         }
 
         div .login-card{
-
             padding: 20px;
             margin-top: 20px;
-
         }
 
         .signup-link {
-
             margin-left: 16px;
-
         }
 
     }

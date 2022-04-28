@@ -104,6 +104,7 @@ export default {
         name: 'Name',
         email: 'Email',
         password: 'Password',
+        newPassword: 'New password',
         confirmPassword: 'Repeat Password',
         forgotPassword: 'Forgot password?',
     },
