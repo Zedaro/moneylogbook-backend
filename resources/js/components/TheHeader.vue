@@ -19,6 +19,75 @@
             </v-btn>-->
 
             <v-menu
+                v-model="accountMenu"
+                :close-on-content-click="true"
+                transition="scale-transition"
+                left
+                offset-y
+                origin="top right"
+                min-width="auto"
+                @input="determineFocus"
+            >
+                <template v-slot:activator="{ on, attrs }">
+                    <v-app-bar-nav-icon
+                        v-bind="attrs"
+                        v-on="on"
+                        class="icon-btn"
+                    >
+                        <v-icon color="black" class="account-icon">mdi-account</v-icon>
+                    </v-app-bar-nav-icon>
+                </template>
+                <v-list class="account-menu-list">
+                    <v-list-item class="list-item-lang">
+                        <v-list-item-content>
+                            <v-menu
+                                v-model="langMenu"
+                                :close-on-content-click="true"
+                                transition="scale-transition"
+                                origin="top"
+                                min-width="auto"
+                                class="lang-menu"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <input
+                                        type="text"
+                                        v-model="selectedLangText"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        class="lang"
+                                    ></input>
+                                </template>
+                                <v-list class="lang-list">
+                                    <v-list-item-group
+                                        v-model="selectedLangIndex"
+                                        mandatory
+                                    >
+                                        <v-list-item
+                                            v-for="(languageValue, languageKey, index) in $store.state.languages"
+                                            :key="index"
+                                        >
+                                            <v-list-item-title>{{ languageValue }}</v-list-item-title>
+                                        </v-list-item>
+                                    </v-list-item-group>
+                                </v-list>
+                            </v-menu>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-divider></v-divider>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-btn @click="logout" class="logout">{{ $t('logout') }}</v-btn>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+
+
+
+
+
+<!--            <v-menu
                 v-model="menu"
                 :close-on-content-click="true"
                 transition="scale-transition"
@@ -48,7 +117,9 @@
                         </v-list-item>
                     </v-list-item-group>
                 </v-list>
-            </v-menu>
+            </v-menu>-->
+
+<!--            <v-btn @click="logout" class="logout">{{ $t('logout') }}</v-btn>-->
 
 <!--            <v-menu
                 v-model="menu"
@@ -83,7 +154,7 @@
                 </v-list>
             </v-menu>-->
 
-            <v-btn @click="logout" class="logout">{{ $t('logout') }}</v-btn>
+
 
         </div>
 
@@ -99,7 +170,8 @@ export default {
     name: "TheHeader",
     data() {
         return {
-            menu: false,
+            accountMenu: false,
+            langMenu: false,
             languages: this.$store.state.languages,
             selectedLangIndex: null,
         }
@@ -171,6 +243,12 @@ export default {
         }*/
     },
     methods: {
+        determineFocus(visible) {
+            if(!visible) {
+                var iconBtn = document.getElementsByClassName('icon-btn')[0];
+                iconBtn.blur();
+            }
+        },
         clickDrawer() {
             this.$store.dispatch("setDrawer");
         },
@@ -379,24 +457,35 @@ export default {
 
 <style scoped>
 
+    .v-list.lang-list {
+        width: 170px;
+        padding: 0;
+    }
 
+    .v-list.lang-list .v-list-item {
+        padding: 2.5px 16px;
+    }
+
+    .lang-list .v-list-item__title {
+        text-align: center;
+    }
 
     .header-title {
         padding-left: 0 !important;
     }
 
     button.logout {
-        width: 90px;
-        font-size: 12px;
-        margin-left: 5px;
+        font-size: 14px;
+        margin: 0;
+        align-self: center;
     }
 
     .lang {
         margin: auto 0;
-        width: 38px;
+
         height: 36px;
         text-align: center;
-        font-size: 14px;
+        font-size: 16px;
 
         border: solid rgb(152 152 152) 1px;
         border-radius: 4px;
@@ -422,10 +511,6 @@ export default {
         height: 100%;
     }
 
-    .lang {
-
-    }
-
     .v-input .v-input__control .v-input__input {
         min-height: 40px !important;
         height: 40px;
@@ -437,22 +522,14 @@ export default {
         overflow: visible;
     }
 
-    .logout {
-        align-self: center;
-        margin-left: 15px;
-    }
-
     @media screen and (min-width: 425px) {
 
         input.lang {
-            width: 50px;
             font-size: 16px;
         }
 
         button.logout {
-            width: 119px;
             font-size: 14px;
-            margin-left: 10px;
         }
 
         .header-title {
