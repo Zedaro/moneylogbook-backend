@@ -1,5 +1,5 @@
 <template>
-    <v-app-bar app>
+    <v-app-bar app class="test-class">
         <v-app-bar-nav-icon v-if="Object.keys($route.params).length === 0 && $route.params.item !== 'new'"
                             @click="clickDrawer"></v-app-bar-nav-icon>
         <!-- Object.keys($route.params).length === 0 -->
@@ -56,7 +56,7 @@
                                         v-bind="attrs"
                                         v-on="on"
                                         class="lang"
-                                    ></input>
+                                    >
                                 </template>
                                 <v-list class="lang-list">
                                     <v-list-item-group
@@ -456,6 +456,10 @@ export default {
 </script>
 
 <style scoped>
+
+    header >>> .v-toolbar__content {
+        padding: 4px 8px 4px 16px;
+    }
 
     .v-list.lang-list {
         width: 170px;
