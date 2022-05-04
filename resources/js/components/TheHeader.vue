@@ -10,9 +10,9 @@
 
         <div class="buttons-div">
 
-<!--            <v-btn @click="test" class="test-btn my-auto" fab depressed>
+            <v-btn @click="test" style="width: 48px; height: 48px;" class="test-btn my-auto" fab depressed>
                 <v-icon>mdi-head-question-outline</v-icon>
-            </v-btn>-->
+            </v-btn>
 
 <!--            <v-btn class="newLocalStorageButton my-auto" @click="refreshDB" fab depressed>
                 <v-icon>mdi-reload</v-icon>
@@ -32,7 +32,7 @@
                     <v-app-bar-nav-icon
                         v-bind="attrs"
                         v-on="on"
-                        class="icon-btn"
+                        class="account-menu-btn"
                     >
                         <v-icon color="black" class="account-icon">mdi-account</v-icon>
                     </v-app-bar-nav-icon>
@@ -245,8 +245,8 @@ export default {
     methods: {
         determineFocus(visible) {
             if(!visible) {
-                var iconBtn = document.getElementsByClassName('icon-btn')[0];
-                iconBtn.blur();
+                let btn = document.getElementsByClassName('account-menu-btn')[0];
+                btn.blur();
             }
         },
         clickDrawer() {
@@ -273,14 +273,21 @@ export default {
             // let fruits = ['apple', 'banana', 'mango'];
             // console.table(fruits);
 
+            /*let obj = {
+                name: {
+                    first: 'Edgar',
+                    family: 'Nasarenko'
+                }
+            }
+            console.log("test:", obj.color?.first);*/
 
-            axios.get("/test")
+            /*axios.get("/test")
                 .then((response) => {
                     //console.log("date < today:", response.data);
                     //console.log("php today():", response.data);
                     //console.log("strtotime:", response.data);
                     console.log("Test:", response.data);
-                });
+                });*/
 
 
             // //Heutiger Wochentag (z.B. Montag) als Zahl
@@ -459,6 +466,10 @@ export default {
 
     header >>> .v-toolbar__content {
         padding: 4px 8px 4px 16px;
+    }
+
+    .account-menu-btn {
+        align-self: center;
     }
 
     .v-list.lang-list {

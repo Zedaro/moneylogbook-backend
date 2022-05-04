@@ -88,7 +88,10 @@ const routes = [
         path: '/overview',
         name: 'overview',
         component: OverviewPage,
-        meta: { title: 'moneyAccounts'  }//.t('headerTitle.moneyAccounts') }
+        meta: {
+            title: 'moneyAccounts',
+            scrollY: 0
+        }//.t('headerTitle.moneyAccounts') }
     },
     {
         path: '/moneyAccounts/:item',
@@ -110,7 +113,10 @@ const routes = [
         path: '/transactions',
         name: 'transactions',
         component: TransactionsPage,
-        meta: { title: 'transactions' }
+        meta: {
+            title: 'transactions',
+            scrollY: 0
+        }
     },
     {
         path: '/transactions/:item',
@@ -122,7 +128,10 @@ const routes = [
         path: '/repeatingTransactions',
         name: 'repeatingTransactions',
         component: RepeatingTransactionsPage,
-        meta: { title: 'repeatingTransactions' }
+        meta: {
+            title: 'repeatingTransactions',
+            scrollY: 0
+        }
     },
     {
         path: '/repeatingTransactions/:item',
@@ -134,7 +143,10 @@ const routes = [
         path: '/transfers',
         name: 'transfers',
         component: TransfersPage,
-        meta: { title: 'transfers' }
+        meta: {
+            title: 'transfers',
+            scrollY: 0
+        }
     },
     {
         path: '/transfers/:item',
@@ -172,6 +184,18 @@ export const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes,
+    scrollBehavior(to, from, savedPosition) {
+        if(to.meta?.scrollY !== undefined)
+            return { x: 0, y: to.meta.scrollY };
+        else
+            return { x: 0, y: 0 };
+    }
+});
+
+router.beforeEach((to, from, next) => {
+    if(from.meta?.scrollY !== undefined)
+        from.meta.scrollY = window.scrollY;
+    next();
 });
 
 /*

@@ -5,7 +5,6 @@
             v-model="menu"
             :close-on-content-click="true"
             transition="scale-transition"
-            offset-y
             min-width="auto"
         >
             <template v-slot:activator="{ on, attrs }">

@@ -1,10 +1,10 @@
 <template>
 
   <div>
-    <v-btn v-if="$route.params.item !== 'new'" class="delete-button mx-2" fab dark medium color="red" @click="deleteData">
+    <v-btn v-if="$route.params.item !== 'new'" class="delete-button bottom-row-button mx-2" fab dark medium color="red" @click="deleteData">
       <v-icon dark>mdi-delete</v-icon>
     </v-btn>
-    <v-btn type="submit" class="save-button mx-2" fab dark medium color="green">
+    <v-btn type="submit" class="save-button bottom-row-button bottom-row-button mx-2" fab dark medium color="green">
       <v-icon dark>mdi-check</v-icon>
     </v-btn>
   </div>
@@ -63,15 +63,6 @@ export default {
 </script>
 
 <style scoped>
-
-  .container {
-    position: fixed;
-    left: 25%;
-    /*top: 80%;*/
-    top: 92%;
-    width: 50%;
-    /* border: black solid 1px; */
-  }
 
   .delete-button {
     position: fixed;

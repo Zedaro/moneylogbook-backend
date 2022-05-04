@@ -62,3 +62,9 @@ new Vue({
     },*/
     //render: h => h(App)
 })
+
+Vue.directive('blur', {
+    inserted: function(el) {
+        el.onfocus = (ev) => ev.target.blur();
+    }
+})
