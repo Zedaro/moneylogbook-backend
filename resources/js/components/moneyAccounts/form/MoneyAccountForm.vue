@@ -12,6 +12,7 @@
                                       maxlength="100"
                                       v-model="name"
                                       :error-messages="errors"
+                                      :color="$store.state.formFocusColor"
                         ></v-text-field>
                     </validation-provider>
 
@@ -23,6 +24,7 @@
                                       :prefix="$t('moneyFormat.monetaryUnit')"
                                       v-model.number="money"
                                       :error-messages="errors"
+                                      :color="$store.state.formFocusColor"
                         ></v-text-field>
                     </validation-provider>
 

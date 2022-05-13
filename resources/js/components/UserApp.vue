@@ -1,14 +1,26 @@
 <template>
-    <div v-if="!$store.state.loading">
+
+    <v-app id="inspire" v-if="!$store.state.loading">
         <navigation-drawer></navigation-drawer>
         <the-header></the-header>
-        <v-main>
+        <v-main class="main-bg">
             <router-view/>
             <plus v-if="noForm"></plus>
-            <back-to-top-button></back-to-top-button>
+            <back-to-top-button v-if="noForm"></back-to-top-button>
             <flash-message :position="'right bottom'"></flash-message>
         </v-main>
-    </div>
+    </v-app>
+
+<!--    <div v-if="!$store.state.loading">
+        <navigation-drawer></navigation-drawer>
+        <the-header></the-header>
+        <v-main class="main-bg">
+            <router-view/>
+            <plus v-if="noForm"></plus>
+            <back-to-top-button v-if="noForm"></back-to-top-button>
+            <flash-message :position="'right bottom'"></flash-message>
+        </v-main>
+    </div>-->
 </template>
 
 <script>
@@ -35,17 +47,20 @@ export default {
         await this.$store.dispatch('getUserData')
                     .then( () => console.log("store state:", this.$store.getters.getState));
 
-    }
+    },
 }
 </script>
 
 <style scoped>
-
+    main {
+        min-height: 100%;
+    }
 </style>
 
 <style>
+
     .form-card {
-        margin-bottom: 50px !important;
+        margin-bottom: 100px !important;
     }
 
     @media screen and (orientation: landscape) {
@@ -53,4 +68,5 @@ export default {
             top: 80% !important;
         }
     }
+
 </style>

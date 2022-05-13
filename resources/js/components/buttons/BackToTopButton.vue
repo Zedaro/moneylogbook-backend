@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-btn v-blur @click="scrollToTop" class="back-to-top bottom-row-button" fixed right depressed fab>
-            <v-icon>mdi-arrow-up</v-icon>
+        <v-btn color="#9c9c9c" v-blur @click="scrollToTop" class="back-to-top bottom-row-button" fixed right depressed fab v-ripple="{ class: 'app-green-text' }">
+            <v-icon color="#eeffedeb">mdi-arrow-up</v-icon>
         </v-btn>
     </div>
 </template>

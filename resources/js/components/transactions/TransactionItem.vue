@@ -40,7 +40,7 @@ export default {
             'getMoneyAccountById'
         ]),
         moneyAccountsExist() {
-            const account = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.moneyAccountId).name);//this.moneyAccount);
+            const account = this.$store.getters.getMoneyAccountById(this.moneyAccountId); //this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.moneyAccountId).name);
 
             return (typeof account != 'undefined');
         },

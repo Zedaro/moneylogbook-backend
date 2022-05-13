@@ -24,8 +24,9 @@ export default {
     computed: {
         moneyAccountsExist() {
 
-            const accountFrom = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.fromId).name);
-            const accountTo = this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.toId).name);
+            const accountFrom = this.$store.getters.getMoneyAccountById(this.fromId);
+            const accountTo = this.$store.getters.getMoneyAccountById(this.toId);
+            console.log('accountFrom:', accountFrom);
 
             return (typeof accountFrom != 'undefined'  &&  typeof accountTo != 'undefined');
         },

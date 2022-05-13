@@ -192,6 +192,7 @@ export const store = new Vuex.Store({
         preferredLanguage: null,
         languageSelected: false,
         toolbarTitle: null,
+        formFocusColor: null,
 
         moneyAccounts: null,
         transactions: null,
@@ -961,6 +962,7 @@ export const store = new Vuex.Store({
                 en: 'EN'
             };
             state.preferredLanguage = navigator.language.substring(0, 2);
+            state.formFocusColor = '#3ac830eb';
         },
         setUserData(state, data) {
 

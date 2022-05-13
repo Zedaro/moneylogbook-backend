@@ -1,21 +1,19 @@
 <template>
-    <v-app-bar app class="test-class">
-        <v-app-bar-nav-icon v-if="Object.keys($route.params).length === 0 && $route.params.item !== 'new'"
+<!--    color="#474747" schwarz -->
+    <v-app-bar app class="header-bg">
+<!--        green&#45;&#45;text text&#45;&#45;accent-1-->
+        <v-app-bar-nav-icon class="header-text" v-if="Object.keys($route.params).length === 0 && $route.params.item !== 'new'"
                             @click="clickDrawer"></v-app-bar-nav-icon>
         <!-- Object.keys($route.params).length === 0 -->
-        <v-app-bar-nav-icon v-else @click="$router.back()">
+        <v-app-bar-nav-icon :color="headerColorGreen" v-else @click="$router.back()">
             <v-icon>mdi-arrow-left</v-icon>
         </v-app-bar-nav-icon>
-        <v-toolbar-title class="header-title">{{ toolbarTitle }}</v-toolbar-title>
+        <v-toolbar-title class="header-title app-green-text">{{ toolbarTitle }}</v-toolbar-title>
 
         <div class="buttons-div">
 
-            <v-btn @click="test" style="width: 48px; height: 48px;" class="test-btn my-auto" fab depressed>
+<!--            <v-btn @click="test" style="width: 48px; height: 48px;" class="test-btn my-auto" fab depressed>
                 <v-icon>mdi-head-question-outline</v-icon>
-            </v-btn>
-
-<!--            <v-btn class="newLocalStorageButton my-auto" @click="refreshDB" fab depressed>
-                <v-icon>mdi-reload</v-icon>
             </v-btn>-->
 
             <v-menu
@@ -33,8 +31,9 @@
                         v-bind="attrs"
                         v-on="on"
                         class="account-menu-btn"
+                        v-ripple="{ class: 'app-green-text' }"
                     >
-                        <v-icon color="black" class="account-icon">mdi-account</v-icon>
+                        <v-icon class="app-green-text">mdi-account</v-icon>
                     </v-app-bar-nav-icon>
                 </template>
                 <v-list class="account-menu-list">
@@ -83,79 +82,6 @@
                 </v-list>
             </v-menu>
 
-
-
-
-
-<!--            <v-menu
-                v-model="menu"
-                :close-on-content-click="true"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-            >
-                <template v-slot:activator="{ on, attrs }">
-                    <input
-                        type="text"
-                        v-model="selectedLangText"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
-                        class="lang"
-                    ></input>
-                </template>
-                <v-list>
-                    <v-list-item-group
-                        v-model="selectedLangIndex"
-                        mandatory
-                    >
-                        <v-list-item
-                            v-for="(languageValue, languageKey, index) in $store.state.languages"
-                            :key="index"
-                        >
-                            <v-list-item-title>{{ languageValue }}</v-list-item-title>
-                        </v-list-item>
-                    </v-list-item-group>
-                </v-list>
-            </v-menu>-->
-
-<!--            <v-btn @click="logout" class="logout">{{ $t('logout') }}</v-btn>-->
-
-<!--            <v-menu
-                v-model="menu"
-                :close-on-content-click="true"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-            >
-                <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                        v-model="selectedLangText"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
-                        outlined
-                        class="my-auto lang"
-                    ></v-text-field>
-                </template>
-                <v-list>
-                    <v-list-item-group
-                        v-model="selectedLangIndex"
-                        mandatory
-                    >
-                        <v-list-item
-                            v-for="(languageValue, languageKey, index) in $store.state.languages"
-                            :key="index"
-                        >
-                            <v-list-item-title>{{ languageValue }}</v-list-item-title>
-                        </v-list-item>
-                    </v-list-item-group>
-                </v-list>
-            </v-menu>-->
-
-
-
         </div>
 
 
@@ -174,6 +100,10 @@ export default {
             langMenu: false,
             languages: this.$store.state.languages,
             selectedLangIndex: null,
+
+            /*eeffedeb*/
+            headerColorGreen: '#b9ffb4eb',
+            /*b9ffb4eb*/
         }
     },
     computed: {
@@ -228,6 +158,12 @@ export default {
         selectedLangText() {
             return this.languages[this.selectedLangKey];
         },
+
+        cssVariables() {
+            return {
+                '--color': this.headerColorGreen
+            };
+        }
 
         /*languages() {
             return Object.values(this.$store.state.userData.languages);
@@ -462,9 +398,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 
-    header >>> .v-toolbar__content {
+    .account-menu-btn:focus {
+        background-color: green;
+    }
+
+    header::v-deep .v-toolbar__content {
         padding: 4px 8px 4px 16px;
     }
 
@@ -475,14 +415,12 @@ export default {
     .v-list.lang-list {
         width: 170px;
         padding: 0;
-    }
-
-    .v-list.lang-list .v-list-item {
-        padding: 2.5px 16px;
-    }
-
-    .lang-list .v-list-item__title {
-        text-align: center;
+        .v-list-item {
+            padding: 2.5px 16px;
+        }
+        .v-list-item__title {
+            text-align: center;
+        }
     }
 
     .header-title {
@@ -497,21 +435,14 @@ export default {
 
     .lang {
         margin: auto 0;
-
         height: 36px;
         text-align: center;
         font-size: 16px;
-
         border: solid rgb(152 152 152) 1px;
         border-radius: 4px;
-    }
-
-    .lang:hover {
-        border-color: rgba(0, 0, 0, 0.66);
-    }
-
-    .newLocalStorageButton {
-        /*border: solid black 1px;*/
+        &:hover {
+            border-color: rgba(0, 0, 0, 0.66);
+        }
     }
 
     .buttons-div {
@@ -535,6 +466,8 @@ export default {
         width: fit-content;
         margin: 1px;
         overflow: visible;
+        /*color: #eeffedeb;*/
+        color: var(--color);
     }
 
     @media screen and (min-width: 425px) {

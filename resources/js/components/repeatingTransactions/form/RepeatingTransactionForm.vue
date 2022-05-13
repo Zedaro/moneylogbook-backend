@@ -11,6 +11,7 @@
                                       :label="$t('form.name')"
                                       maxlength="100"
                                       v-model="name"
+                                      :color="$store.state.formFocusColor"
                                       :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -19,7 +20,10 @@
                     <validation-provider rules="regex" v-slot="{ errors }">
                         <v-textarea
                             maxlength="1000"
+                            auto-grow
+                            rows="2"
                             v-model="description"
+                            :color="$store.state.formFocusColor"
                             :error-messages="errors"
                         >
                             <template v-slot:label>
@@ -36,6 +40,7 @@
                             :items="selectItems"
                             :label="$t('form.moneyAccount')"
                             v-model="moneyAccountId"
+                            :color="$store.state.formFocusColor"
                             :error-messages="errors"
                         ></v-select>
                     </validation-provider>
@@ -47,6 +52,7 @@
                                       step="0.01"
                                       :prefix="$t('moneyFormat.monetaryUnit')"
                                       v-model.number="money"
+                                      :color="$store.state.formFocusColor"
                                       :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -71,6 +77,7 @@
                                     v-bind="attrs"
                                     v-on="on"
                                     :disabled="disabled"
+                                    :color="$store.state.formFocusColor"
                                     :error-messages="errors"
                                 ></v-text-field>
                             </template>
@@ -80,7 +87,8 @@
                                 scrollable
                                 @input="menuStart = false"
                                 first-day-of-week="1"
-
+                                :locale="$i18n.locale"
+                                :color="$store.state.formFocusColor"
                                 :disabled="disabled"
                             ></v-date-picker>
                         </v-menu>
@@ -108,6 +116,7 @@
                                         v-bind="attrs"
                                         v-on="on"
                                         :disabled="disabled"
+                                        :color="$store.state.formFocusColor"
                                         :error-messages="errors"
                                     ></v-text-field>
                                 </template>
@@ -151,6 +160,7 @@
                                         v-bind="attrs"
                                         v-on="on"
                                         :disabled="disabled"
+                                        :color="$store.state.formFocusColor"
                                         :error-messages="errors"
                                     ></v-text-field>
                                 </template>
@@ -174,7 +184,7 @@
                                 v-model="weekdayIndexes"
                                 :class="{ weekdays, 'no-weekdays': validated && invalid }"
                                 multiple
-                                active-class="primary--text"
+                                active-class="app-green-bg"
                                 :error-messages="errors"
                             >
                                 <v-chip
@@ -206,6 +216,7 @@
                                 readonly
                                 v-bind="attrs"
                                 v-on="on"
+                                :color="$store.state.formFocusColor"
                             ></v-text-field>
                         </template>
                         <v-date-picker
@@ -214,7 +225,7 @@
                             scrollable
                             @input="menuEnd = false"
                             first-day-of-week="1"
-
+                            :color="$store.state.formFocusColor"
                         ></v-date-picker>
                     </v-menu>
 
@@ -474,15 +485,16 @@ export default {
             //     rhythmNumbers.push(i + 1);
             // }
 
-            //They are ordered because the user could select friday first and then monday, for example. Then the weekday indexes would be saved in this order.
-            let orderedWeekdayIndexes = this.weekdayIndexes.sort(function (a, b) {
-                return a - b
-            });
-
-            //When you pick "every friday" and 19.01.2022 as the startingDate, but this date is a monday, the date should rather be the date of the friday
+            //When you pick "every friday" and 19.01.2022 as the startingDate, but this date is a monday, the starting date should rather be the date of the friday
             let startingDate = null;
+            let orderedWeekdayIndexes = null;
             //If weekdays are selected -> calculate starting and ending date based on the selected weekdays
-            if(this.weekdayIndexes.length > 0) {
+            if(this.weekdayIndexes?.length > 0) {
+
+                //They are ordered because the user could select friday first and then monday, for example. Then the weekday indexes would be saved in this order.
+                orderedWeekdayIndexes = this.weekdayIndexes.sort(function (a, b) {
+                    return a - b
+                });
 
                 //Calculate the date of the earliest weekday that was selected ( [TUE, MON, FRI] -> date of next MON, or today if today is monday )
                 //param: weekday index as used in this app, e.g. 0 => MON, 1 => TUE, ...
@@ -511,7 +523,7 @@ export default {
                 endingDate: this.endingDate,
                 rhythmNumber: this.rhythmNumberIndex,
                 rhythmType: this.rhythmTypeIndex,
-                weekdays: (this.weekdayIndexes.length == 0) ? [] : orderedWeekdayIndexes,
+                weekdays: (this.rhythmTypeIndex === 0) ? orderedWeekdayIndexes : [], //(this.weekdayIndexes.length === 0) ? [] : orderedWeekdayIndexes,
                 expired: false
             };
 
@@ -552,7 +564,7 @@ export default {
                             status: 'success',
                             message: this.$t('flashMessage.success.saved.repeatingTransaction'),
                             time: 3000,
-                            clickable: true
+                            clickable: true,
                         });
 
                         this.$router.push({name: 'repeatingTransactions'});
@@ -581,7 +593,7 @@ export default {
                         status: 'success',
                         message: this.$t('flashMessage.success.deleted.repeatingTransaction'),
                         time: 3000,
-                        clickable: true
+                        clickable: true,
                     });
 
                     this.$router.push({name: 'repeatingTransactions'});
@@ -603,34 +615,34 @@ export default {
 
 <style scoped>
 
-.rhythm-div {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.rhythm-number {
-    margin-right: 2.5%;
-}
-
-.rhythm-type {
-    margin-left: 2.5%;
-}
-
-.no-weekdays {
-    background-color: RGBA(249, 96, 97, 0.79);
-}
-
-@media only screen and (min-width: 768px) {
     .rhythm-div {
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
     }
 
-    .weekdays {
-
+    .rhythm-number {
+        margin-right: 2.5%;
     }
-}
+
+    .rhythm-type {
+        margin-left: 2.5%;
+    }
+
+    .no-weekdays {
+        background-color: RGBA(249, 96, 97, 0.79);
+    }
+
+    @media only screen and (min-width: 768px) {
+        .rhythm-div {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .weekdays {
+
+        }
+    }
 
 </style>
 

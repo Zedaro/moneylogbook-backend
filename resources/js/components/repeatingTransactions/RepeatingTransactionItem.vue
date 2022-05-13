@@ -18,7 +18,7 @@ export default {
     props: ['id', 'name', 'description', 'money', 'moneyAccountId', 'startingDate', 'endingDate', 'rhythmNumber', 'rhythmType', 'expired', 'index'],
     computed: {
         moneyAccountsExist() {
-            const account = this.$store.getters.getMoneyAccounts.find(account => account.id === this.moneyAccountId);
+            const account = this.$store.getters.getMoneyAccountById(this.moneyAccountId); //this.$store.getters.getMoneyAccounts.find(account => account.id === this.moneyAccountId);
 
             //returns boolean
             return (typeof account != 'undefined');

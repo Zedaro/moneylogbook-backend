@@ -23,6 +23,7 @@
                                 :label="$t('authenticationForms.email')"
                                 type="email"
                                 v-model="email"
+                                :color="$store.state.formFocusColor"
                                 :error-messages="errors"
                             ></v-text-field>
                         </validation-provider>

@@ -2,8 +2,8 @@
 
     <!-- :class="{ 'drawer-active': drawerState, 'drawer-inactive': !drawerState }" -->
     <div class="div">
-        <v-btn class="plus-button bottom-row-button" fab dark medium color="green" :to="item">
-            <v-icon dark>mdi-plus</v-icon>
+        <v-btn class="plus-button bottom-row-button app-black-bg" fab dark medium :to="item" v-ripple="{ class: 'app-green-text' }">
+            <v-icon class="app-green-text" dark>mdi-plus</v-icon>
         </v-btn>
     </div>
 

@@ -17,7 +17,7 @@ import AuthenticationPage from "./auth/AuthenticationPage";
 import SignUp from "./auth/SignupComponent";
 import LoginPage from "./auth/LoginComponent";
 import ForgotPasswort from "./auth/ForgotPassword";
-import Playground from "./components/Playground";
+import Playground from "./components/playground/Playground";
 import ResetPassword from "./auth/ResetPassword";
 
 

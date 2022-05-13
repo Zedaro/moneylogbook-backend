@@ -1,5 +1,6 @@
 <template>
     <v-navigation-drawer
+        class="app-black-bg"
         :value="drawer"
         app
         temporary
@@ -8,10 +9,14 @@
         <v-list>
             <v-list-item-group>
 
-                <v-list-item v-for="(item, index) in drawerListItems" :key="index" :to="{name: item.pathName}"
-                             three-line>
+                <v-list-item v-for="(item, index) in drawerListItems"
+                             :key="index"
+                             :to="{name: item.pathName}"
+                             three-line
+                             active-class="test-class"
+                             v-ripple="{ class: 'app-green-text' }">
                     <v-list-item-content>
-                        <v-list-item-title class="text-h6">{{ item.title }}</v-list-item-title>
+                        <v-list-item-title class="text-h6 app-green-text">{{ item.title }}</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
 
@@ -66,5 +71,10 @@ a:visited {
 
 a:hover {
     font-weight: bold;
+    background-color: #508950a1;
+}
+
+.test-class {
+    background-color: #508950a1;
 }
 </style>

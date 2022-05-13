@@ -1,40 +1,46 @@
 <template>
-    <div>
 
-        <v-menu
-            v-model="menu"
-            :close-on-content-click="true"
-            transition="scale-transition"
-            min-width="auto"
-        >
-            <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                    v-model="selectedLangText"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    outlined
-                    class="my-auto lang-menu"
-                ></v-text-field>
-            </template>
-            <v-list>
-                <v-list-item-group
-                    v-model="selectedLangIndex"
-                    mandatory
-                >
-                    <v-list-item
-                        v-for="(language, index) in languages"
-                        :key="index"
+    <v-app id="inspire">
+        <div class="auth-div">
+
+            <v-menu
+                v-model="menu"
+                :close-on-content-click="true"
+                transition="scale-transition"
+                min-width="auto"
+            >
+                <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                        v-model="selectedLangText"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        outlined
+                        class="my-auto lang-menu"
+                    ></v-text-field>
+                </template>
+                <v-list>
+                    <v-list-item-group
+                        v-model="selectedLangIndex"
+                        mandatory
                     >
-                        <v-list-item-title>{{ language }}</v-list-item-title>
-                    </v-list-item>
-                </v-list-item-group>
-            </v-list>
-        </v-menu>
+                        <v-list-item
+                            v-for="(language, index) in languages"
+                            :key="index"
+                        >
+                            <v-list-item-title>{{ language }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list-item-group>
+                </v-list>
+            </v-menu>
 
-        <router-view></router-view>
+            <v-main>
+                <router-view> class="grey-bg"</router-view>
+            </v-main>
 
-    </div>
+        </div>
+    </v-app>
+
 </template>
 
 <script>
@@ -90,6 +96,11 @@ export default {
     div div.lang-menu {
         margin: 5px 5px 0 auto !important;
         width: 50px;
+    }
+
+    .auth-div {
+        min-height: 100vh;
+        background-color: #f5f5f5;
     }
 
 </style>

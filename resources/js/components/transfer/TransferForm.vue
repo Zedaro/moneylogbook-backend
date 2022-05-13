@@ -23,6 +23,7 @@
                                       :label="$t('form.name')"
                                       maxlength="100"
                                       v-model="name"
+                                      :color="$store.state.formFocusColor"
                                       :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -32,6 +33,7 @@
                         <v-textarea
                             maxlength="1000"
                             v-model="description"
+                            :color="$store.state.formFocusColor"
                             :error-messages="errors"
                         >
                             <template v-slot:label>
@@ -49,6 +51,7 @@
                             :items="selectItems"
                             :label="$t('form.from')"
                             v-model="fromId"
+                            :color="$store.state.formFocusColor"
                             :error-messages="errors"
                         ></v-select>
                     </validation-provider>
@@ -60,6 +63,7 @@
                             :items="selectItems"
                             :label="$t('form.to')"
                             v-model="toId"
+                            :color="$store.state.formFocusColor"
                             :error-messages="errors"
                         ></v-select>
                     </validation-provider>
@@ -71,6 +75,7 @@
                                       step="0.01"
                                       :prefix="$t('moneyFormat.monetaryUnit')"
                                       v-model.number="money"
+                                      :color="$store.state.formFocusColor"
                                       :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -93,6 +98,7 @@
                                     readonly
                                     v-bind="attrs"
                                     v-on="on"
+                                    :color="$store.state.formFocusColor"
                                     :error-messages="errors"
                                 ></v-text-field>
                             </template>
@@ -102,6 +108,7 @@
                                 scrollable
                                 @input="menu = false"
                                 first-day-of-week="1"
+                                :color="$store.state.formFocusColor"
                             ></v-date-picker>
                         </v-menu>
                     </validation-provider>

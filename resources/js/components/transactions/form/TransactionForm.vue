@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <v-dialog v-model="dialog" content-class="dialog">
+        <v-dialog v-model="dialogError" content-class="dialog">
             <v-card class="dialog-card">
                 <v-card-title class="text-h5">
                     {{ $t('form.errorMessages.title') }}
@@ -10,6 +10,10 @@
                     {{ dialogText }}
                 </v-card-text>
             </v-card>
+        </v-dialog>
+
+        <v-dialog>
+
         </v-dialog>
 
         <v-card class="form-card">
@@ -23,6 +27,7 @@
                                       :label="$t('form.name')"
                                       maxlength="100"
                                       v-model="name"
+                                      :color="$store.state.formFocusColor"
                                       :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -32,6 +37,7 @@
                         <v-textarea
                             maxlength="1000"
                             v-model="description"
+                            :color="$store.state.formFocusColor"
                             :error-messages="errors"
                         >
                             <template v-slot:label>
@@ -48,6 +54,7 @@
                             :items="items"
                             :label="$t('form.moneyAccount')"
                             v-model="moneyAccountId"
+                            :color="$store.state.formFocusColor"
                             :error-messages="errors"
                         ></v-select>
                     </validation-provider>
@@ -59,6 +66,7 @@
                                       step="0.01"
                                       :prefix="$t('moneyFormat.monetaryUnit')"
                                       v-model.number="money"
+                                      :color="$store.state.formFocusColor"
                                       :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -81,6 +89,7 @@
                                     readonly
                                     v-bind="attrs"
                                     v-on="on"
+                                    :color="$store.state.formFocusColor"
                                     :error-messages="errors"
                                 ></v-text-field>
                             </template>
@@ -90,6 +99,7 @@
                                 scrollable
                                 @input="menu = false"
                                 first-day-of-week="1"
+                                :color="$store.state.formFocusColor"
                             ></v-date-picker>
                         </v-menu>
                     </validation-provider>
@@ -146,7 +156,8 @@ export default {
 
                 date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
                 menu: false,
-                dialog: false,
+                dialogError: false,
+                dialogUserPermission: false,
                 dialogText: ''
             };
         } else {

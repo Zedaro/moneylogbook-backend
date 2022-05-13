@@ -22,6 +22,7 @@
                             :label="$t('authenticationForms.email')"
                             type="email"
                             v-model="email"
+                            :color="$store.state.formFocusColor"
                             :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -31,6 +32,7 @@
                             :label="$t('authenticationForms.newPassword')"
                             type="password"
                             v-model="password"
+                            :color="$store.state.formFocusColor"
                             :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -40,6 +42,7 @@
                             :label="$t('authenticationForms.confirmPassword')"
                             type="password"
                             v-model="password_confirmation"
+                            :color="$store.state.formFocusColor"
                             :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
