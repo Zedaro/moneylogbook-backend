@@ -1,14 +1,20 @@
 <template>
 
-    <v-card class="list-item" :to="moneyAccountsExist ? item : ''">
+    <v-card class="list-item"
+            :to="item"
+            v-ripple="{ class: 'green-ripple' }">
         <div class="colorFrom" :style="{ backgroundColor: colorFrom }"></div>
         <div class="colorTo" :style="{ backgroundColor: colorTo }"></div>
         <v-card-text class="grey--text date">{{ formattedDate }}</v-card-text>
         <v-card-text class="text-center money">{{ $t('moneyFormat.format').format(money) }}</v-card-text>
         <div class="from-to-div">
-            <v-card-text class="text-center money-account from">{{ moneyAccountName(fromId) }}</v-card-text>
+            <v-card-text class="text-center money-account from">
+                {{ moneyAccountName(fromId) }}
+            </v-card-text>
             <v-icon class="arrow-down">mdi-arrow-down</v-icon>
-            <v-card-text class="text-center money-account to">{{ moneyAccountName(toId) }}</v-card-text>
+            <v-card-text class="text-center money-account to">
+                {{ moneyAccountName(toId) }}
+            </v-card-text>
         </div>
         <v-card-text class="text-center grey--text name">{{ name }}</v-card-text>
     </v-card>
@@ -18,18 +24,15 @@
 
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "TransferItem",
     props: ['name', 'description', 'money', 'fromId', 'toId', 'date', 'index'],
     computed: {
-        moneyAccountsExist() {
-
-            const accountFrom = this.$store.getters.getMoneyAccountById(this.fromId);
-            const accountTo = this.$store.getters.getMoneyAccountById(this.toId);
-            console.log('accountFrom:', accountFrom);
-
-            return (typeof accountFrom != 'undefined'  &&  typeof accountTo != 'undefined');
-        },
+        ...mapGetters([
+            'getMoneyAccountById',
+        ]),
         item() {
             return {
                 name: 'transferForm',
@@ -47,7 +50,13 @@ export default {
             return this.$store.getters.color(this.toId);
         },
         moneyAccountName() {
-            return (id) => this.$store.getters.getMoneyAccountById(id).name;
+            return (id) => {
+
+                const account = this.getMoneyAccountById(id);
+                let deleted = account.archived ? this.$t('archived.moneyAccount') : '';
+                return account.name + deleted;
+
+            }
         }
     }
 }

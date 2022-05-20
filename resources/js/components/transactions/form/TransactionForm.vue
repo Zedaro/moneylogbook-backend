@@ -12,8 +12,18 @@
             </v-card>
         </v-dialog>
 
-        <v-dialog>
-
+        <v-dialog v-model="dialogDeletionPermission" content-class="dialog">
+            <v-card class="dialog-card">
+                <v-card-title>
+                    {{ $t('form.permissionDialog.delete') }}
+                </v-card-title>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="deleteData">{{ $t('form.permissionDialog.yes') }}</v-btn>
+                    <v-btn @click="dialogDeletionPermission = false">{{ $t('form.permissionDialog.no') }}</v-btn>
+                </v-card-actions>
+            </v-card>
         </v-dialog>
 
         <v-card class="form-card">
@@ -28,6 +38,7 @@
                                       maxlength="100"
                                       v-model="name"
                                       :color="$store.state.formFocusColor"
+                                      :disabled="archived"
                                       :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -38,6 +49,7 @@
                             maxlength="1000"
                             v-model="description"
                             :color="$store.state.formFocusColor"
+                            :disabled="archived"
                             :error-messages="errors"
                         >
                             <template v-slot:label>
@@ -55,6 +67,7 @@
                             :label="$t('form.moneyAccount')"
                             v-model="moneyAccountId"
                             :color="$store.state.formFocusColor"
+                            :disabled="archived"
                             :error-messages="errors"
                         ></v-select>
                     </validation-provider>
@@ -67,6 +80,7 @@
                                       :prefix="$t('moneyFormat.monetaryUnit')"
                                       v-model.number="money"
                                       :color="$store.state.formFocusColor"
+                                      :disabled="archived"
                                       :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -90,6 +104,7 @@
                                     v-bind="attrs"
                                     v-on="on"
                                     :color="$store.state.formFocusColor"
+                                    :disabled="archived"
                                     :error-messages="errors"
                                 ></v-text-field>
                             </template>
@@ -104,7 +119,7 @@
                         </v-menu>
                     </validation-provider>
 
-                    <save-delete @deleteData="deleteData"></save-delete>
+                    <save-delete v-if="!archived" @deleteData="activatePermissionDialog"></save-delete>
                     <!-- <edit-money-account v-else></edit-money-account> -->
 
                 </v-form>
@@ -123,6 +138,7 @@
 import SaveDelete from "../../buttons/SaveDelete";
 import {ValidationObserver, ValidationProvider} from 'vee-validate';
 import '../../../validation/rules';
+import {mapGetters} from "vuex";
 
 export default {
     name: "TransactionForm",
@@ -157,7 +173,7 @@ export default {
                 date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
                 menu: false,
                 dialogError: false,
-                dialogUserPermission: false,
+                dialogDeletionPermission: false,
                 dialogText: ''
             };
         } else {
@@ -175,7 +191,8 @@ export default {
                 selectRules: selectRules,
 
                 menu: false,
-                dialog: false,
+                dialogError: false,
+                dialogDeletionPermission: false,
                 dialogText: ''
             };
         }
@@ -194,8 +211,14 @@ export default {
 
     },
     computed: {
+        ...mapGetters([
+            'getMoneyAccountById',
+        ]),
         computedDateFormatted() {
             return this.formatDate(this.date);
+        },
+        archived() {
+            return this.getMoneyAccountById(this.moneyAccountId).archived;
         }
     },
     methods: {
@@ -259,6 +282,10 @@ export default {
                         clickable: true
                     });
                 })
+        },
+        activatePermissionDialog() {
+            this.dialogText = 'Wollen Sie den Eintrag wirklich löschen?';
+            this.dialogDeletionPermission = true;
         },
         deleteData() {
             const data = {

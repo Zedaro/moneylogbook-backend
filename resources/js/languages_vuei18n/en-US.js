@@ -94,6 +94,14 @@ export default {
                 transfer: 'Würden Sie diese Umbuchung löschen, würde der Kontostand des Kontos, auf das Sie umgebucht haben, negativ werden.'
             }
         },
+        permissionDialog: {
+            delete: 'Do you really want to delete the entry?',
+            yes: 'Yes',
+            no: 'No'
+        },
+    },
+    archived: {
+        moneyAccount: ' (deleted)',
     },
     authenticationForms: {
         loginLabel: 'Login',

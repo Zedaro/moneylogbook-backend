@@ -1,6 +1,8 @@
 <template>
 
-    <v-card class="list-item" :to="(moneyAccountsExist && expired == false) ? item : ''">
+    <v-card class="list-item"
+            :to="(expired == false) ? item : ''"
+            v-ripple="{ class: 'green-ripple' }">
         <div class="color" :style="{ backgroundColor: color }"></div>
         <v-card-text class="text-center grey--text flex date">{{ formattedDate(startingDate) }} - {{ formattedDate(endingDate) }}</v-card-text>
         <v-card-text class="text-center grey--text flex interval">{{ rhythmText }}</v-card-text>
@@ -13,16 +15,15 @@
 
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "RepeatingTransactionItem",
     props: ['id', 'name', 'description', 'money', 'moneyAccountId', 'startingDate', 'endingDate', 'rhythmNumber', 'rhythmType', 'expired', 'index'],
     computed: {
-        moneyAccountsExist() {
-            const account = this.$store.getters.getMoneyAccountById(this.moneyAccountId); //this.$store.getters.getMoneyAccounts.find(account => account.id === this.moneyAccountId);
-
-            //returns boolean
-            return (typeof account != 'undefined');
-        },
+        ...mapGetters([
+            'getMoneyAccountById',
+        ]),
         item() {
             return {
                 name: 'repeatingTransactionForm',
@@ -36,7 +37,9 @@ export default {
             return ((this.money > 0) ? 'green--text' : 'red--text');
         },
         moneyAccountName() {
-            return this.$store.getters.getMoneyAccountById(this.moneyAccountId).name;
+            const account = this.getMoneyAccountById(this.moneyAccountId);
+            let deleted = account.archived ? this.$t('archived.moneyAccount') : '';
+            return account.name + deleted;
         },
         rhythmText() {
             return (this.$t('form.rhythmNumbers', {rhythmTypeIndex: this.rhythmType})[this.rhythmNumber] + " " + this.$t('form.rhythmTypes', {rhythmNumberIndex: this.rhythmNumber})[this.rhythmType]);

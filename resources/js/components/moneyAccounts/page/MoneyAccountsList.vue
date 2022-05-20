@@ -5,7 +5,7 @@
             <v-card-text class="text-center app-green-text">{{ totalMoney }}</v-card-text>
         </v-card>
         <list-component>
-            <money-account-item v-for="(account, index) in $store.getters.getMoneyAccounts" :key="index"
+            <money-account-item v-for="(account, index) in $store.getters.getUnarchivedMoneyAccounts" :key="index"
                                 :name="account.name" :money="account.money" :color="account.color" :index="index" v-ripple="{ class: 'green-ripple' }">
             </money-account-item>
         </list-component>
@@ -24,7 +24,8 @@ export default {
             let totalMoney = this.$store.getters.getTotalMoney;
             return this.$t('moneyFormat.format').format(totalMoney);
             //this.money.replace(/\./g, ',') €
-        }
+        },
+
     }
 }
 </script>

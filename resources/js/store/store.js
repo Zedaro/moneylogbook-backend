@@ -227,6 +227,14 @@ export const store = new Vuex.Store({
         getMoneyAccounts(state) {
             return state.userData.moneyAccounts; //state.moneyAccounts;
         },
+        getUnarchivedMoneyAccounts(state) {
+            let unarchivedMoneyAccounts = [];
+            state.userData.moneyAccounts.forEach(moneyAccount => {
+                if(moneyAccount.archived === 0)
+                    unarchivedMoneyAccounts.push(moneyAccount);
+            });
+            return unarchivedMoneyAccounts;
+        },
         getMoneyAccountById(state) {
             return (id) => state.userData.moneyAccounts.find(account => account.id === id);
         },
@@ -393,12 +401,13 @@ export const store = new Vuex.Store({
             }
 
         },
-        async deleteMoneyAccount(context, data) {
+        async archiveMoneyAccount(context, data) {
 
-            await axios.delete('/deleteMoneyAccount', {data: {id: data.id}})
+            await axios.post('/archiveMoneyAccount', {id: data.id})
                 .then(() => {
 
-                    context.commit('deleteMoneyAccount', {index: data.index});
+                    let accountToArchive = context.getters.getMoneyAccountById(data.id);
+                    context.commit('archiveMoneyAccount', {accountToArchive: accountToArchive});
 
                 });
 
@@ -1004,10 +1013,13 @@ export const store = new Vuex.Store({
             state.userData.moneyAccounts[moneyAccountIndex] = updatedData;
 
         },
-        deleteMoneyAccount(state, {index}) {
+        archiveMoneyAccount(state, {accountToArchive}) {
+
+            //Save moneyAccount as archived
+            accountToArchive.archived = 1;
 
             //delete moneyAccount in state
-            state.userData.moneyAccounts.splice(index, 1);
+            //state.userData.moneyAccounts.splice(index, 1);
 
         },
 

@@ -1,6 +1,8 @@
 <template>
 
-    <v-card class="list-item" :to="moneyAccountsExist ? item : ''">
+    <v-card class="list-item"
+            :to="item"
+            v-ripple="{ class: 'green-ripple' }">
 
 <!--        color(moneyAccountId)-->
 
@@ -15,7 +17,7 @@
 
         <div class="money-account-div">
             <v-card-text class="text-center money-account">
-                {{getMoneyAccountById(moneyAccountId).name }}
+                {{ moneyAccountName }}
             </v-card-text>
         </div>
 
@@ -39,11 +41,6 @@ export default {
             'color',
             'getMoneyAccountById'
         ]),
-        moneyAccountsExist() {
-            const account = this.$store.getters.getMoneyAccountById(this.moneyAccountId); //this.$store.getters.getMoneyAccounts.find(account => account.name === this.$store.getters.getMoneyAccountById(this.moneyAccountId).name);
-
-            return (typeof account != 'undefined');
-        },
         item() {
             return {
                 name: 'transactionForm',
@@ -56,6 +53,11 @@ export default {
         formattedDate() {
             const [year, month, day] = this.date.split('-');
             return `${day}.${month}.${year}`;
+        },
+        moneyAccountName() {
+            const account = this.getMoneyAccountById(this.moneyAccountId);
+            let deleted = account.archived ? this.$t('archived.moneyAccount') : '';
+            return account.name + deleted;
         }
     },
 }

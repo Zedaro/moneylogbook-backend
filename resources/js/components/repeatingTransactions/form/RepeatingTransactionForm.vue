@@ -1,5 +1,20 @@
 <template>
     <div>
+
+        <v-dialog v-model="dialogDeletionPermission" content-class="dialog">
+            <v-card class="dialog-card">
+                <v-card-title>
+                    {{ $t('form.permissionDialog.delete') }}
+                </v-card-title>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="deleteData">{{ $t('form.permissionDialog.yes') }}</v-btn>
+                    <v-btn @click="dialogDeletionPermission = false">{{ $t('form.permissionDialog.no') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
         <v-card class="form-card">
 
             <validation-observer v-slot="{ handleSubmit }">
@@ -12,6 +27,7 @@
                                       maxlength="100"
                                       v-model="name"
                                       :color="$store.state.formFocusColor"
+                                      :disabled="archived"
                                       :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -24,6 +40,7 @@
                             rows="2"
                             v-model="description"
                             :color="$store.state.formFocusColor"
+                            :disabled="archived"
                             :error-messages="errors"
                         >
                             <template v-slot:label>
@@ -41,6 +58,7 @@
                             :label="$t('form.moneyAccount')"
                             v-model="moneyAccountId"
                             :color="$store.state.formFocusColor"
+                            :disabled="archived"
                             :error-messages="errors"
                         ></v-select>
                     </validation-provider>
@@ -53,6 +71,7 @@
                                       :prefix="$t('moneyFormat.monetaryUnit')"
                                       v-model.number="money"
                                       :color="$store.state.formFocusColor"
+                                      :disabled="archived"
                                       :error-messages="errors"
                         ></v-text-field>
                     </validation-provider>
@@ -66,7 +85,7 @@
                             transition="scale-transition"
                             offset-y
                             min-width="auto"
-                            :disabled="disabled"
+                            :disabled="disabled || archived"
                         >
                             <template v-slot:activator="{ on, attrs }">
                                 <v-text-field
@@ -105,7 +124,7 @@
                                 transition="scale-transition"
                                 offset-y
                                 min-width="auto"
-                                :disabled="disabled"
+                                :disabled="disabled || archived"
                             >
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-text-field
@@ -150,7 +169,7 @@
                                 transition="scale-transition"
                                 offset-y
                                 min-width="auto"
-                                :disabled="disabled"
+                                :disabled="disabled || archived"
                             >
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-text-field
@@ -185,6 +204,7 @@
                                 :class="{ weekdays, 'no-weekdays': validated && invalid }"
                                 multiple
                                 active-class="app-green-bg"
+                                :disabled="archived"
                                 :error-messages="errors"
                             >
                                 <v-chip
@@ -217,6 +237,7 @@
                                 v-bind="attrs"
                                 v-on="on"
                                 :color="$store.state.formFocusColor"
+                                :disabled="archived"
                             ></v-text-field>
                         </template>
                         <v-date-picker
@@ -230,8 +251,7 @@
                     </v-menu>
 
 
-                    <save-delete @saveData="saveData"
-                                 @deleteData="deleteData"
+                    <save-delete v-if="!archived" @deleteData="activatePermissionDialog"
                     ></save-delete>
                     <!-- <edit-money-account v-else></edit-money-account> -->
 
@@ -247,6 +267,7 @@
 import SaveDelete from "../../buttons/SaveDelete";
 import {ValidationObserver, ValidationProvider} from 'vee-validate';
 import '../../../validation/rules';
+import {mapGetters} from "vuex";
 
 export default {
     name: "RepeatingTransactionForm",
@@ -276,7 +297,10 @@ export default {
                 menuStart: false,
                 menuEnd: false,
                 menuRhythmNumber: false,
-                menuRhythmType: false
+                menuRhythmType: false,
+
+                dialogDeletionPermission: false,
+                dialogText: '',
             };
         }
         else {
@@ -311,7 +335,10 @@ export default {
                 menuStart: false,
                 menuEnd: false,
                 menuRhythmNumber: false,
-                menuRhythmType: false
+                menuRhythmType: false,
+
+                dialogDeletionPermission: false,
+                dialogText: '',
             };
         }
 
@@ -329,6 +356,9 @@ export default {
 
     },
     computed: {
+        ...mapGetters([
+            'getMoneyAccountById',
+        ]),
         /**
          * rhythmNumbers:
          * "Every", "Every 2", "Every 3", ... ; as in "Every month"
@@ -358,6 +388,9 @@ export default {
         },
         disabled() {
             return (this.$route.params.item === 'new') ? false : true;
+        },
+        archived() {
+            return this.getMoneyAccountById(this.moneyAccountId).archived ? true : false;
         }
     },
     methods: {
@@ -607,7 +640,11 @@ export default {
                         clickable: true
                     });
                 });
-        }
+        },
+        activatePermissionDialog() {
+            this.dialogText = 'Wollen Sie den Eintrag wirklich löschen?';
+            this.dialogDeletionPermission = true;
+        },
     }
 }
 </script>

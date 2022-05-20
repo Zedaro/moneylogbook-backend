@@ -103,8 +103,16 @@ export default {
                 transfer: 'Würden Sie diese Umbuchung löschen, würde der Kontostand des Kontos, auf das Sie umgebucht haben, negativ werden.'
             }
         },
+        permissionDialog: {
+            delete: 'Wollen Sie den Eintrag wirklich löschen?',
+            yes: 'Ja',
+            no: 'Nein'
+        },
         weekdays: ['MO', 'DI', 'MI', 'DO', 'FR', 'SA', 'SO'],
 
+    },
+    archived: {
+        moneyAccount: ' (gelöscht)',
     },
     authenticationForms: {
         loginLabel: 'Einloggen',

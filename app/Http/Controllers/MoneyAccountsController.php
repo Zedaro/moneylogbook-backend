@@ -155,7 +155,14 @@ class MoneyAccountsController extends Controller
      */
     public function destroy(Request $request)
     {
-        MoneyAccount::find($request->id)->delete();
+        //MoneyAccount::find($request->id)->delete();
+    }
+
+    public function archive(Request $request)
+    {
+        $moneyAccount = MoneyAccount::find($request->id);
+        $moneyAccount->archived = 1;
+        $moneyAccount->save();
     }
 
 

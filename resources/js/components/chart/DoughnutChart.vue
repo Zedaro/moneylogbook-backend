@@ -150,7 +150,7 @@ export default {
     }
 
     //Hol dir die Konten in eine Variable
-    const moneyAccounts = this.$store.getters.getMoneyAccounts;
+    const moneyAccounts = this.$store.getters.getUnarchivedMoneyAccounts;
     //Befülle doughnutChartData mit Vue-Daten: Name, Betrag und Farbe der Konten
     moneyAccounts.forEach( account => {
       data.labels.push(account.name);

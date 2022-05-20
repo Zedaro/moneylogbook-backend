@@ -1,5 +1,20 @@
 <template>
     <div>
+
+        <v-dialog v-model="dialogDeletionPermission" content-class="dialog">
+            <v-card class="dialog-card">
+                <v-card-title>
+                    {{ $t('form.permissionDialog.delete') }}
+                </v-card-title>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="archiveData">{{ $t('form.permissionDialog.yes') }}</v-btn>
+                    <v-btn @click="dialogDeletionPermission = false">{{ $t('form.permissionDialog.no') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
         <v-card class="form-card">
 
             <validation-observer v-slot="{ handleSubmit }">
@@ -33,7 +48,7 @@
                         <v-input-colorpicker v-model="color" :error-messages="errors"/>
                     </validation-provider>
 
-                    <save-delete @deleteData="deleteData"></save-delete>
+                    <save-delete @deleteData="activatePermissionDialog"></save-delete>
 
                 </v-form>
             </validation-observer>
@@ -60,13 +75,19 @@ export default {
                 name: '',
                 money: null,
                 color: '#000000',
+
+                dialogDeletionPermission: false,
+                dialogText: '',
             };
         } else {
             return {
                 new: false,
-                name: (this.$store.getters.getMoneyAccounts[this.$route.params.item].name),
-                money: (this.$store.getters.getMoneyAccounts[this.$route.params.item].money),
-                color: (this.$store.getters.getMoneyAccounts[this.$route.params.item].color),
+                name: (this.$store.getters.getUnarchivedMoneyAccounts[this.$route.params.item].name),
+                money: (this.$store.getters.getUnarchivedMoneyAccounts[this.$route.params.item].money),
+                color: (this.$store.getters.getUnarchivedMoneyAccounts[this.$route.params.item].color),
+
+                dialogDeletionPermission: false,
+                dialogText: '',
             };
         }
 
@@ -133,10 +154,10 @@ export default {
                     });
                 });
         },
-        deleteData() {
-            this.$store.dispatch('deleteMoneyAccount', {
+        archiveData() {
+            this.$store.dispatch('archiveMoneyAccount', {
                 index: this.$route.params.item,
-                id: this.$store.getters.getMoneyAccountByIndex(this.$route.params.item).id
+                id: this.$store.getters.getUnarchivedMoneyAccounts[this.$route.params.item].id
             })
                 .then(() => {
                     this.$store.dispatch('updateTotalMoney');
@@ -160,7 +181,11 @@ export default {
                         clickable: true
                     });
                 });
-        }
+        },
+        activatePermissionDialog() {
+            this.dialogText = 'Wollen Sie den Eintrag wirklich löschen?';
+            this.dialogDeletionPermission = true;
+        },
     },
     mounted() {
         /*window.scrollTo(0, 0);*/

@@ -46,7 +46,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::post('/updateMoneyAccount', [MoneyAccountsController::class, 'update']);
 
-    Route::delete('/deleteMoneyAccount', [MoneyAccountsController::class, 'destroy']);
+    Route::post('/archiveMoneyAccount', [MoneyAccountsController::class, 'archive']);
 
     Route::post('/testMoneyAccountsController', [MoneyAccountsController::class, 'test']);
 
@@ -328,7 +328,6 @@ Route::post('/changeLanguage', function(Request $request) {
 
 Route::get('/welcome/{locale}', function($locale, Request $request) {
 
-    logger('/welcome/de|en');
     App::setLocale($locale);
     return view('welcome');
 
@@ -336,9 +335,6 @@ Route::get('/welcome/{locale}', function($locale, Request $request) {
 
 
 Route::get('/welcome/{any?}', function(Request $request) {
-
-    logger('welcome any');
-    logger('session lang: '.$request->session()->has('lang'));
 
     //Neue Session: preferred Browser language als Anfangs-locale nehmen und in Laravel-Session speichern
     if($request->session()->has('lang') === false) {
@@ -382,7 +378,6 @@ Route::get('/home', function() {
 
 
 Route::get('/{any}', function () {
-    logger('/{any}');
     return view('index')->with('authenticated', 'yes');
 
 })->where('any', '.*')->middleware('auth:sanctum');
