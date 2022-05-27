@@ -332,10 +332,11 @@ export default {
             return this.formatDate(this.date);
         },
         archived() {
-            let fromAccountArchived = this.getMoneyAccountById(this.fromId).archived;
-            let toAccountArchived = this.getMoneyAccountById(this.toId).archived;
-
-            return (fromAccountArchived === 1 || toAccountArchived === 1) ? true : false;
+            if(this.$route.params.item !== 'new') {
+                let fromAccountArchived = this.getMoneyAccountById(this.fromId).archived;
+                let toAccountArchived = this.getMoneyAccountById(this.toId).archived;
+                return Boolean(fromAccountArchived || toAccountArchived);
+            }
         }
     },
     methods: {

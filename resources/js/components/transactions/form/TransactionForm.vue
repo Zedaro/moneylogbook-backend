@@ -218,7 +218,8 @@ export default {
             return this.formatDate(this.date);
         },
         archived() {
-            return this.getMoneyAccountById(this.moneyAccountId).archived;
+            if(this.$route.params.item !== 'new')
+                return Boolean( this.getMoneyAccountById(this.moneyAccountId).archived );
         }
     },
     methods: {

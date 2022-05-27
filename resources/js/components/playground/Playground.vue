@@ -22,7 +22,18 @@
 import TextBox from "./TextBox";
 export default {
     name: "Playground",
-    components: {TextBox}
+    components: {TextBox},
+    mounted() {
+
+        /* Prototypes
+        const parent = { favFood: 'pizza', favPizza: 'cheese pizza' };
+        const child = { favPizza: 'pizza hawaii' };
+        Object.setPrototypeOf(child, parent);
+        console.log('child:', child);
+        console.log('childs favorite food:', child.favFood);
+        console.log('childs favorite pizza:', child.favPizza);
+        */
+    }
 }
 </script>
 

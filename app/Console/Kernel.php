@@ -47,7 +47,7 @@ class Kernel extends ConsoleKernel
                     }
 
                     //Kommt das Programm an diese Stelle, ist der Dauerauftrag tatsächlich noch gültig.
-                    //Überprüfe, ob der Dauerauftrag bereits begonnen hat oder heute beginnt
+                    //Überprüfe, ob der Dauerauftrag bereits begonnen hat oder heute beginnt. Wenn nicht, gehe zum nächsten Dauerauftrag
                     if( $repTransaction->starting_date <= $today ) {
 
                         $selectedWeekdays = [];

@@ -110,14 +110,18 @@ Route::middleware('auth:sanctum')->group(function() {
 
         //---------------------------------------------------
 
-
+        //Dieser Test funktioniert folgendermaßen:
+        //Der Code geht alle Daueraufträge durch. Am Anfang definierst du, welches Datum der 'heutige' Tag hat: im Code wird $testToday verwendet. Wenn $testToday über dem Enddatum eines Dauerauftrags liegt, dürfte der Dauerauftrag nicht ausegführt werden.
+        //Der Code nimmt sich den Dauerauftrag, der gerade in der Schleife dran ist. Er rechnet ab dem Startdatum das Intervall hoch, bis man bei heute oder in der Zukunft landet. Wenn man auf heute landet, wird der Dauerauftrag ausgeführt, sonst nicht.
 
         $today = substr(today(), 0, 10);
-        $testToday = '2021-08-15';
+        $testToday = '2022-05-31';
+        $testDate = new DateTime('last day of May');
 
 
 
-        //Geh jeden Dauerauftrag in der DB durch
+
+        //Gehe jeden Dauerauftrag in der DB durch
         foreach( RepeatingTransaction::all() as $repTransaction ) {
 
             //Debugbar::debug($repTransaction);
@@ -137,7 +141,7 @@ Route::middleware('auth:sanctum')->group(function() {
                 }
 
                 //Kommt das Programm an diese Stelle, ist der Dauerauftrag tatsächlich noch gültig.
-                //Überprüfe, ob der Dauerauftrag bereits begonnen hat oder heute beginnt
+                //Überprüfe, ob der Dauerauftrag bereits begonnen hat oder heute beginnt. Wenn nicht, gehe zum nächsten Dauerauftrag, denn der Dauerauftrag hat noch nicht begonnen.
                 if( $repTransaction->starting_date <= $testToday ) {
 
 
@@ -170,7 +174,7 @@ Route::middleware('auth:sanctum')->group(function() {
                     //i wird benutzt, um das Intervall zu vergrößern (zB. 1 * 2 Monate, 2 * 2 Monate, 3 * 2 Monate, ...)
                     $i = 0;
 
-
+                    //Wöchentlich
                     if( !empty($weekdays) ) {
 
                         //Heutiger Wochentag (z.B. Montag) als Zahl
@@ -246,6 +250,7 @@ Route::middleware('auth:sanctum')->group(function() {
                         }
 
                     }
+                    //Monatlich & Jährlich
                     else {
 
                         while($nextDate <= $testToday) {
@@ -256,6 +261,9 @@ Route::middleware('auth:sanctum')->group(function() {
                             $intervalString = "+" . $i * ($repTransaction->interval_number + 1) . " " . $intervalTypes[$repTransaction->interval_type];
 
                             //datetime(2.Argument): Startdatum + i * Intervall als Zahl. Wird umformatiert zu einem Datum im Format 'Y-m-d'
+                            //Bsp: startdatum + 2 Monate = $nextDate
+                            //Startdatum: 15.05.2022 | Heute: 15.06.2022 | Typ: Monatlich || -> funktioniert
+                            //Startdatum: 31.05.2022 | Heute: 30.06.2022 | Typ: Monatlich || -> funktioniert nicht
                             $nextDate = date('Y-m-d', strtotime( $repTransaction->starting_date . " " . $intervalString ));
 
 
@@ -283,7 +291,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
                                 }
 
-                                //Gehe zum nächsten Dauerauftrag
+                                //Beende die Intervall-Schleife, Gehe dadurch zum nächsten Dauerauftrag
                                 break;
 
                             }

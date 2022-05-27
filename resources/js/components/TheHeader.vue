@@ -8,13 +8,15 @@
         <v-app-bar-nav-icon :color="headerColorGreen" v-else @click="$router.back()">
             <v-icon>mdi-arrow-left</v-icon>
         </v-app-bar-nav-icon>
-        <v-toolbar-title class="header-title app-green-text">{{ toolbarTitle }}</v-toolbar-title>
+        <v-toolbar-title class="header-title header-text">{{ toolbarTitle }}</v-toolbar-title>
 
         <div class="buttons-div">
 
 <!--            <v-btn @click="test" style="width: 48px; height: 48px;" class="test-btn my-auto" fab depressed>
                 <v-icon>mdi-head-question-outline</v-icon>
             </v-btn>-->
+
+            <v-btn @click="test">Test Task Scheduling</v-btn>
 
             <v-menu
                 v-model="accountMenu"
@@ -33,7 +35,7 @@
                         class="account-menu-btn"
                         v-ripple="{ class: 'app-green-text' }"
                     >
-                        <v-icon class="app-green-text">mdi-account</v-icon>
+                        <v-icon class="header-text">mdi-account</v-icon>
                     </v-app-bar-nav-icon>
                 </template>
                 <v-list class="account-menu-list">
@@ -217,13 +219,13 @@ export default {
             }
             console.log("test:", obj.color?.first);*/
 
-            /*axios.get("/test")
+            axios.get("/test")
                 .then((response) => {
                     //console.log("date < today:", response.data);
                     //console.log("php today():", response.data);
                     //console.log("strtotime:", response.data);
                     console.log("Test:", response.data);
-                });*/
+                });
 
 
             // //Heutiger Wochentag (z.B. Montag) als Zahl

@@ -140,7 +140,7 @@
                                     ></v-text-field>
                                 </template>
                                 <v-list>
-                                    <v-list-item-group v-model="rhythmNumberIndex">
+                                    <v-list-item-group v-model="rhythmNumberIndex" mandatory>
                                         <v-list-item
                                             v-for="(item, index) in rhythmNumbers"
                                             :key="index"
@@ -184,7 +184,7 @@
                                     ></v-text-field>
                                 </template>
                                 <v-list>
-                                    <v-list-item-group v-model="rhythmTypeIndex">
+                                    <v-list-item-group v-model="rhythmTypeIndex" mandatory>
                                         <v-list-item
                                             v-for="(item, index) in rhythmTypes"
                                             :key="index"
@@ -390,7 +390,8 @@ export default {
             return (this.$route.params.item === 'new') ? false : true;
         },
         archived() {
-            return this.getMoneyAccountById(this.moneyAccountId).archived ? true : false;
+            if(this.$route.params.item !== 'new')
+                return Boolean( this.getMoneyAccountById(this.moneyAccountId).archived );
         }
     },
     methods: {
